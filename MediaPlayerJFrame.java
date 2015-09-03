@@ -87,8 +87,7 @@ public class MediaPlayerJFrame extends JFrame {
 		txtInputText.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				txtInputText.setText("Text to synthesize here - max 30 words");
-				
+				//Do nothing
 			}
 			@Override
 			public void focusGained(FocusEvent e) {
