@@ -14,6 +14,8 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MediaPlayerJFrame extends JFrame {
 
@@ -22,6 +24,8 @@ public class MediaPlayerJFrame extends JFrame {
 	private final int buttonWidth = 125;
 	EmbeddedMediaPlayerComponent mediaPlayerComponent;
 	EmbeddedMediaPlayer video;
+	protected boolean videoIsStarted;
+	
 	/**
 	 * Create the frame.
 	 */
@@ -39,11 +43,39 @@ public class MediaPlayerJFrame extends JFrame {
 		mediaPanel.add(mediaPlayerComponent, BorderLayout.CENTER);
 		
 		JButton btnBackward = new JButton("Back");
+		btnBackward.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//TODO
+			}
+		});
 		
-		JButton btnPlay = new JButton("Play");
+		final JButton btnPlay = new JButton("Play");
+		btnPlay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(!videoIsStarted) {
+					play();
+					videoIsStarted = true;
+					btnPlay.setText("Pause");
+				} else {
+					if (!video.isPlaying()) {
+						video.setPause(false);
+						btnPlay.setText("Pause");
+					} else {
+						video.setPause(true);
+						btnPlay.setText("Play");
+					}
+				}
+				
+			}
+		});
 		btnPlay.setToolTipText("Play the video");
 		
 		JButton btnForward = new JButton("Forward");
+		btnForward.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO
+			}
+		});
 		
 		txtInputText = new JTextField();
 		txtInputText.setToolTipText("Text to synthesize here - max 30 words");
@@ -51,12 +83,27 @@ public class MediaPlayerJFrame extends JFrame {
 		txtInputText.setColumns(10);
 		
 		JButton btnPlayText = new JButton("Play text");
+		btnPlayText.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO
+			}
+		});
 		btnPlayText.setToolTipText("Listen to the text");
 		
 		JButton btnSaveText = new JButton("Save text");
+		btnSaveText.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO
+			}
+		});
 		btnSaveText.setToolTipText("Save the text to a mp3 file");
 		
 		JButton btnSelectMp3 = new JButton("Select mp3");
+		btnSelectMp3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO
+			}
+		});
 		btnSelectMp3.setToolTipText("Select an mp3 to add to the start of the video\r\n");
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(

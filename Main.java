@@ -6,11 +6,9 @@ import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
-public class test {
+public class Main {
 	
 	private final MediaPlayerJFrame frame;
-	
-	private EmbeddedMediaPlayerComponent mediaPlayerComponent;
 	
 	public static void main(String args[]) {
 		//boolean found = new NativeDiscovery().discover();
@@ -18,12 +16,12 @@ public class test {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new test();
+				new Main();
 			}
 		});
 	}
 	
-	public test() {
+	public Main() {
 		frame = new MediaPlayerJFrame("Vidivox");
 		frame.setBounds(100,100,600,400);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,8 +35,7 @@ public class test {
 		});
 		
 		
-		frame.play();
-		//frame.addVideo(mediaPlayerComponent);
+		
 		
 		
 	}
