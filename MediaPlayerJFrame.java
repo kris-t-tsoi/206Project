@@ -15,6 +15,9 @@ import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class MediaPlayerJFrame extends JFrame {
@@ -81,11 +84,22 @@ public class MediaPlayerJFrame extends JFrame {
 		txtInputText.setToolTipText("Text to synthesize here - max 30 words");
 		txtInputText.setText("Text to synthesize here - max 30 words");
 		txtInputText.setColumns(10);
+		txtInputText.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				txtInputText.setText("Text to synthesize here - max 30 words");
+				
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				txtInputText.setText("");
+			}
+		});
 		
 		JButton btnPlayText = new JButton("Play text");
 		btnPlayText.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO
+				sayWithFestival(txtInputText.getText());
 			}
 		});
 		btnPlayText.setToolTipText("Listen to the text");
@@ -159,5 +173,16 @@ public class MediaPlayerJFrame extends JFrame {
 	
 	public void play() {
 		video.playMedia("big_buck_bunny_1_minute.avi");
+	}
+	
+	public void sayWithFestival(String text) {
+		String cmd = "echo "+text+ " | festival --tts&";
+		ProcessBuilder builder = new ProcessBuilder("bash", "-c", cmd);
+			try {
+				builder.start();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		
 	}
 }
