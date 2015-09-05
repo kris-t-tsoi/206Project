@@ -29,7 +29,7 @@ public class Main {
 		frame.addWindowListener(new WindowAdapter() {;
 			@Override
 			public void windowClosing(WindowEvent e) {
-				frame.release();
+				frame.release();//Releases the mediaPlayerComponent
 				System.exit(0);
 			}
 		});

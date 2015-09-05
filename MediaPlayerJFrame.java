@@ -1,9 +1,6 @@
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
@@ -37,7 +34,7 @@ public class MediaPlayerJFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 431, 360);
 		contentPane = new JPanel();
-		//contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));//Give the video a border
 		setContentPane(contentPane);
 		
 		JPanel mediaPanel = new JPanel(new BorderLayout());
@@ -45,6 +42,7 @@ public class MediaPlayerJFrame extends JFrame {
 		video = mediaPlayerComponent.getMediaPlayer();
 		mediaPanel.add(mediaPlayerComponent, BorderLayout.CENTER);
 		
+		//Button to skip backwards
 		JButton btnBackward = new JButton("Back");
 		btnBackward.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -52,6 +50,9 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 		
+		/*Button to play the video
+		 * It also acts as a pause/unpause button, and is used to stop skipping backward or forward
+		 */
 		final JButton btnPlay = new JButton("Play");
 		btnPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -73,6 +74,7 @@ public class MediaPlayerJFrame extends JFrame {
 		});
 		btnPlay.setToolTipText("Play the video");
 		
+		//Button to skip forward
 		JButton btnForward = new JButton("Forward");
 		btnForward.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -80,6 +82,7 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 		
+		//JTextField that allows for user input so that 
 		txtInputText = new JTextField();
 		txtInputText.setToolTipText("Text to synthesize here - max 30 words");
 		txtInputText.setText("Text to synthesize here - max 30 words");
@@ -87,7 +90,7 @@ public class MediaPlayerJFrame extends JFrame {
 		txtInputText.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				//Do nothing
+				//Do nothing i.e. no change to the text inside when focus is lost
 			}
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -95,6 +98,7 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 		
+		//Button to speak the text in the JTextField using festival 
 		JButton btnPlayText = new JButton("Play text");
 		btnPlayText.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -103,6 +107,7 @@ public class MediaPlayerJFrame extends JFrame {
 		});
 		btnPlayText.setToolTipText("Listen to the text");
 		
+		//Button to save text as mp3
 		JButton btnSaveText = new JButton("Save text");
 		btnSaveText.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -111,6 +116,7 @@ public class MediaPlayerJFrame extends JFrame {
 		});
 		btnSaveText.setToolTipText("Save the text to a mp3 file");
 		
+		//Button to select an mp3
 		JButton btnSelectMp3 = new JButton("Select mp3");
 		btnSelectMp3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -118,6 +124,8 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 		btnSelectMp3.setToolTipText("Select an mp3 to add to the start of the video\r\n");
+		
+		//Windowbuilder generated code below, enter at your own risk
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -166,14 +174,24 @@ public class MediaPlayerJFrame extends JFrame {
 		setVisible(true);
 		
 	}
+	/**
+	 * Function to allow release of the mediaPlayerComponent from the main class
+	 */
 	public void release() {
 		mediaPlayerComponent.release();
 	}
 	
+	/**
+	 * Function to play a given media
+	 */
 	public void play() {
 		video.playMedia("big_buck_bunny_1_minute.avi");
 	}
 	
+	/**
+	 * Uses festival to speak the input text by creating a bash process
+	 * @param text
+	 */
 	public void sayWithFestival(String text) {
 		String cmd = "echo "+text+ " | festival --tts&";
 		ProcessBuilder builder = new ProcessBuilder("bash", "-c", cmd);
