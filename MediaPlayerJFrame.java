@@ -2,14 +2,13 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
-
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingWorker;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -25,7 +24,7 @@ public class MediaPlayerJFrame extends JFrame {
 	EmbeddedMediaPlayerComponent mediaPlayerComponent;
 	EmbeddedMediaPlayer video;
 	protected boolean videoIsStarted;
-	
+	private BackgroundTask bgTask; //Used to skip forwards and backwards without gui freezing
 	/**
 	 * Create the frame.
 	 */
@@ -42,13 +41,6 @@ public class MediaPlayerJFrame extends JFrame {
 		video = mediaPlayerComponent.getMediaPlayer();
 		mediaPanel.add(mediaPlayerComponent, BorderLayout.CENTER);
 		
-		//Button to skip backwards
-		JButton btnBackward = new JButton("Back");
-		btnBackward.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//TODO
-			}
-		});
 		
 		/*Button to play the video
 		 * It also acts as a pause/unpause button, and is used to stop skipping backward or forward
@@ -56,29 +48,49 @@ public class MediaPlayerJFrame extends JFrame {
 		final JButton btnPlay = new JButton("Play");
 		btnPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(!videoIsStarted) {
-					play();
-					videoIsStarted = true;
-					btnPlay.setText("Pause");
-				} else {
-					if (!video.isPlaying()) {
+				
+				//Cancel any current skipping
+				if (bgTask != null) {
+					bgTask.cancel(true);
+					bgTask = null;
+					return;
+				} else
+					//Start the video if not started
+					if(!videoIsStarted) {
+						play();
+						btnPlay.setText("Pause");
+						videoIsStarted = true;
+						return;
+					}
+					
+					//Pause or play the video
+					if (!video.isPlaying()) {//Pause video if playing
 						video.setPause(false);
 						btnPlay.setText("Pause");
+						
 					} else {
-						video.setPause(true);
+						video.setPause(true);//Play video if paused
 						btnPlay.setText("Play");
 					}
-				}
-				
-			}
+			}	
+			
 		});
 		btnPlay.setToolTipText("Play the video");
+		
+		//Button to skip backwards
+				JButton btnBackward = new JButton("Back");
+				btnBackward.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						if (videoIsStarted) skipVideo(false);
+					}
+				});
+				
 		
 		//Button to skip forward
 		JButton btnForward = new JButton("Forward");
 		btnForward.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO
+				if (videoIsStarted) skipVideo(true);
 			}
 		});
 		
@@ -201,5 +213,32 @@ public class MediaPlayerJFrame extends JFrame {
 				e.printStackTrace();
 			}
 		
+	}
+	class BackgroundTask extends SwingWorker<Void, Void>{
+		private boolean skipForward;
+		
+		public BackgroundTask(boolean skipFoward) {
+			this.skipForward = skipFoward;
+		}
+		
+		@Override
+		protected Void doInBackground() throws Exception {
+			int skipValue = skipForward? 1000 : -1000 ;
+			while (!isCancelled()) {
+				video.skip(skipValue);
+				Thread.sleep(200);
+			}
+			return null;
+		}
+	}
+	
+	/**
+	 * Function to continuously skip forwards or backwards depending on the input boolean.
+	 * @param forwards
+	 */
+	private void skipVideo(boolean forwards) {
+		if (bgTask != null) bgTask.cancel(true);
+		bgTask = new BackgroundTask(forwards);
+		bgTask.execute();
 	}
 }
