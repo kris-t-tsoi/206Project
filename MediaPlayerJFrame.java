@@ -114,12 +114,16 @@ public class MediaPlayerJFrame extends JFrame {
 		JButton btnPlayText = new JButton("Play text");
 		btnPlayText.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+<<<<<<< HEAD
 				//check if number of word is within limit
 				if(checkTxtLength(txtInputText.getText())){
 					sayWithFestival(txtInputText.getText());					
 				}else{
 					popup("Sorry you have exceeded the maximum word count of 30");
 				}
+=======
+				sayWithFestival(txtInputText.getText());
+>>>>>>> d576ddb6da1cc72e3deea0bb6f49aef8c9ccf35e
 			}
 		});
 		btnPlayText.setToolTipText("Listen to the text");
@@ -128,6 +132,7 @@ public class MediaPlayerJFrame extends JFrame {
 		JButton btnSaveText = new JButton("Save text");
 		btnSaveText.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+<<<<<<< HEAD
 				//check if number of word is within limit
 				if(checkTxtLength(txtInputText.getText())){
 					String s = (String)JOptionPane.showInputDialog(thisFrame, "Enter a name for the mp3 file");
@@ -137,6 +142,11 @@ public class MediaPlayerJFrame extends JFrame {
 					
 				}else{
 					popup("Sorry you have exceeded the maximum word count of 30");
+=======
+				String s = (String)JOptionPane.showInputDialog(thisFrame, "Enter a name for the mp3 file");
+				if (!s.startsWith(" ")){
+					createMP3(s);
+>>>>>>> d576ddb6da1cc72e3deea0bb6f49aef8c9ccf35e
 				}
 				
 			}
@@ -325,6 +335,7 @@ public class MediaPlayerJFrame extends JFrame {
 		useTerminalCommand("lame " + s + ".wav " + s + ".mp3");
 		useTerminalCommand("rm " + s + ".wav");
 	}
+<<<<<<< HEAD
 	
 	/**
 	 * 
@@ -359,4 +370,6 @@ public class MediaPlayerJFrame extends JFrame {
 		JOptionPane.showMessageDialog(popup, message);
 
 	}
+=======
+>>>>>>> d576ddb6da1cc72e3deea0bb6f49aef8c9ccf35e
 }
