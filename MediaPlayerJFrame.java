@@ -33,6 +33,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 	private static final int DEFAULT_VOLUME = 50;// Default volume of the video
 
+	private static final String ERROR_MESSAGE = "Sorry, you have exceeded the maximum word count of 30.";
 	/**
 	 * Create the frame.
 	 */
@@ -120,7 +121,7 @@ public class MediaPlayerJFrame extends JFrame {
 				if (checkTxtLength(txtInputText.getText())) {
 					sayWithFestival(txtInputText.getText());
 				} else {
-					popup("Sorry you have exceeded the maximum word count of 30");
+					JOptionPane.showMessageDialog(thisFrame, ERROR_MESSAGE);
 				}
 			}
 		});
@@ -138,7 +139,7 @@ public class MediaPlayerJFrame extends JFrame {
 					}
 
 				} else {
-					popup("Sorry you have exceeded the maximum word count of 30");
+					JOptionPane.showMessageDialog(thisFrame, ERROR_MESSAGE);
 
 				}
 
@@ -365,18 +366,6 @@ public class MediaPlayerJFrame extends JFrame {
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * create popup frame with chosen message
-	 * 
-	 * @param message
-	 *            gets text to be printed on frame
-	 */
-	void popup(String message) {
-		JFrame popup = new JFrame();
-		JOptionPane.showMessageDialog(popup, message);
-
 	}
 
 }
