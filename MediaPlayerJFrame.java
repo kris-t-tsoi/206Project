@@ -1,11 +1,11 @@
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import javax.swing.GroupLayout;
@@ -19,8 +19,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
-
-import java.awt.BorderLayout;
 
 public class MediaPlayerJFrame extends JFrame {
 
@@ -44,6 +42,7 @@ public class MediaPlayerJFrame extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));//Give the video a border
 		setContentPane(contentPane);
+		final JFrame thisFrame = this;
 		
 		JPanel mediaPanel = new JPanel(new BorderLayout());
 		mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
@@ -133,7 +132,11 @@ public class MediaPlayerJFrame extends JFrame {
 		JButton btnSaveText = new JButton("Save text");
 		btnSaveText.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO
+				String s = (String)JOptionPane.showInputDialog(thisFrame, "Enter a name for the mp3 file");
+				if (!s.startsWith(" ")){
+					createMP3(s);
+				}
+				
 			}
 		});
 		btnSaveText.setToolTipText("Save the text to a mp3 file");
@@ -297,5 +300,27 @@ public class MediaPlayerJFrame extends JFrame {
 		if (bgTask != null) bgTask.cancel(true);
 		bgTask = new BackgroundTask(forwards);
 		bgTask.execute();
+	}
+	
+	/**
+	 * Executes a given terminal command as-is, where we don't do anything with different return values.
+	 * This function waits for the process to finish, so can freeze the GUI if a swingworker is not used.
+	 * @param cmd
+	 */
+	private void useTerminalCommand(String cmd) {
+		ProcessBuilder builder = new ProcessBuilder("bash", "-c", cmd);
+		Process process;
+		try{
+			process = builder.start();
+			process.waitFor();
+		} catch (IOException | SecurityException | IllegalArgumentException | InterruptedException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	private void createMP3(String s) {
+		useTerminalCommand("echo " + txtInputText.getText() +  "|text2wave -o " + s + ".wav");
+		useTerminalCommand("lame " + s + ".wav " + s + ".mp3");
+		useTerminalCommand("rm " + s + ".wav");
 	}
 }
