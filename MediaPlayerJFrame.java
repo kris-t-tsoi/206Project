@@ -108,16 +108,7 @@ public class MediaPlayerJFrame extends JFrame {
 		txtInputText.setToolTipText("Text to synthesize here - max 30 words");
 		txtInputText.setText("Text to synthesize here - max 30 words");
 		txtInputText.setColumns(10);
-		txtInputText.addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				//Do nothing i.e. no change to the text inside when focus is lost
-			}
-			@Override
-			public void focusGained(FocusEvent e) {
-				txtInputText.setText("");
-			}
-		});
+		
 		
 		//Button to speak the text in the JTextField using festival 
 		JButton btnPlayText = new JButton("Play text");
