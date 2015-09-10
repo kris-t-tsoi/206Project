@@ -24,15 +24,13 @@ public class MediaPlayerJFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtInputText;
-	private final int buttonWidth = 125;
 	EmbeddedMediaPlayerComponent mediaPlayerComponent;
 	EmbeddedMediaPlayer video;
 	protected boolean videoIsStarted;
-	private BackgroundTask bgTask; // Used to skip forwards and backwards
-									// without gui freezing
-
+	private final int buttonWidth = 125; // Standard width for all buttons
+	private BackgroundTask bgTask; // Used to skip forwards and backwards without gui freezing
 	private static final int DEFAULT_VOLUME = 50;// Default volume of the video
-
+	private static final int MAX_NUMBER_OF_WORDS = 30; // Max number of words which can be played/saved
 	private static final String ERROR_MESSAGE = "Sorry, you have exceeded the maximum word count of 30.";
 	/**
 	 * Create the frame.
@@ -42,8 +40,7 @@ public class MediaPlayerJFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 408);
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));// Give the video a
-															// border
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));// Give the actual video a border
 		setContentPane(contentPane);
 		final JFrame thisFrame = this;
 
@@ -94,7 +91,7 @@ public class MediaPlayerJFrame extends JFrame {
 		btnBackward.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (videoIsStarted)
-					skipVideo(false);
+					skipVideoForwards(false);
 			}
 		});
 
@@ -103,7 +100,7 @@ public class MediaPlayerJFrame extends JFrame {
 		btnForward.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (videoIsStarted)
-					skipVideo(true);
+					skipVideoForwards(true);
 			}
 		});
 
@@ -140,9 +137,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 				} else {
 					JOptionPane.showMessageDialog(thisFrame, ERROR_MESSAGE);
-
 				}
-
 			}
 		});
 		btnSaveText.setToolTipText("Save the text to a mp3 file");
@@ -175,8 +170,7 @@ public class MediaPlayerJFrame extends JFrame {
 		});
 		btnMute.setToolTipText("Mute the audio");
 
-		// Create a JSlider with 0 and 100 as the volume limits. 50 is the
-		// default.
+		// Create a JSlider with 0 and 100 as the volume limits. 50 is the default (it is set to 50 in the constructor.
 		JSlider sliderVolume = new JSlider(JSlider.HORIZONTAL, 0, 100, DEFAULT_VOLUME);
 		sliderVolume.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
@@ -194,32 +188,32 @@ public class MediaPlayerJFrame extends JFrame {
 								.addComponent(mediaPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
 										Short.MAX_VALUE)
 								.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
-										.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 125,
+										.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, buttonWidth,
 												GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, 125,
+										.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, buttonWidth,
 												GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 125,
+										.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, buttonWidth,
 												GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, 125,
+										.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, buttonWidth,
 												GroupLayout.PREFERRED_SIZE)
 						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 				.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
 						.addComponent(txtInputText, GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
 						.addContainerGap()).addGroup(
 								gl_contentPane.createSequentialGroup().addContainerGap()
-										.addComponent(btnPlayText, GroupLayout.PREFERRED_SIZE, 125,
+										.addComponent(btnPlayText, GroupLayout.PREFERRED_SIZE, buttonWidth,
 												GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(btnSaveText, GroupLayout.PREFERRED_SIZE, 125,
+										.addComponent(btnSaveText, GroupLayout.PREFERRED_SIZE, buttonWidth,
 												GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(btnSelectMp3, GroupLayout.PREFERRED_SIZE, 125,
+										.addComponent(btnSelectMp3, GroupLayout.PREFERRED_SIZE, buttonWidth,
 												GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, 125,
+										.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, buttonWidth,
 												GroupLayout.PREFERRED_SIZE)
 						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addGroup(
 								gl_contentPane
@@ -287,8 +281,6 @@ public class MediaPlayerJFrame extends JFrame {
 	/**
 	 * Class to skip forward/backward continuously without freezing the GUI.
 	 * 
-	 * @author stefan
-	 *
 	 */
 	class BackgroundTask extends SwingWorker<Void, Void> {
 		private boolean skipForward;
@@ -302,7 +294,7 @@ public class MediaPlayerJFrame extends JFrame {
 			int skipValue = skipForward ? 1000 : -1000;
 			while (!isCancelled()) {
 				video.skip(skipValue);
-				Thread.sleep(200);
+				Thread.sleep(200);//Sleep in between skips to prevent errors
 			}
 			return null;
 		}
@@ -314,7 +306,7 @@ public class MediaPlayerJFrame extends JFrame {
 	 * 
 	 * @param forwards
 	 */
-	private void skipVideo(boolean forwards) {
+	private void skipVideoForwards(boolean forwards) {
 		if (bgTask != null)
 			bgTask.cancel(true);
 		bgTask = new BackgroundTask(forwards);
@@ -339,14 +331,22 @@ public class MediaPlayerJFrame extends JFrame {
 		}
 	}
 
+	/**
+	 * Function to create an mp3 from a string of text by:
+	 * 		1. creating a wav file using text2wave
+	 * 		2. creating an mp3 from the wav file using ffmpeg
+	 * 		3. removing the wav file
+	 * @param s is the input string
+	 */
 	private void createMP3(String s) {
 		useTerminalCommand("echo " + txtInputText.getText() + "|text2wave -o " + s + ".wav");
-		useTerminalCommand("lame " + s + ".wav " + s + ".mp3");
+		useTerminalCommand("ffmpeg -i " + s + ".wav -f mp3 " + s + ".mp3");
 		useTerminalCommand("rm " + s + ".wav");
 	}
 
 	/**
-	 * 
+	 * Function to check if the number of words a string of text exceeds a certain value.
+	 * Used before reading or saving any text.
 	 * @param text
 	 *            - from textField
 	 * @return true - number of words is less than 30 false - number of words is
@@ -354,7 +354,7 @@ public class MediaPlayerJFrame extends JFrame {
 	 * 
 	 */
 	public boolean checkTxtLength(String text) {
-		// removes all spaces and punctuation apart from ' for conjunctions
+		// Removes all spaces and punctuation apart from ' for conjunctions
 		String[] punct = text.split("[^a-zA-Z0-9']");
 		int words = 0;
 		for (int i = 0; i < punct.length; i++) {
@@ -362,7 +362,7 @@ public class MediaPlayerJFrame extends JFrame {
 				words++;
 			}
 		}
-		if (words <= 30) {
+		if (words <= MAX_NUMBER_OF_WORDS) {
 			return true;
 		}
 		return false;
