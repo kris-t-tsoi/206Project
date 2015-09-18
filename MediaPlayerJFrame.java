@@ -1,5 +1,8 @@
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -11,17 +14,21 @@ import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingWorker;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.File;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class MediaPlayerJFrame extends JFrame {
 
+	private String videoPath;
+	private String mp3Path;
 	private JPanel contentPane;
 	private JTextField txtInputText;
 	private final int buttonWidth = 125;
@@ -32,7 +39,32 @@ public class MediaPlayerJFrame extends JFrame {
 									// without gui freezing
 
 	private static final int DEFAULT_VOLUME = 50;// Default volume of the video
+	final JFileChooser fc = new JFileChooser();
+	JMenuBar menuBar;
+	JMenu menu;
+	JMenuItem menuItem;
+	File currentPath = new File(System.getProperty("user.dir"));
+	
+	public String getVideoPath() {
+		return videoPath;
+	}
 
+	public void setVideoPath(String videoPath) {
+		this.videoPath = videoPath;
+	}
+	
+	public String getMp3Path() {
+		return mp3Path;
+	}
+
+	public void setMp3Path(String mp3Path) {
+		this.mp3Path = mp3Path;
+	}
+
+
+	
+	
+	
 	/**
 	 * Create the frame.
 	 */
@@ -51,6 +83,60 @@ public class MediaPlayerJFrame extends JFrame {
 		video = mediaPlayerComponent.getMediaPlayer();
 		mediaPanel.add(mediaPlayerComponent, BorderLayout.CENTER);
 
+		/**
+		 * MenuBar placed at top of frame
+		 * 	Item : Files
+		menuBar = new JMenuBar();
+		menuBar.setBounds(55, 28, 129, 21);
+		contentPane.add(menuBar);
+
+		/**
+		 * JMenu Files -- Select Video and MP3
+		 */
+		menu = new JMenu("Files");
+
+
+		menuItem = new JMenuItem("Choose Video File");
+		menuItem.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				//start file search in current file 
+				//May want to add in video folder is do then just add in (+"folder name")
+				fc.setCurrentDirectory(currentPath);
+				int returnVal = fc.showOpenDialog(menuItem);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					setVideoPath( fc.getSelectedFile().getAbsolutePath());	
+					//play choosen video
+					play();
+				} else if (returnVal == JFileChooser.ERROR_OPTION) {
+					popup("Sorry an ERROR occured, Please try again");
+				}
+			}
+		}));
+		menu.add(menuItem);
+		
+		menuItem = new JMenuItem("Choose MP3 File");
+		menuItem.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				//start file search in current file 
+				//May want to add in mp3 folder is do then just add in (+"folder name")
+				fc.setCurrentDirectory(currentPath);
+				int returnVal = fc.showOpenDialog(menuItem);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					setMp3Path(fc.getSelectedFile().getAbsolutePath());	
+				} else if (returnVal == JFileChooser.ERROR_OPTION) {
+					popup("Sorry an ERROR occured, Please try again");
+				}
+			}
+		}));
+		menu.add(menuItem);
+
+		menuBar.add(menu);
+	
+		
+		
+		
 		/*
 		 * Button to play the video It also acts as a pause/unpause button, and
 		 * is used to stop skipping backward or forward
@@ -264,7 +350,7 @@ public class MediaPlayerJFrame extends JFrame {
 	 * Function to play a given media
 	 */
 	public void play() {
-		video.playMedia("big_buck_bunny_1_minute.avi");
+		video.playMedia(getVideoPath());
 	}
 
 	/**
@@ -378,5 +464,7 @@ public class MediaPlayerJFrame extends JFrame {
 		JOptionPane.showMessageDialog(popup, message);
 
 	}
+	
+	
 
 }
