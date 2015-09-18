@@ -10,7 +10,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import javax.swing.GroupLayout;
@@ -20,6 +19,7 @@ import javax.swing.JFileChooser;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingWorker;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileFilter;
@@ -41,8 +41,8 @@ public class MediaPlayerJFrame extends JFrame {
 
 	final JFileChooser vfc = new JFileChooser();
 	final JFileChooser mp3fc = new JFileChooser();
-	JMenuBar menuBar;
-	JMenu menu;
+	JMenuBar fileMenuBar;
+	JMenu fileMenu;
 	JMenuItem menuItem;
 	File currentPath = new File(System.getProperty("user.dir"));
 	
@@ -75,7 +75,8 @@ public class MediaPlayerJFrame extends JFrame {
 	public MediaPlayerJFrame(String name) {
 		super(name);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 500, 408);
+		setBounds(100, 100, 586, 504);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));// Give the actual video a border
 		setContentPane(contentPane);
@@ -90,14 +91,14 @@ public class MediaPlayerJFrame extends JFrame {
 		 * MenuBar placed at top of frame
 		 * 	Item : Files
 		 */
-		menuBar = new JMenuBar();
-		menuBar.setBounds(55, 28, 129, 21);
-		contentPane.add(menuBar);
+		fileMenuBar = new JMenuBar();
+		fileMenuBar.setBounds(55, 28, 129, 21);
+		setJMenuBar(fileMenuBar);
 
 		/**
 		 * JMenu Files -- Select Video and MP3
 		 */
-		menu = new JMenu("Files");
+		fileMenu = new JMenu("Files");
 		
 		menuItem = new JMenuItem("Choose Video File");
 		menuItem.addActionListener((new ActionListener() {
@@ -117,7 +118,7 @@ public class MediaPlayerJFrame extends JFrame {
 				}
 			}
 		}));
-		menu.add(menuItem);
+		fileMenu.add(menuItem);
 		
 		menuItem = new JMenuItem("Choose MP3 File");
 		menuItem.addActionListener((new ActionListener() {
@@ -137,9 +138,9 @@ public class MediaPlayerJFrame extends JFrame {
 				}
 			}
 		}));
-		menu.add(menuItem);
+		fileMenu.add(menuItem);
 
-		menuBar.add(menu);
+		fileMenuBar.add(fileMenu);
 	
 		
 		
@@ -266,7 +267,7 @@ public class MediaPlayerJFrame extends JFrame {
 		btnMute.setToolTipText("Mute the audio");
 
 		// Create a JSlider with 0 and 100 as the volume limits. 50 is the default (it is set to 50 in the constructor.
-		JSlider sliderVolume = new JSlider(JSlider.HORIZONTAL, 0, 100, DEFAULT_VOLUME);
+		JSlider sliderVolume = new JSlider(SwingConstants.VERTICAL, 0, 100, DEFAULT_VOLUME);
 		sliderVolume.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				video.setVolume(((JSlider) arg0.getSource()).getValue());
@@ -277,66 +278,58 @@ public class MediaPlayerJFrame extends JFrame {
 
 		// Windowbuilder generated code below, enter at your own risk
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane
-				.setHorizontalGroup(
-						gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(mediaPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE)
-								.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
-										.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, buttonWidth,
-												GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, buttonWidth,
-												GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, buttonWidth,
-												GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, buttonWidth,
-												GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-				.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
-						.addComponent(txtInputText, GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
-						.addContainerGap()).addGroup(
-								gl_contentPane.createSequentialGroup().addContainerGap()
-										.addComponent(btnPlayText, GroupLayout.PREFERRED_SIZE, buttonWidth,
-												GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(btnSaveText, GroupLayout.PREFERRED_SIZE, buttonWidth,
-												GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(btnSelectMp3, GroupLayout.PREFERRED_SIZE, buttonWidth,
-												GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, buttonWidth,
-												GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addGroup(
-								gl_contentPane
-										.createSequentialGroup().addContainerGap().addComponent(sliderVolume,
-												GroupLayout.DEFAULT_SIZE, 525, GroupLayout.PREFERRED_SIZE)
-										.addContainerGap()));
-		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addComponent(mediaPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 572, Short.MAX_VALUE)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE))
+								.addComponent(txtInputText, GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(btnPlayText, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnSaveText, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnSelectMp3, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(sliderVolume, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap())
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-						.addComponent(mediaPanel, GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(sliderVolume, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-				.addPreferredGap(ComponentPlacement.RELATED)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
-				.addPreferredGap(ComponentPlacement.RELATED)
-				.addComponent(txtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-						GroupLayout.PREFERRED_SIZE)
-				.addPreferredGap(ComponentPlacement.RELATED)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnPlayText, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnSaveText, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnSelectMp3, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
-				.addContainerGap()));
+					.addComponent(mediaPanel, GroupLayout.PREFERRED_SIZE, 267, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(txtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnPlayText, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnSaveText, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnSelectMp3, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)))
+						.addComponent(sliderVolume, 0, 0, Short.MAX_VALUE))
+					.addContainerGap())
+		);
 		contentPane.setLayout(gl_contentPane);
 
 		// Set the frame as visible
