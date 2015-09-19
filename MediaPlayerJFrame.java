@@ -38,8 +38,6 @@ public class MediaPlayerJFrame extends JFrame {
 	private final int buttonWidth = 125; // Standard width for all buttons
 	private BackgroundTask bgTask; // Used to skip forwards and backwards without gui freezing
 	
-	
-					
 	// Default volume of the video
 	private static final int DEFAULT_VOLUME = 50;
 
@@ -53,9 +51,10 @@ public class MediaPlayerJFrame extends JFrame {
 	JMenuBar fileMenuBar;
 	JMenu fileMenu;
 	JMenuItem menuItem;
-	private static final File VIDEO_DIR_PATH = new File(System.getProperty("user.dir") + File.separator + "Video");
+	private static final File VIDEO_DIR_ABSOLUTE_PATH = new File(System.getProperty("user.dir") + File.separator + "Video");
 	//private static final File MP3_DIR_PATH = new File(System.getProperty("user.dir") + File.separator + "MP3");
-	private static final String MP3_DIR_PATH = "MP3";
+	private static final String VIDEO_DIR_RELATIVE_PATH = "Video";
+	private static final String MP3_DIR_RELATIVE_PATH = "MP3";
 	JLabel lblCurrentMP3;
 
 	//Getters and setters for FileChoosers
@@ -85,17 +84,17 @@ public class MediaPlayerJFrame extends JFrame {
 		setBounds(100, 100, 595, 468);
 		
 		//Create the folders needed if they don't exist
-		final File videoDir = VIDEO_DIR_PATH;
+		final File videoDir = VIDEO_DIR_ABSOLUTE_PATH;
 		//File mp3Dir = MP3_DIR_PATH;
-		final File mp3Dir = new File(MP3_DIR_PATH);
+		final File mp3Dir = new File(MP3_DIR_RELATIVE_PATH);
 		
 		videoDir.mkdir();
 		mp3Dir.mkdir();
 		
 
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));// Give the actual
-															// video a border
+		//Give the video a border
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		final JFrame thisFrame = this;
 
@@ -123,7 +122,7 @@ public class MediaPlayerJFrame extends JFrame {
 				// start file search in current file
 				// May want to add in video folder is do then just add in
 				// (+"folder name")
-				vfc.setCurrentDirectory(VIDEO_DIR_PATH);
+				vfc.setCurrentDirectory(VIDEO_DIR_ABSOLUTE_PATH);
 				int returnVal = vfc.showOpenDialog(menuItem);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					setVideoPath(vfc.getSelectedFile().getAbsolutePath());
@@ -253,18 +252,24 @@ public class MediaPlayerJFrame extends JFrame {
 		});
 		btnSelectMp3.setToolTipText("Add the text to the current video");
 
-		
+		//Button to add a selected mp3 to the file
 		JButton btnAdd = new JButton("Add mp3");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String mp3name = createValidMP3(thisFrame);
-				if (mp3name != null) {
-					String video = getVideoPath();
-					String output = (String) JOptionPane.showInputDialog(this, "Enter a name for the output file:");
+				String mp3Path = getMp3Path();
+				String videoPath = getVideoPath();
+				if (mp3Path != null && videoPath != null) {
+					
+					String output = (String) JOptionPane.showInputDialog(thisFrame, "Please enter a name for the output file", 
+							"Output file name", JOptionPane.INFORMATION_MESSAGE);
 					
 					if (output != null) {
-						useTerminalCommand("ffmpeg -i "+ video + "-i" + mp3name + "-map 0:v -map 1:a " + output);
+						useTerminalCommand("ffmpeg -i "+ videoPath + " -i " + mp3Path + " -map 0:v -map 1:a " + VIDEO_DIR_RELATIVE_PATH + File.separator + output + ".mp4");
+						System.out.println("ffmpeg -i "+ videoPath + " -i " + mp3Path + " -map 0:v -map 1:a " + VIDEO_DIR_RELATIVE_PATH + File.separator + output + ".mp4");
 					}
+				}
+				else {
+					JOptionPane.showMessageDialog(thisFrame, "Please select a video and/or and mp3 file.");
 				}
 			}
 		});
@@ -279,7 +284,6 @@ public class MediaPlayerJFrame extends JFrame {
 				} else {
 					btnMute.setText("Mute");
 				}
-
 				video.mute();
 
 			}
@@ -297,8 +301,9 @@ public class MediaPlayerJFrame extends JFrame {
 		sliderVolume.setMinorTickSpacing(1);
 		sliderVolume.setToolTipText("Change the volume of the video");
 		
-		JLabel lblCurrentSelection = new JLabel("Currently selected mp3:");
+		JLabel lblCurrentSelection = new JLabel("Currently selected:");
 		
+		// Label that displays teh currently selected mp3
 		lblCurrentMP3 = new JLabel("");
 		
 
@@ -464,12 +469,8 @@ public class MediaPlayerJFrame extends JFrame {
 	 */
 	private void createMP3(String s) {
 		useTerminalCommand("echo " + txtInputText.getText() + "|text2wave -o " + s + ".wav;"
-				+ "ffmpeg -i " + s + ".wav -f mp3 " + MP3_DIR_PATH  + File.separator + s + ".mp3;"
+				+ "ffmpeg -i " + s + ".wav -f mp3 " + MP3_DIR_RELATIVE_PATH  + File.separator + s + ".mp3;"
 						+ "rm " + s + ".wav");
-		System.out.println("echo " + txtInputText.getText() + "|text2wave -o " + s + ".wav;"
-				+ "ffmpeg -i " + s + ".wav -f mp3 " + MP3_DIR_PATH + File.separator + s + ".mp3;"
-						+ "rm " + s + ".wav");
-		System.out.println(MP3_DIR_PATH + File.separator);
 	}
 
 	/**
