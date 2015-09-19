@@ -54,21 +54,17 @@ public class MediaPlayerJFrame extends JFrame {
 	JMenu fileMenu;
 	JMenuItem menuItem;
 
-	//private static final File VIDEO_DIR_ABSOLUTE_PATH = new File(
-		//	System.getProperty("user.dir") + File.separator + "Video");
-	// private static final File MP3_DIR_PATH = new
-	// File(System.getProperty("user.dir") + File.separator + "MP3");
-
-	
 	// Directory location constants
 
 	private static final String VIDEO_DIR_RELATIVE_PATH = "Video";
-	private static final File VIDEO_DIR_ABSOLUTE_PATH = new File(System.getProperty("user.dir") + File.separator + VIDEO_DIR_RELATIVE_PATH);
-	//private static final File MP3_DIR_PATH = new File(System.getProperty("user.dir") + File.separator + "MP3");
+	private static final File VIDEO_DIR_ABSOLUTE_PATH = new File(
+			System.getProperty("user.dir") + File.separator + VIDEO_DIR_RELATIVE_PATH);
+	// private static final File MP3_DIR_PATH = new
+	// File(System.getProperty("user.dir") + File.separator + "MP3");
 	private static final String MP3_DIR_RELATIVE_PATH = "MP3";
 
-	private static final String MP3_DIR_ABSOLUTE_PATH = System.getProperty("user.dir") + File.separator + MP3_DIR_RELATIVE_PATH;
-
+	private static final String MP3_DIR_ABSOLUTE_PATH = System.getProperty("user.dir") + File.separator
+			+ MP3_DIR_RELATIVE_PATH;
 
 	// Dynamic labels for user information
 	private static final String CURRENTLY_SELECTED = "Currently selected: ";
@@ -126,7 +122,7 @@ public class MediaPlayerJFrame extends JFrame {
 		fileMenuBar = new JMenuBar();
 		fileMenuBar.setBounds(55, 28, 129, 21);
 		setJMenuBar(fileMenuBar);
-		
+
 		/**
 		 * JMenu Files -- Select Video and MP3
 		 */
@@ -137,19 +133,15 @@ public class MediaPlayerJFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// start file search in current file
-				// May want to add in video folder is do then just add in
-				// (+"folder name")
 				vfc.setCurrentDirectory(VIDEO_DIR_ABSOLUTE_PATH);
 				int returnVal = vfc.showOpenDialog(menuItem);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					setVideoPath(vfc.getSelectedFile().getAbsolutePath());
 
-					JFrame popup = new JFrame();
-					JOptionPane.showMessageDialog(popup,vfc.getSelectedFile().getName()+ " has been selected");
+					JOptionPane.showMessageDialog(thisFrame, vfc.getSelectedFile().getName() + " has been selected");
 
 				} else if (returnVal == JFileChooser.ERROR_OPTION) {
-					JFrame popup = new JFrame();
-					JOptionPane.showMessageDialog(popup, "Sorry an ERROR occured, Please try again");
+					JOptionPane.showMessageDialog(thisFrame, "Sorry an ERROR occured, Please try again");
 				}
 			}
 		}));
@@ -160,8 +152,6 @@ public class MediaPlayerJFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// Start file search in current directory
-				// May want to add in mp3 folder is do then just add in
-				// (+"folder name")
 				FileNameExtensionFilter filter = new FileNameExtensionFilter("MP3 File", "mp3");
 				mp3fc.setFileFilter(filter);
 				mp3fc.setCurrentDirectory(mp3Dir);
@@ -169,8 +159,7 @@ public class MediaPlayerJFrame extends JFrame {
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					setMp3Path(mp3fc.getSelectedFile().getAbsolutePath());
 				} else if (returnVal == JFileChooser.ERROR_OPTION) {
-					JFrame popup = new JFrame();
-					JOptionPane.showMessageDialog(popup, "Sorry an ERROR occured, Please try again");
+					JOptionPane.showMessageDialog(thisFrame, "Sorry an ERROR occured, Please try again");
 				}
 			}
 		}));
@@ -193,7 +182,7 @@ public class MediaPlayerJFrame extends JFrame {
 				} else
 					// Start the video if not started
 					if (!videoIsStarted) {
-					play();
+					play(thisFrame);
 					btnPlay.setText("Pause");
 					videoIsStarted = true;
 					video.setVolume(DEFAULT_VOLUME);
@@ -292,10 +281,6 @@ public class MediaPlayerJFrame extends JFrame {
 										+ VIDEO_DIR_RELATIVE_PATH + File.separator + output + ".mp4");
 						lblProcessing.setText("Processing...");
 						replacer.execute();
-						// useTerminalCommand("ffmpeg -i "+ videoPath + " -i " +
-						// mp3Path + " -map 0:v -map 1:a " +
-						// VIDEO_DIR_RELATIVE_PATH + File.separator + output +
-						// ".mp4");
 					}
 				} else {
 					JOptionPane.showMessageDialog(thisFrame, "Please select a video and/or and mp3 file.");
@@ -421,12 +406,11 @@ public class MediaPlayerJFrame extends JFrame {
 	/**
 	 * Function to play a given media
 	 */
-	public void play() {
-		
-		if(getVideoPath() == null){
-			JFrame popup = new JFrame();
-			JOptionPane.showMessageDialog(popup, "Please select video to play");
-		}else{
+	public void play(JFrame thisFrame) {
+
+		if (getVideoPath() == null) {
+			JOptionPane.showMessageDialog(thisFrame, "Please select video to play");
+		} else {
 			video.playMedia(getVideoPath());
 		}
 	}
@@ -528,18 +512,18 @@ public class MediaPlayerJFrame extends JFrame {
 	}
 
 	/**
-	 * Function to create an mp3 from a string of text by: 
-	 * 1. creating a wav file using text2wave 
-	 * 2. creating an mp3 from the wav file using ffmpeg 
-	 * 3. removing the wav file
-	 * NB: this overwrites an existing mp3 with the same name
-	 * @param s - the input string
-	 *            
+	 * Function to create an mp3 from a string of text by: 1. creating a wav
+	 * file using text2wave 2. creating an mp3 from the wav file using ffmpeg 3.
+	 * removing the wav file NB: this overwrites an existing mp3 with the same
+	 * name
+	 * 
+	 * @param s
+	 *            - the input string
+	 * 
 	 */
 	private void createMP3(String s) {
-		useTerminalCommand("echo " + txtInputText.getText() + "|text2wave -o " + s + ".wav;"
-				+ "ffmpeg -y -i " + s + ".wav -f mp3 " + MP3_DIR_RELATIVE_PATH  + File.separator + s + ".mp3;"
-						+ "rm " + s + ".wav");
+		useTerminalCommand("echo " + txtInputText.getText() + "|text2wave -o " + s + ".wav;" + "ffmpeg -y -i " + s
+				+ ".wav -f mp3 " + MP3_DIR_RELATIVE_PATH + File.separator + s + ".mp3;" + "rm " + s + ".wav");
 	}
 
 	/**
@@ -601,21 +585,21 @@ public class MediaPlayerJFrame extends JFrame {
 		}
 		return null;
 	}
-	
+
 	private void replaceAudio(JFrame thisFrame, String localMp3Path, String localVideoPath) {
 		if (localMp3Path != null && localVideoPath != null) {
-			String output = (String) JOptionPane.showInputDialog(thisFrame, "Please enter a name for the output file", 
+			String output = (String) JOptionPane.showInputDialog(thisFrame, "Please enter a name for the output file",
 					"Output file name", JOptionPane.INFORMATION_MESSAGE);
-			
+
 			if (output != null) {
 				// Replace the video's audio with the synthesized text
-				BackgroundAudioReplacer replacer = new BackgroundAudioReplacer("ffmpeg -y -i \""+ localVideoPath + "\" -i \"" + localMp3Path + 
-						"\" -map 0:v -map 1:a \"" + VIDEO_DIR_RELATIVE_PATH + File.separator + output + ".mp4\"");
+				BackgroundAudioReplacer replacer = new BackgroundAudioReplacer(
+						"ffmpeg -y -i \"" + localVideoPath + "\" -i \"" + localMp3Path + "\" -map 0:v -map 1:a \""
+								+ VIDEO_DIR_RELATIVE_PATH + File.separator + output + ".mp4\"");
 				lblProcessing.setText("Processing...");
 				replacer.execute();
 			}
-		}
-		else {
+		} else {
 			JOptionPane.showMessageDialog(thisFrame, "Please select a video and/or and mp3 file.");
 		}
 	}
