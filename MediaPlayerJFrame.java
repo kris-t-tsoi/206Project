@@ -53,8 +53,9 @@ public class MediaPlayerJFrame extends JFrame {
 	JMenuBar fileMenuBar;
 	JMenu fileMenu;
 	JMenuItem menuItem;
-	private static final File VIDEO_DIR_PATH = new File(System.getProperty("user.dir") + File.pathSeparator + "Video");
-	private static final File MP3_DIR_PATH = new File(System.getProperty("user.dir") + File.pathSeparator + "MP3");
+	private static final File VIDEO_DIR_PATH = new File(System.getProperty("user.dir") + File.separator + "Video");
+	//private static final File MP3_DIR_PATH = new File(System.getProperty("user.dir") + File.separator + "MP3");
+	private static final String MP3_DIR_PATH = "MP3";
 	JLabel lblCurrentMP3;
 
 	//Getters and setters for FileChoosers
@@ -84,8 +85,9 @@ public class MediaPlayerJFrame extends JFrame {
 		setBounds(100, 100, 595, 468);
 		
 		//Create the folders needed if they don't exist
-		File videoDir = VIDEO_DIR_PATH;
-		File mp3Dir = MP3_DIR_PATH;
+		final File videoDir = VIDEO_DIR_PATH;
+		//File mp3Dir = MP3_DIR_PATH;
+		final File mp3Dir = new File(MP3_DIR_PATH);
 		
 		videoDir.mkdir();
 		mp3Dir.mkdir();
@@ -144,7 +146,7 @@ public class MediaPlayerJFrame extends JFrame {
 				// (+"folder name")
 				FileNameExtensionFilter filter = new FileNameExtensionFilter("MP3 File", "mp3");
 				mp3fc.setFileFilter(filter);
-				mp3fc.setCurrentDirectory(MP3_DIR_PATH);
+				mp3fc.setCurrentDirectory(mp3Dir);
 				int returnVal = mp3fc.showOpenDialog(menuItem);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					setMp3Path(mp3fc.getSelectedFile().getAbsolutePath());
@@ -256,12 +258,13 @@ public class MediaPlayerJFrame extends JFrame {
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String mp3name = createValidMP3(thisFrame);
-				// TODO add selected mp3 to video
-				String video = getVideoPath();
-				String output = (String) JOptionPane.showInputDialog(this, "Enter a name for the output file:");
-				
-				if (output != null) {
-					useTerminalCommand("ffmpeg -i "+ video + "-i" + mp3name + "-map 0:v -map 1:a " + output);
+				if (mp3name != null) {
+					String video = getVideoPath();
+					String output = (String) JOptionPane.showInputDialog(this, "Enter a name for the output file:");
+					
+					if (output != null) {
+						useTerminalCommand("ffmpeg -i "+ video + "-i" + mp3name + "-map 0:v -map 1:a " + output);
+					}
 				}
 			}
 		});
@@ -395,7 +398,6 @@ public class MediaPlayerJFrame extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -453,17 +455,21 @@ public class MediaPlayerJFrame extends JFrame {
 	}
 
 	/**
-	 * Function to create an mp3 from a string of text by: 1. creating a wav
-	 * file using text2wave 2. creating an mp3 from the wav file using ffmpeg 3.
-	 * removing the wav file
-	 * 
-	 * @param s
-	 *            is the input string
+	 * Function to create an mp3 from a string of text by: 
+	 * 1. creating a wav file using text2wave 
+	 * 2. creating an mp3 from the wav file using ffmpeg 
+	 * 3. removing the wav file
+	 * @param s - the input string
+	 *            
 	 */
 	private void createMP3(String s) {
-		useTerminalCommand("echo " + txtInputText.getText() + "|text2wave -o " + s + ".wav");
-		useTerminalCommand("ffmpeg -i " + s + ".wav -f mp3 " + s + ".mp3");
-		useTerminalCommand("rm " + s + ".wav");
+		useTerminalCommand("echo " + txtInputText.getText() + "|text2wave -o " + s + ".wav;"
+				+ "ffmpeg -i " + s + ".wav -f mp3 " + MP3_DIR_PATH  + File.separator + s + ".mp3;"
+						+ "rm " + s + ".wav");
+		System.out.println("echo " + txtInputText.getText() + "|text2wave -o " + s + ".wav;"
+				+ "ffmpeg -i " + s + ".wav -f mp3 " + MP3_DIR_PATH + File.separator + s + ".mp3;"
+						+ "rm " + s + ".wav");
+		System.out.println(MP3_DIR_PATH + File.separator);
 	}
 
 	/**
