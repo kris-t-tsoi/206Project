@@ -37,22 +37,27 @@ public class MediaPlayerJFrame extends JFrame {
 	protected boolean videoIsStarted;
 	private final int buttonWidth = 125; // Standard width for all buttons
 	private BackgroundTask bgTask; // Used to skip forwards and backwards without gui freezing
-									
-	private static final int DEFAULT_VOLUME = 50;// Default volume of the video
+	
+	
+					
+	// Default volume of the video
+	private static final int DEFAULT_VOLUME = 50;
 
-	// Constants for the textfield
-	private static final int MAX_NUMBER_OF_WORDS = 30; // Max number of words which can be played/saved
-														
+	// Constants for the textfield - Max number of words which can be played/saved, and error message
+	private static final int MAX_NUMBER_OF_WORDS = 30; 												
 	private static final String ERROR_MESSAGE = "Sorry, you have exceeded the maximum word count of 30.";
 
+	//FileChooser-related fields
 	final JFileChooser vfc = new JFileChooser();
 	final JFileChooser mp3fc = new JFileChooser();
 	JMenuBar fileMenuBar;
 	JMenu fileMenu;
 	JMenuItem menuItem;
-	File currentPath = new File(System.getProperty("user.dir"));
+	private static final File VIDEO_DIR_PATH = new File(System.getProperty("user.dir") + File.pathSeparator + "Video");
+	private static final File MP3_DIR_PATH = new File(System.getProperty("user.dir") + File.pathSeparator + "MP3");
 	JLabel lblCurrentMP3;
 
+	//Getters and setters for FileChoosers
 	public String getVideoPath() {
 		return videoPath;
 	}
@@ -76,7 +81,15 @@ public class MediaPlayerJFrame extends JFrame {
 	public MediaPlayerJFrame(String name) {
 		super(name);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 679, 442);
+		setBounds(100, 100, 595, 468);
+		
+		//Create the folders needed if they don't exist
+		File videoDir = VIDEO_DIR_PATH;
+		File mp3Dir = MP3_DIR_PATH;
+		
+		videoDir.mkdir();
+		mp3Dir.mkdir();
+		
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));// Give the actual
@@ -108,7 +121,7 @@ public class MediaPlayerJFrame extends JFrame {
 				// start file search in current file
 				// May want to add in video folder is do then just add in
 				// (+"folder name")
-				vfc.setCurrentDirectory(currentPath);
+				vfc.setCurrentDirectory(VIDEO_DIR_PATH);
 				int returnVal = vfc.showOpenDialog(menuItem);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					setVideoPath(vfc.getSelectedFile().getAbsolutePath());
@@ -131,7 +144,7 @@ public class MediaPlayerJFrame extends JFrame {
 				// (+"folder name")
 				FileNameExtensionFilter filter = new FileNameExtensionFilter("MP3 File", "mp3");
 				mp3fc.setFileFilter(filter);
-				mp3fc.setCurrentDirectory(currentPath);
+				mp3fc.setCurrentDirectory(MP3_DIR_PATH);
 				int returnVal = mp3fc.showOpenDialog(menuItem);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					setMp3Path(mp3fc.getSelectedFile().getAbsolutePath());
@@ -223,36 +236,36 @@ public class MediaPlayerJFrame extends JFrame {
 		JButton btnSaveText = new JButton("Save text");
 		btnSaveText.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// check if number of word is within limit
-				if (checkTxtLength(txtInputText.getText())) {
-					String s = (String) JOptionPane.showInputDialog(thisFrame, "Enter a name for the mp3 file");
-					if (!s.startsWith(" ")) {
-						createMP3(s);
-					}
-
-				} else {
-					JOptionPane.showMessageDialog(thisFrame, ERROR_MESSAGE);
-				}
+				createValidMP3(thisFrame);
 			}
 		});
 		btnSaveText.setToolTipText("Save the text to a mp3 file");
 
-		// Button to select an mp3
+		// Button to add the text to the video
 		JButton btnSelectMp3 = new JButton("Add text");
 		btnSelectMp3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO
+				// TODO create the mp3 then add it - just use two functions
+				
 			}
 		});
 		btnSelectMp3.setToolTipText("Add the text to the current video");
 
+		
 		JButton btnAdd = new JButton("Add mp3");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO
+				String mp3name = createValidMP3(thisFrame);
+				// TODO add selected mp3 to video
+				String video = getVideoPath();
+				String output = (String) JOptionPane.showInputDialog(this, "Enter a name for the output file:");
+				
+				if (output != null) {
+					useTerminalCommand("ffmpeg -i "+ video + "-i" + mp3name + "-map 0:v -map 1:a " + output);
+				}
 			}
 		});
-		btnAdd.setToolTipText("Select an mp3 to add to the start of the video\r\n");
+		btnAdd.setToolTipText("Add selected mp3 to the start of the video");
 
 		// Button to mute audio
 		final JButton btnMute = new JButton("Mute");
@@ -350,6 +363,7 @@ public class MediaPlayerJFrame extends JFrame {
 		);
 		contentPane.setLayout(gl_contentPane);
 
+		
 		// Set the frame as visible
 		setVisible(true);
 	}
@@ -397,6 +411,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 		@Override
 		protected Void doInBackground() throws Exception {
+			//skipForward is a boolean which determines whether to skip forwards or backwards
 			int skipValue = skipForward ? 1000 : -1000;
 			while (!isCancelled()) {
 				video.skip(skipValue);
@@ -479,10 +494,31 @@ public class MediaPlayerJFrame extends JFrame {
 	/**
 	 * Function to extract the media files basename i.e. everything after the last slash, and sets it
 	 * as the label's text so the user knows what they have selected
-	 * @param s
+	 * @param path - the path to the video
 	 */
-	private void setCurrentMp3(String s) {
-		String[] splitPath = s.split("/");
+	private void setCurrentMp3(String path) {
+		String[] splitPath = path.split("/");
 		lblCurrentMP3.setText(splitPath[splitPath.length-1]);
+	}
+	
+	
+	/**
+	 * Function that creates an mp3 from the textField only if the number of words is under the limit.
+	 * It also returns the name of the created mp3
+	 * @param parentFrame - the current frame, used in JOptionPane
+	 * @return mp3Name - name of the created mp3
+	 */
+	private String createValidMP3(JFrame parentFrame) {
+		 //check if number of word is within limit
+		if (checkTxtLength(txtInputText.getText())) {
+			String mp3Name = JOptionPane.showInputDialog(parentFrame, "Enter a name for the mp3 file");
+			if ((mp3Name != null) && !mp3Name.startsWith(" ")) {
+				createMP3(mp3Name);
+				return mp3Name;
+			}
+		} else {
+			JOptionPane.showMessageDialog(parentFrame, ERROR_MESSAGE);
+		}
+		return null;
 	}
 }

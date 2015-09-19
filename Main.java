@@ -3,9 +3,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
-import uk.co.caprica.vlcj.log.NativeLog;
 import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 
 public class Main {
