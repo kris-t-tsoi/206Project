@@ -22,9 +22,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
 
 public class MediaPlayerJFrame extends JFrame {
 
@@ -37,7 +37,13 @@ public class MediaPlayerJFrame extends JFrame {
 	protected boolean videoIsStarted;
 	private final int buttonWidth = 125; // Standard width for all buttons
 	private BackgroundTask bgTask; // Used to skip forwards and backwards without gui freezing
+									
 	private static final int DEFAULT_VOLUME = 50;// Default volume of the video
+
+	// Constants for the textfield
+	private static final int MAX_NUMBER_OF_WORDS = 30; // Max number of words which can be played/saved
+														
+	private static final String ERROR_MESSAGE = "Sorry, you have exceeded the maximum word count of 30.";
 
 	final JFileChooser vfc = new JFileChooser();
 	final JFileChooser mp3fc = new JFileChooser();
@@ -45,7 +51,8 @@ public class MediaPlayerJFrame extends JFrame {
 	JMenu fileMenu;
 	JMenuItem menuItem;
 	File currentPath = new File(System.getProperty("user.dir"));
-	
+	JLabel lblCurrentMP3;
+
 	public String getVideoPath() {
 		return videoPath;
 	}
@@ -53,21 +60,15 @@ public class MediaPlayerJFrame extends JFrame {
 	public void setVideoPath(String videoPath) {
 		this.videoPath = videoPath;
 	}
-	
+
 	public String getMp3Path() {
 		return mp3Path;
 	}
 
 	public void setMp3Path(String mp3Path) {
 		this.mp3Path = mp3Path;
+		setCurrentMp3(mp3Path);
 	}
-
-
-	
-	
-
-	private static final int MAX_NUMBER_OF_WORDS = 30; // Max number of words which can be played/saved
-	private static final String ERROR_MESSAGE = "Sorry, you have exceeded the maximum word count of 30.";
 
 	/**
 	 * Create the frame.
@@ -75,10 +76,11 @@ public class MediaPlayerJFrame extends JFrame {
 	public MediaPlayerJFrame(String name) {
 		super(name);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 586, 504);
-		
+		setBounds(100, 100, 679, 442);
+
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));// Give the actual video a border
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));// Give the actual
+															// video a border
 		setContentPane(contentPane);
 		final JFrame thisFrame = this;
 
@@ -88,8 +90,7 @@ public class MediaPlayerJFrame extends JFrame {
 		mediaPanel.add(mediaPlayerComponent, BorderLayout.CENTER);
 
 		/**
-		 * MenuBar placed at top of frame
-		 * 	Item : Files
+		 * MenuBar placed at top of frame Item : Files
 		 */
 		fileMenuBar = new JMenuBar();
 		fileMenuBar.setBounds(55, 28, 129, 21);
@@ -99,39 +100,20 @@ public class MediaPlayerJFrame extends JFrame {
 		 * JMenu Files -- Select Video and MP3
 		 */
 		fileMenu = new JMenu("Files");
-		
+
 		menuItem = new JMenuItem("Choose Video File");
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//start file search in current file 
-				//May want to add in video folder is do then just add in (+"folder name")
+				// start file search in current file
+				// May want to add in video folder is do then just add in
+				// (+"folder name")
 				vfc.setCurrentDirectory(currentPath);
 				int returnVal = vfc.showOpenDialog(menuItem);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					setVideoPath( vfc.getSelectedFile().getAbsolutePath());	
-					//play choosen video
+					setVideoPath(vfc.getSelectedFile().getAbsolutePath());
+					// play chosen video
 					play();
-				} else if (returnVal == JFileChooser.ERROR_OPTION) {
-					JFrame popup = new JFrame();
-					JOptionPane.showMessageDialog(popup,"Sorry an ERROR occured, Please try again");
-				}
-			}
-		}));
-		fileMenu.add(menuItem);
-		
-		menuItem = new JMenuItem("Choose MP3 File");
-		menuItem.addActionListener((new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				//start file search in current file 
-				//May want to add in mp3 folder is do then just add in (+"folder name")
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("MP3 File","mp3");
-				mp3fc.setFileFilter(filter);
-				mp3fc.setCurrentDirectory(currentPath);
-				int returnVal = mp3fc.showOpenDialog(menuItem);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					setMp3Path(mp3fc.getSelectedFile().getAbsolutePath());	
 				} else if (returnVal == JFileChooser.ERROR_OPTION) {
 					JFrame popup = new JFrame();
 					JOptionPane.showMessageDialog(popup, "Sorry an ERROR occured, Please try again");
@@ -140,11 +122,28 @@ public class MediaPlayerJFrame extends JFrame {
 		}));
 		fileMenu.add(menuItem);
 
+		menuItem = new JMenuItem("Choose MP3 File");
+		menuItem.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// Start file search in current directory
+				// May want to add in mp3 folder is do then just add in
+				// (+"folder name")
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("MP3 File", "mp3");
+				mp3fc.setFileFilter(filter);
+				mp3fc.setCurrentDirectory(currentPath);
+				int returnVal = mp3fc.showOpenDialog(menuItem);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					setMp3Path(mp3fc.getSelectedFile().getAbsolutePath());
+				} else if (returnVal == JFileChooser.ERROR_OPTION) {
+					JFrame popup = new JFrame();
+					JOptionPane.showMessageDialog(popup, "Sorry an ERROR occured, Please try again");
+				}
+			}
+		}));
+		fileMenu.add(menuItem);
 		fileMenuBar.add(fileMenu);
-	
-		
-		
-		
+
 		/*
 		 * Button to play the video It also acts as a pause/unpause button, and
 		 * is used to stop skipping backward or forward
@@ -248,6 +247,11 @@ public class MediaPlayerJFrame extends JFrame {
 		btnSelectMp3.setToolTipText("Add the text to the current video");
 
 		JButton btnAdd = new JButton("Add mp3");
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// TODO
+			}
+		});
 		btnAdd.setToolTipText("Select an mp3 to add to the start of the video\r\n");
 
 		// Button to mute audio
@@ -266,7 +270,8 @@ public class MediaPlayerJFrame extends JFrame {
 		});
 		btnMute.setToolTipText("Mute the audio");
 
-		// Create a JSlider with 0 and 100 as the volume limits. 50 is the default (it is set to 50 in the constructor.
+		// Create a JSlider with 0 and 100 as the volume limits. 50 is the
+		// default (it is set to 50 in the constructor.
 		JSlider sliderVolume = new JSlider(SwingConstants.VERTICAL, 0, 100, DEFAULT_VOLUME);
 		sliderVolume.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
@@ -275,14 +280,19 @@ public class MediaPlayerJFrame extends JFrame {
 		});
 		sliderVolume.setMinorTickSpacing(1);
 		sliderVolume.setToolTipText("Change the volume of the video");
+		
+		JLabel lblCurrentSelection = new JLabel("Currently selected mp3:");
+		
+		lblCurrentMP3 = new JLabel("");
+		
 
 		// Windowbuilder generated code below, enter at your own risk
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(mediaPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 572, Short.MAX_VALUE)
+						.addComponent(mediaPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addContainerGap()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -294,24 +304,28 @@ public class MediaPlayerJFrame extends JFrame {
 									.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE))
-								.addComponent(txtInputText, GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
+								.addComponent(txtInputText, GroupLayout.DEFAULT_SIZE, 612, Short.MAX_VALUE)
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(btnPlayText, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(btnSaveText, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(btnSelectMp3, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
+									.addComponent(btnSelectMp3, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
+									.addGap(30)
+									.addComponent(lblCurrentSelection)
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)))
+									.addComponent(lblCurrentMP3)))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(sliderVolume, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap())
+					.addGap(1))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(mediaPanel, GroupLayout.PREFERRED_SIZE, 267, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+					.addComponent(mediaPanel, GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
@@ -325,9 +339,13 @@ public class MediaPlayerJFrame extends JFrame {
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(btnPlayText, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
 								.addComponent(btnSaveText, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnSelectMp3, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(btnSelectMp3, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)))
 						.addComponent(sliderVolume, 0, 0, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblCurrentSelection)
+						.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblCurrentMP3))
 					.addContainerGap())
 		);
 		contentPane.setLayout(gl_contentPane);
@@ -382,7 +400,7 @@ public class MediaPlayerJFrame extends JFrame {
 			int skipValue = skipForward ? 1000 : -1000;
 			while (!isCancelled()) {
 				video.skip(skipValue);
-				Thread.sleep(200);//Sleep in between skips to prevent errors
+				Thread.sleep(200);// Sleep in between skips to prevent errors
 			}
 			return null;
 		}
@@ -420,11 +438,12 @@ public class MediaPlayerJFrame extends JFrame {
 	}
 
 	/**
-	 * Function to create an mp3 from a string of text by:
-	 * 		1. creating a wav file using text2wave
-	 * 		2. creating an mp3 from the wav file using ffmpeg
-	 * 		3. removing the wav file
-	 * @param s is the input string
+	 * Function to create an mp3 from a string of text by: 1. creating a wav
+	 * file using text2wave 2. creating an mp3 from the wav file using ffmpeg 3.
+	 * removing the wav file
+	 * 
+	 * @param s
+	 *            is the input string
 	 */
 	private void createMP3(String s) {
 		useTerminalCommand("echo " + txtInputText.getText() + "|text2wave -o " + s + ".wav");
@@ -433,8 +452,9 @@ public class MediaPlayerJFrame extends JFrame {
 	}
 
 	/**
-	 * Function to check if the number of words a string of text exceeds a certain value.
-	 * Used before reading or saving any text.
+	 * Function to check if the number of words a string of text exceeds a
+	 * certain value. Used before reading or saving any text.
+	 * 
 	 * @param text
 	 *            - from textField
 	 * @return true - number of words is less than 30 false - number of words is
@@ -455,6 +475,14 @@ public class MediaPlayerJFrame extends JFrame {
 		}
 		return false;
 	}
-
-
+	
+	/**
+	 * Function to extract the media files basename i.e. everything after the last slash, and sets it
+	 * as the label's text so the user knows what they have selected
+	 * @param s
+	 */
+	private void setCurrentMp3(String s) {
+		String[] splitPath = s.split("/");
+		lblCurrentMP3.setText(splitPath[splitPath.length-1]);
+	}
 }
