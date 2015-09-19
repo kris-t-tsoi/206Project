@@ -13,4 +13,6 @@ gonna use this readme for notes/TODOS
   
   sudo apt-get dist-upgrade
   
-  THEN run sudo apt-get install ffmpeg
+  THEN  sudo apt-get install ffmpeg
+  
+  ALSO sudo apt-get install text2wave
