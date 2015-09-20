@@ -1,3 +1,4 @@
+package main;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -10,6 +11,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import guiComponents.InputTextField;
+import guiComponents.PlayButton;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import javax.swing.GroupLayout;
@@ -31,20 +35,17 @@ public class MediaPlayerJFrame extends JFrame {
 	private String videoPath;
 	private String mp3Path;
 	private JPanel contentPane;
-	private JTextField txtInputText;
+	private InputTextField txtInputText;
 	EmbeddedMediaPlayerComponent mediaPlayerComponent;
 	EmbeddedMediaPlayer video;
-	protected boolean videoIsStarted;
+	private boolean videoIsStarted;
 	private final int buttonWidth = 125; // Standard width for all buttons
-	private BackgroundSkipper bgTask; // Used to skip forwards and backwards
-										// without gui freezing
 
 	// Default volume of the video
-	private static final int DEFAULT_VOLUME = 50;
+	public static final int DEFAULT_VOLUME = 50;
 
 	// Constants for the textfield - Max number of words which can be
 	// played/saved, and error message
-	private static final int MAX_NUMBER_OF_WORDS = 30;
 	private static final String ERROR_MESSAGE = "Sorry, you have exceeded the maximum word count of 30.";
 
 	// FileChooser-related fields
@@ -89,6 +90,26 @@ public class MediaPlayerJFrame extends JFrame {
 		setDisplayedMp3(mp3Path);
 	}
 
+	public boolean getVideoIsStarted() {
+		return videoIsStarted;
+	}
+
+	public void setVideoIsStarted(boolean videoIsStarted) {
+		this.videoIsStarted = videoIsStarted;
+	}
+	
+	public void setVideoVolume(int value) {
+		video.setVolume(value);
+	}
+	
+	public boolean videoIsPlaying() {
+		return video.isPlaying();
+	}
+	
+	public void pauseVideo(boolean pause) {
+		video.setPause(pause);
+	}
+
 	/**
 	 * Create the frame.
 	 */
@@ -99,7 +120,6 @@ public class MediaPlayerJFrame extends JFrame {
 
 		// Create the folders needed if they don't exist
 		final File videoDir = VIDEO_DIR_ABSOLUTE_PATH;
-		// File mp3Dir = MP3_DIR_PATH;
 		final File mp3Dir = new File(MP3_DIR_RELATIVE_PATH);
 
 		videoDir.mkdir();
@@ -109,7 +129,7 @@ public class MediaPlayerJFrame extends JFrame {
 		// Give the video a border
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		final JFrame thisFrame = this;
+		final MediaPlayerJFrame thisFrame = this;
 
 		JPanel mediaPanel = new JPanel(new BorderLayout());
 		mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
@@ -172,45 +192,19 @@ public class MediaPlayerJFrame extends JFrame {
 		 * Button to play the video It also acts as a pause/unpause button, and
 		 * is used to stop skipping backward or forward
 		 */
-		final JButton btnPlay = new JButton("Play");
+		final PlayButton btnPlay = new PlayButton(thisFrame);
 		btnPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				// Cancel any current skipping
-				if (bgTask != null) {
-					bgTask.cancel(true);
-					bgTask = null;
-					return;
-				} else
-					// Start the video if not started
-					if (!videoIsStarted) {
-					play(thisFrame);
-					btnPlay.setText("Pause");
-					videoIsStarted = true;
-					video.setVolume(DEFAULT_VOLUME);
-					return;
-				}
-
-				// Pause or play the video
-				if (!video.isPlaying()) {// Pause video if playing
-					video.setPause(false);
-					btnPlay.setText("Pause");
-
-				} else {
-					video.setPause(true);// Play video if paused
-					btnPlay.setText("Play");
-				}
+				btnPlay.playPressed();
 			}
-
 		});
-		btnPlay.setToolTipText("Play the video");
-
+		
 		// Button to skip backwards
 		JButton btnBackward = new JButton("Back");
 		btnBackward.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (videoIsStarted)
-					skipVideoForwards(false);
+				if (getVideoIsStarted())
+					btnPlay.skipVideoForwards(false);
 			}
 		});
 
@@ -218,23 +212,20 @@ public class MediaPlayerJFrame extends JFrame {
 		JButton btnForward = new JButton("Forward");
 		btnForward.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (videoIsStarted)
-					skipVideoForwards(true);
+				if (getVideoIsStarted())
+					btnPlay.skipVideoForwards(true);
 			}
 		});
 
 		// JTextField that allows for user input so that
-		txtInputText = new JTextField();
-		txtInputText.setToolTipText("Text to synthesize here - max 30 words");
-		txtInputText.setText("Text to synthesize here - max 30 words");
-		txtInputText.setColumns(10);
+		txtInputText = new InputTextField();
 
 		// Button to speak the text in the JTextField using festival
 		JButton btnPlayText = new JButton("Play text");
 		btnPlayText.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// check if number of word is within limit
-				if (checkTxtLength(txtInputText.getText())) {
+				if (txtInputText.checkTxtLength()) {
 					sayWithFestival(txtInputText.getText());
 				} else {
 					JOptionPane.showMessageDialog(thisFrame, ERROR_MESSAGE);
@@ -268,7 +259,6 @@ public class MediaPlayerJFrame extends JFrame {
 		JButton btnAdd = new JButton("Add mp3");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				String mp3Path = getMp3Path();
 				String videoPath = getVideoPath();
 				if (mp3Path != null && videoPath != null) {
@@ -287,7 +277,6 @@ public class MediaPlayerJFrame extends JFrame {
 				} else {
 					JOptionPane.showMessageDialog(thisFrame, "Please select a video and/or and mp3 file.");
 				}
-
 				String localMp3Path = getMp3Path();
 				String localVideoPath = getVideoPath();
 				replaceAudio(thisFrame, localMp3Path, localVideoPath);
@@ -393,7 +382,7 @@ public class MediaPlayerJFrame extends JFrame {
 						.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblCurrentSelection).addComponent(lblProcessing)).addContainerGap()));
 		contentPane.setLayout(gl_contentPane);
-
+		setSize(600, 200);// Custom size so UI behaves nicely
 		// Set the frame as visible
 		setVisible(true);
 	}
@@ -409,7 +398,6 @@ public class MediaPlayerJFrame extends JFrame {
 	 * Function to play a given media
 	 */
 	public void play(JFrame thisFrame) {
-
 		if (getVideoPath() == null) {
 			JOptionPane.showMessageDialog(thisFrame, "Please select video to play");
 		} else {
@@ -482,18 +470,7 @@ public class MediaPlayerJFrame extends JFrame {
 		}
 	}
 
-	/**
-	 * Function to continuously skip forwards or backwards depending on the
-	 * input boolean.
-	 * 
-	 * @param forwards
-	 */
-	private void skipVideoForwards(boolean forwards) {
-		if (bgTask != null)
-			bgTask.cancel(true);
-		bgTask = new BackgroundSkipper(forwards);
-		bgTask.execute();
-	}
+	
 
 	/**
 	 * Executes a given terminal command as-is, where we don't do anything with
@@ -529,31 +506,6 @@ public class MediaPlayerJFrame extends JFrame {
 	}
 
 	/**
-	 * Function to check if the number of words a string of text exceeds a
-	 * certain value. Used before reading or saving any text.
-	 * 
-	 * @param text
-	 *            - from textField
-	 * @return true - number of words is less than 30 false - number of words is
-	 *         greater than 30
-	 * 
-	 */
-	public boolean checkTxtLength(String text) {
-		// Removes all spaces and punctuation apart from ' for conjunctions
-		String[] punct = text.split("[^a-zA-Z0-9']");
-		int words = 0;
-		for (int i = 0; i < punct.length; i++) {
-			if (!punct[i].equals("")) {
-				words++;
-			}
-		}
-		if (words <= MAX_NUMBER_OF_WORDS) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
 	 * Function to extract the media files basename i.e. everything after the
 	 * last slash, and sets it as the label's text so the user knows what they
 	 * have selected
@@ -576,7 +528,7 @@ public class MediaPlayerJFrame extends JFrame {
 	 */
 	private String createValidMP3(JFrame parentFrame) {
 		// check if number of word is within limit
-		if (checkTxtLength(txtInputText.getText())) {
+		if (txtInputText.checkTxtLength()) {
 			String mp3Name = JOptionPane.showInputDialog(parentFrame, "Enter a name for the mp3 file");
 			if ((mp3Name != null) && !mp3Name.startsWith(" ")) {
 				createMP3(mp3Name);
@@ -604,5 +556,9 @@ public class MediaPlayerJFrame extends JFrame {
 		} else {
 			JOptionPane.showMessageDialog(thisFrame, "Please select a video and/or and mp3 file.");
 		}
+	}
+	
+	public void skip(int value) {
+		video.skip(value);
 	}
 }
