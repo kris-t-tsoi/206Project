@@ -51,10 +51,14 @@ public class MediaPlayerJFrame extends JFrame {
 	JMenuBar fileMenuBar;
 	JMenu fileMenu;
 	JMenuItem menuItem;
-	private static final File VIDEO_DIR_ABSOLUTE_PATH = new File(System.getProperty("user.dir") + File.separator + "Video");
-	//private static final File MP3_DIR_PATH = new File(System.getProperty("user.dir") + File.separator + "MP3");
+	
+	// Directory location constants
 	private static final String VIDEO_DIR_RELATIVE_PATH = "Video";
+	private static final File VIDEO_DIR_ABSOLUTE_PATH = new File(System.getProperty("user.dir") + File.separator + VIDEO_DIR_RELATIVE_PATH);
+	//private static final File MP3_DIR_PATH = new File(System.getProperty("user.dir") + File.separator + "MP3");
 	private static final String MP3_DIR_RELATIVE_PATH = "MP3";
+	private static final String MP3_DIR_ABSOLUTE_PATH = System.getProperty("user.dir") + File.separator + MP3_DIR_RELATIVE_PATH;
+
 	
 	
 	// Dynamic labels for user information
@@ -251,7 +255,10 @@ public class MediaPlayerJFrame extends JFrame {
 		JButton btnSelectMp3 = new JButton("Add text");
 		btnSelectMp3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO create the mp3 then add it - just use two functions
+				String mp3 = createValidMP3(thisFrame);
+				String localMp3Path = MP3_DIR_ABSOLUTE_PATH + File.separator + mp3;
+				String localVideoPath = getVideoPath();
+				replaceAudio(thisFrame, localMp3Path, localVideoPath);
 			}
 		});
 		btnSelectMp3.setToolTipText("Add the text to the current video");
@@ -260,24 +267,9 @@ public class MediaPlayerJFrame extends JFrame {
 		JButton btnAdd = new JButton("Add mp3");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String mp3Path = getMp3Path();
-				String videoPath = getVideoPath();
-				if (mp3Path != null && videoPath != null) {
-					String output = (String) JOptionPane.showInputDialog(thisFrame, "Please enter a name for the output file", 
-							"Output file name", JOptionPane.INFORMATION_MESSAGE);
-					
-					if (output != null) {
-						// Replace the video's audio with the synthesized text
-						BackgroundAudioReplacer replacer = new BackgroundAudioReplacer("ffmpeg -i "+ videoPath + " -i " + mp3Path + 
-								" -map 0:v -map 1:a " + VIDEO_DIR_RELATIVE_PATH + File.separator + output + ".mp4");
-						lblProcessing.setText("Processing...");
-						replacer.execute();
-						//useTerminalCommand("ffmpeg -i "+ videoPath + " -i " + mp3Path + " -map 0:v -map 1:a " + VIDEO_DIR_RELATIVE_PATH + File.separator + output + ".mp4");
-					}
-				}
-				else {
-					JOptionPane.showMessageDialog(thisFrame, "Please select a video and/or and mp3 file.");
-				}
+				String localMp3Path = getMp3Path();
+				String localVideoPath = getVideoPath();
+				replaceAudio(thisFrame, localMp3Path, localVideoPath);
 			}
 		});
 		btnAdd.setToolTipText("Add selected mp3 to the start of the video");
@@ -298,7 +290,7 @@ public class MediaPlayerJFrame extends JFrame {
 		btnMute.setToolTipText("Mute the audio");
 
 		// Create a JSlider with 0 and 100 as the volume limits. 50 is the
-		// default (it is set to 50 in the constructor.
+		// default (it is set to 50 in the constructor).
 		JSlider sliderVolume = new JSlider(SwingConstants.VERTICAL, 0, 100, DEFAULT_VOLUME);
 		sliderVolume.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
@@ -550,11 +542,31 @@ public class MediaPlayerJFrame extends JFrame {
 			String mp3Name = JOptionPane.showInputDialog(parentFrame, "Enter a name for the mp3 file");
 			if ((mp3Name != null) && !mp3Name.startsWith(" ")) {
 				createMP3(mp3Name);
-				return mp3Name;
+				return mp3Name + ".mp3";
 			}
 		} else {
 			JOptionPane.showMessageDialog(parentFrame, ERROR_MESSAGE);
 		}
 		return null;
+	}
+	
+	private void replaceAudio(JFrame thisFrame, String localMp3Path, String localVideoPath) {
+		if (localMp3Path != null && localVideoPath != null) {
+			String output = (String) JOptionPane.showInputDialog(thisFrame, "Please enter a name for the output file", 
+					"Output file name", JOptionPane.INFORMATION_MESSAGE);
+			
+			if (output != null) {
+				// Replace the video's audio with the synthesized text
+				BackgroundAudioReplacer replacer = new BackgroundAudioReplacer("ffmpeg -i \""+ localVideoPath + "\" -i \"" + localMp3Path + 
+						"\" -map 0:v -map 1:a \"" + VIDEO_DIR_RELATIVE_PATH + File.separator + output + ".mp4\"");
+				lblProcessing.setText("Processing...");
+				replacer.execute();
+				System.out.println("ffmpeg -i \""+ localVideoPath + "\" -i \"" + localMp3Path + 
+						"\" -map 0:v -map 1:a \"" + VIDEO_DIR_RELATIVE_PATH + File.separator + output + ".mp4\"");
+			}
+		}
+		else {
+			JOptionPane.showMessageDialog(thisFrame, "Please select a video and/or and mp3 file.");
+		}
 	}
 }
