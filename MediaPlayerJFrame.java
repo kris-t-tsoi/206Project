@@ -486,12 +486,13 @@ public class MediaPlayerJFrame extends JFrame {
 	 * 1. creating a wav file using text2wave 
 	 * 2. creating an mp3 from the wav file using ffmpeg 
 	 * 3. removing the wav file
+	 * NB: this overwrites an existing mp3 with the same name
 	 * @param s - the input string
 	 *            
 	 */
 	private void createMP3(String s) {
 		useTerminalCommand("echo " + txtInputText.getText() + "|text2wave -o " + s + ".wav;"
-				+ "ffmpeg -i " + s + ".wav -f mp3 " + MP3_DIR_RELATIVE_PATH  + File.separator + s + ".mp3;"
+				+ "ffmpeg -y -i " + s + ".wav -f mp3 " + MP3_DIR_RELATIVE_PATH  + File.separator + s + ".mp3;"
 						+ "rm " + s + ".wav");
 	}
 
@@ -557,12 +558,10 @@ public class MediaPlayerJFrame extends JFrame {
 			
 			if (output != null) {
 				// Replace the video's audio with the synthesized text
-				BackgroundAudioReplacer replacer = new BackgroundAudioReplacer("ffmpeg -i \""+ localVideoPath + "\" -i \"" + localMp3Path + 
+				BackgroundAudioReplacer replacer = new BackgroundAudioReplacer("ffmpeg -y -i \""+ localVideoPath + "\" -i \"" + localMp3Path + 
 						"\" -map 0:v -map 1:a \"" + VIDEO_DIR_RELATIVE_PATH + File.separator + output + ".mp4\"");
 				lblProcessing.setText("Processing...");
 				replacer.execute();
-				System.out.println("ffmpeg -i \""+ localVideoPath + "\" -i \"" + localMp3Path + 
-						"\" -map 0:v -map 1:a \"" + VIDEO_DIR_RELATIVE_PATH + File.separator + output + ".mp4\"");
 			}
 		}
 		else {
