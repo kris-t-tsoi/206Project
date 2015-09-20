@@ -126,6 +126,7 @@ public class MediaPlayerJFrame extends JFrame {
 		fileMenuBar = new JMenuBar();
 		fileMenuBar.setBounds(55, 28, 129, 21);
 		setJMenuBar(fileMenuBar);
+		//contentPane.add(fileMenuBar);
 		
 		/**
 		 * JMenu Files -- Select Video and MP3
@@ -176,7 +177,7 @@ public class MediaPlayerJFrame extends JFrame {
 		}));
 		fileMenu.add(menuItem);
 		fileMenuBar.add(fileMenu);
-
+		setJMenuBar(fileMenuBar);
 		/*
 		 * Button to play the video It also acts as a pause/unpause button, and
 		 * is used to stop skipping backward or forward
