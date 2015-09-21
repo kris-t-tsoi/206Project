@@ -1,6 +1,8 @@
 package main;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -84,10 +86,12 @@ public class MediaPlayerJFrame extends JFrame {
 			+ MP3_DIR_RELATIVE_PATH;
 
 	// Dynamic labels for user information
-	private static final String CURRENTLY_SELECTED_TEXT = "Currently selected mp3: ";
+	private static final String CURRENT_MP3_TEXT = "Currently selected mp3: ";
+	private static final String CURRENT_VIDEO_TEXT = "Currently selected video: ";
 	private static final String PROCESS_TEXT = "Processing...";
 	private static final String COMPLETE_TEXT = "Complete!";
-	JLabel lblCurrentSelection;
+	JLabel lblCurrentMP3;
+	JLabel lblCurrentVideo;
 	JLabel lblProcessing = new JLabel(" ");
 	
 	private static final ImageIcon REWIND_IMAGE = new ImageIcon("images/Rewind16.gif");
@@ -101,6 +105,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 	public void setVideoPath(String videoPath) {
 		this.videoPath = videoPath;
+		setDisplayedMedia(lblCurrentVideo, CURRENT_VIDEO_TEXT, videoPath);
 	}
 
 	public String getMp3Path() {
@@ -109,7 +114,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 	public void setMp3Path(String mp3Path) {
 		this.mp3Path = mp3Path;
-		setDisplayedMp3(mp3Path);
+		setDisplayedMedia(lblCurrentMP3, CURRENT_MP3_TEXT, mp3Path);
 	}
 
 	public boolean getVideoIsStarted() {
@@ -138,7 +143,7 @@ public class MediaPlayerJFrame extends JFrame {
 	public MediaPlayerJFrame(String name) {
 		super(name);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 595, 468);
+		//setBounds(100, 100, 600, 700);
 
 		// Create the folders needed if they don't exist
 		final File videoDir = VIDEO_DIR_ABSOLUTE_PATH;
@@ -220,8 +225,14 @@ public class MediaPlayerJFrame extends JFrame {
 		sliderVolume.setMinorTickSpacing(1);
 		sliderVolume.setToolTipText("Change the volume of the video");
 
+		
+		
+		JLabel lblMediaToOverlay = new JLabel("Media to overlay:");
+		
 		// Label that displays the currently selected mp3
-		lblCurrentSelection = new JLabel(CURRENTLY_SELECTED_TEXT);
+		lblCurrentMP3 = new JLabel(CURRENT_MP3_TEXT);
+		
+		lblCurrentVideo = new JLabel(CURRENT_VIDEO_TEXT);
 		
 		/**
 		 * MenuBar placed at top of frame Item : Files
@@ -323,63 +334,69 @@ public class MediaPlayerJFrame extends JFrame {
 		// setJMenuBar(fileMenuBar);
 		mediaPanel.add(fileMenuBar, BorderLayout.NORTH);
 
+		
 		// Windowbuilder generated code below, enter at your own risk
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addComponent(mediaPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+				GroupLayout gl_contentPane = new GroupLayout(contentPane);
+				gl_contentPane.setHorizontalGroup(
+					gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+								.addComponent(mediaPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addContainerGap()
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 										.addGroup(gl_contentPane.createSequentialGroup()
-												.addPreferredGap(ComponentPlacement.UNRELATED)
-												.addComponent(lblCurrentSelection, GroupLayout.DEFAULT_SIZE, 246,
-														Short.MAX_VALUE)
-												.addPreferredGap(ComponentPlacement.RELATED).addComponent(lblProcessing,
-														GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE))
+											.addComponent(lblMediaToOverlay)
+											.addPreferredGap(ComponentPlacement.RELATED, 388, Short.MAX_VALUE)
+											.addComponent(lblProcessing, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE))
 										.addGroup(gl_contentPane.createSequentialGroup()
-												.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 60,
-														GroupLayout.PREFERRED_SIZE)
-												.addPreferredGap(ComponentPlacement.RELATED)
-												.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, 60,
-														GroupLayout.PREFERRED_SIZE)
-												.addPreferredGap(ComponentPlacement.RELATED)
-												.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 60,
-														GroupLayout.PREFERRED_SIZE)
-												.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnMute,
-														GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE))
-										.addComponent(txtInputText, GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
-										.addGroup(gl_contentPane.createSequentialGroup()
-												.addPreferredGap(ComponentPlacement.RELATED)
-												.addPreferredGap(ComponentPlacement.RELATED)))
-								.addPreferredGap(ComponentPlacement.RELATED).addComponent(sliderVolume,
-										GroupLayout.PREFERRED_SIZE, 150, Short.MAX_VALUE)))
-						.addGap(7)));
-		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_contentPane.createSequentialGroup().addComponent(mediaPanel, GroupLayout.DEFAULT_SIZE,
-						GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-				.addPreferredGap(ComponentPlacement.UNRELATED)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false).addGroup(gl_contentPane
-						.createSequentialGroup()
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-								.addComponent(sliderVolume, 0, 0, Short.MAX_VALUE))
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(txtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								))
-						)
-				.addPreferredGap(ComponentPlacement.RELATED)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblCurrentSelection).addComponent(lblProcessing)).addContainerGap()));
-		contentPane.setLayout(gl_contentPane);
-		setSize(600, 400);// Custom size so UI behaves nicely
+											.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(sliderVolume, GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE))
+										.addComponent(txtInputText, GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE))
+									.addPreferredGap(ComponentPlacement.RELATED)))
+							.addGap(7))
+						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+							.addGap(36)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+								.addComponent(lblCurrentVideo, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+								.addComponent(lblCurrentMP3, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE))
+							.addContainerGap())
+				);
+				gl_contentPane.setVerticalGroup(
+					gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(mediaPanel, GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(sliderVolume, 0, 0, Short.MAX_VALUE)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+									.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+									.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+									.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+									.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(txtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblProcessing)
+								.addComponent(lblMediaToOverlay))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblCurrentVideo)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblCurrentMP3)
+							.addContainerGap())
+				);
+				contentPane.setLayout(gl_contentPane);
+				
+				
+				//setSize(600, 600);// Custom size so UI behaves nicely
 		// Set the frame as visible
 		setVisible(true);
 
@@ -413,11 +430,11 @@ public class MediaPlayerJFrame extends JFrame {
 	 * have selected
 	 * 
 	 * @param path
-	 *            - the path to the video
+	 *            - the path to the video or mp3
 	 */
-	private void setDisplayedMp3(String path) {
+	private void setDisplayedMedia(JLabel label, String constantText, String path) {
 		String[] splitPath = path.split("/");
-		lblCurrentSelection.setText(CURRENTLY_SELECTED_TEXT + splitPath[splitPath.length - 1]);
+		label.setText(constantText + splitPath[splitPath.length - 1]);
 	}
 
 	/**
