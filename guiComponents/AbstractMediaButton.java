@@ -48,6 +48,8 @@ public abstract class AbstractMediaButton extends AbstractMP3Creator{
 				BackgroundAudioReplacer replacer = new BackgroundAudioReplacer(
 						"ffmpeg -y -i \"" + localVideoPath + "\" -i \"" + localMp3Path + "\" -map 0:v -map 1:a \""
 								+ MediaPlayerJFrame.VIDEO_DIR_RELATIVE_PATH + File.separator + outputFile + ".mp4\"");
+				System.out.println("ffmpeg -y -i \"" + localVideoPath + "\" -i \"" + localMp3Path + "\" -map 0:v -map 1:a \""
+								+ MediaPlayerJFrame.VIDEO_DIR_RELATIVE_PATH + File.separator + outputFile + ".mp4\"");
 				replacer.execute();
 	}
 }

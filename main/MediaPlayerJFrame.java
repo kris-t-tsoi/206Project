@@ -12,7 +12,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import guiComponents.AbstractMP3Creator;
 import guiComponents.AbstractMediaButton;
 import guiComponents.InputTextField;
@@ -28,14 +27,22 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.SwingWorker;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+
+/*TODO remove thisFrame with this where possible
+ * do mute and volume image icons
+ * move volume slider
+ * no coding after 12
+ * change mp3 label to something like this
+ * 
+ * Media to overlay:
+ * 		Video:
+ * 		MP3:
+ */
 
 public class MediaPlayerJFrame extends JFrame {
 
@@ -153,6 +160,7 @@ public class MediaPlayerJFrame extends JFrame {
 		 * Button to play the video It also acts as a pause/unpause button, and
 		 * is used to stop skipping backward or forward
 		 */
+		
 		final PlayButton btnPlay = new PlayButton(thisFrame);
 		btnPlay.setIcon(PlayButton.PLAY_IMAGE);
 		btnPlay.addActionListener(new ActionListener() {
@@ -183,17 +191,12 @@ public class MediaPlayerJFrame extends JFrame {
 
 		// JTextField that allows for user input so that
 		txtInputText = new InputTextField();
-
+/*
 		// Button to add the text to the video
 		final OverlayTextButton btnSelectMp3 = new OverlayTextButton(thisFrame);
 		btnSelectMp3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// First create the mp3
-				String mp3 = createValidMP3(thisFrame, btnSelectMp3);
-
-				// Then replace the audio
-				String localMp3Path = MP3_DIR_ABSOLUTE_PATH + File.separator + mp3;
-				replaceAudio(thisFrame, btnSelectMp3, localMp3Path);
+				
 			}
 		});
 
@@ -201,12 +204,10 @@ public class MediaPlayerJFrame extends JFrame {
 		final OverlayExistingMp3Button btnAdd = new OverlayExistingMp3Button(thisFrame);
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Get the mp3 and video, then replace the audio
-				String localMp3Path = getMp3Path();
-				replaceAudio(thisFrame, btnSelectMp3, localMp3Path);
+				
 			}
 		});
-
+*/
 		// Button to mute audio
 		final JButton btnMute = new JButton("Mute");
 		//btnMute.setIcon(new ImageIcon("images/Mute16.gif")); TODO make a mute button
@@ -299,9 +300,39 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		}));
 		fileMenu.add(saveTextMenuItem);
-		
 		fileMenuBar.add(fileMenu);
 		
+		fileMenu = new JMenu("Video");
+		
+		JMenu subMenu = new JMenu("Overlay Current Video With");
+		fileMenu.add(subMenu);
+		
+		final OverlayTextButton overlayTextItem = new OverlayTextButton(this);
+		overlayTextItem.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// First create the mp3
+				String mp3 = createValidMP3(thisFrame, overlayTextItem);
+
+				// Then replace the audio
+				String localMp3Path = MP3_DIR_ABSOLUTE_PATH + File.separator + mp3;
+				replaceAudio(thisFrame, overlayTextItem, localMp3Path);
+			}
+		}));
+		subMenu.add(overlayTextItem);
+		
+		final OverlayExistingMp3Button overlayMp3Item = new OverlayExistingMp3Button(this);
+		overlayMp3Item.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// Get the mp3 and video, then replace the audio
+				String localMp3Path = getMp3Path();
+				replaceAudio(thisFrame, overlayMp3Item, localMp3Path);
+			}
+		}));
+		subMenu.add(overlayMp3Item);
+		
+		fileMenuBar.add(fileMenu);
 		
 		// setJMenuBar(fileMenuBar);
 		mediaPanel.add(fileMenuBar, BorderLayout.NORTH);
@@ -316,8 +347,6 @@ public class MediaPlayerJFrame extends JFrame {
 						.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
 								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 										.addGroup(gl_contentPane.createSequentialGroup()
-												.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, 125,
-														GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(ComponentPlacement.UNRELATED)
 												.addComponent(lblCurrentSelection, GroupLayout.DEFAULT_SIZE, 246,
 														Short.MAX_VALUE)
@@ -337,8 +366,7 @@ public class MediaPlayerJFrame extends JFrame {
 										.addComponent(txtInputText, GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
 										.addGroup(gl_contentPane.createSequentialGroup()
 												.addPreferredGap(ComponentPlacement.RELATED)
-												.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnSelectMp3,
-														GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)))
+												.addPreferredGap(ComponentPlacement.RELATED)))
 								.addPreferredGap(ComponentPlacement.RELATED).addComponent(sliderVolume,
 										GroupLayout.PREFERRED_SIZE, 150, Short.MAX_VALUE)))
 						.addGap(7)));
@@ -359,12 +387,10 @@ public class MediaPlayerJFrame extends JFrame {
 								GroupLayout.PREFERRED_SIZE)
 						.addPreferredGap(ComponentPlacement.RELATED)
 						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnSelectMp3, GroupLayout.PREFERRED_SIZE, 25,
-										GroupLayout.PREFERRED_SIZE)))
+								))
 						)
 				.addPreferredGap(ComponentPlacement.RELATED)
 				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblCurrentSelection).addComponent(lblProcessing)).addContainerGap()));
 		contentPane.setLayout(gl_contentPane);
 		setSize(600, 400);// Custom size so UI behaves nicely
