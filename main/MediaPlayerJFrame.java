@@ -67,8 +67,6 @@ public class MediaPlayerJFrame extends JFrame {
 	public static final String VIDEO_DIR_RELATIVE_PATH = "Video";
 	public static final File VIDEO_DIR_ABSOLUTE_PATH = new File(
 			System.getProperty("user.dir") + File.separator + VIDEO_DIR_RELATIVE_PATH);
-	// private static final File MP3_DIR_PATH = new
-	// File(System.getProperty("user.dir") + File.separator + "MP3");
 	public static final String MP3_DIR_RELATIVE_PATH = "MP3";
 
 	private static final String MP3_DIR_ABSOLUTE_PATH = System.getProperty("user.dir") + File.separator

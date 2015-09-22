@@ -9,4 +9,5 @@ public class OverlayExistingMp3Button extends AbstractMediaButton{
 		setText("Add mp3");
 		setToolTipText("Overlay the mp3 on the current video");
 	}
+	
 }
