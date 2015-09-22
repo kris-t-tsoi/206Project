@@ -35,19 +35,6 @@ import java.io.File;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 
-/*TODO remove thisFrame with this where possible
- * do mute and volume image icons
- * move volume slider
- * no coding after 12
- * change mp3 label to something like this
- * 
- * Media to overlay:
- * 		Video:
- * 		MP3:
- * 
- * Check if it actually still works
- */
-
 public class MediaPlayerJFrame extends JFrame {
 
 	private String videoPath;
@@ -168,7 +155,7 @@ public class MediaPlayerJFrame extends JFrame {
 		 * is used to stop skipping backward or forward
 		 */
 		
-		final PlayButton btnPlay = new PlayButton(thisFrame);
+		final PlayButton btnPlay = new PlayButton(this);
 		btnPlay.setIcon(PlayButton.PLAY_IMAGE);
 		btnPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -201,7 +188,6 @@ public class MediaPlayerJFrame extends JFrame {
 
 		// Button to mute audio
 		final JButton btnMute = new JButton("Mute");
-		//btnMute.setIcon(new ImageIcon("images/Mute16.gif")); TODO make a mute button
 		btnMute.setToolTipText("Mute the audio");
 		btnMute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -293,7 +279,7 @@ public class MediaPlayerJFrame extends JFrame {
 		saveTextMenuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				createValidMP3(thisFrame, saveTextMenuItem);
+				createValidMP3(saveTextMenuItem);
 			}
 		}));
 		fileMenu.add(saveTextMenuItem);
@@ -309,11 +295,11 @@ public class MediaPlayerJFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// First create the mp3
-				String mp3 = createValidMP3(thisFrame, overlayTextItem);
+				String mp3 = createValidMP3(overlayTextItem);
 				
 				// Then replace the audio
 				String localMp3Path = MP3_DIR_ABSOLUTE_PATH + File.separator + mp3;
-				replaceAudio(thisFrame, overlayTextItem, localMp3Path);
+				replaceAudio(overlayTextItem, localMp3Path);
 			}
 		}));
 		subMenu.add(overlayTextItem);
@@ -324,7 +310,7 @@ public class MediaPlayerJFrame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				// Get the mp3 and video, then replace the audio
 				String localMp3Path = getMp3Path();
-				replaceAudio(thisFrame, overlayMp3Item, localMp3Path);
+				replaceAudio(overlayMp3Item, localMp3Path);
 			}
 		}));
 		subMenu.add(overlayMp3Item);
@@ -334,69 +320,71 @@ public class MediaPlayerJFrame extends JFrame {
 		// setJMenuBar(fileMenuBar);
 		mediaPanel.add(fileMenuBar, BorderLayout.NORTH);
 
-		
+		JLabel lblImageIcon = new JLabel(new ImageIcon("images/Volume16.gif"));
+
 		// Windowbuilder generated code below, enter at your own risk
-				GroupLayout gl_contentPane = new GroupLayout(contentPane);
-				gl_contentPane.setHorizontalGroup(
-					gl_contentPane.createParallelGroup(Alignment.LEADING)
+		GroupLayout gl_contentPane = new GroupLayout(contentPane);
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addComponent(mediaPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addComponent(mediaPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addContainerGap()
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_contentPane.createSequentialGroup()
-											.addComponent(lblMediaToOverlay)
-											.addPreferredGap(ComponentPlacement.RELATED, 388, Short.MAX_VALUE)
-											.addComponent(lblProcessing, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE))
-										.addGroup(gl_contentPane.createSequentialGroup()
-											.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(sliderVolume, GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE))
-										.addComponent(txtInputText, GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE))
-									.addPreferredGap(ComponentPlacement.RELATED)))
-							.addGap(7))
-						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-							.addGap(36)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addComponent(lblCurrentVideo, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
-								.addComponent(lblCurrentMP3, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE))
-							.addContainerGap())
-				);
-				gl_contentPane.setVerticalGroup(
-					gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(mediaPanel, GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addContainerGap()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(sliderVolume, 0, 0, Short.MAX_VALUE)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-									.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-									.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-									.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-									.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblProcessing)
-								.addComponent(lblMediaToOverlay))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblCurrentVideo)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblCurrentMP3)
-							.addContainerGap())
-				);
-				contentPane.setLayout(gl_contentPane);
-				
-				
-				//setSize(600, 600);// Custom size so UI behaves nicely
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(lblMediaToOverlay)
+									.addPreferredGap(ComponentPlacement.RELATED, 328, Short.MAX_VALUE)
+									.addComponent(lblProcessing, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(lblImageIcon, GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+									.addGap(4)
+									.addComponent(sliderVolume, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))
+								.addComponent(txtInputText, GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE))
+							.addPreferredGap(ComponentPlacement.RELATED)))
+					.addGap(7))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(36)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addComponent(lblCurrentVideo, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE)
+						.addComponent(lblCurrentMP3, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE))
+					.addContainerGap())
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addComponent(mediaPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+							.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+							.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+							.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+							.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblImageIcon, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
+						.addComponent(sliderVolume, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(txtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblProcessing)
+						.addComponent(lblMediaToOverlay))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(lblCurrentVideo)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(lblCurrentMP3)
+					.addContainerGap())
+		);
+		contentPane.setLayout(gl_contentPane);
+		setSize(603, 476);// Custom size so UI behaves nicely
 		// Set the frame as visible
 		setVisible(true);
 
@@ -415,9 +403,9 @@ public class MediaPlayerJFrame extends JFrame {
 	 * @return true - user had just selected initial video 
 	 * @return	false -  
 	 */
-	public void play(JFrame thisFrame, PlayButton btnPlay) {
+	public void play(PlayButton btnPlay) {
 		if (getVideoPath() == null) {
-			JOptionPane.showMessageDialog(thisFrame, "Please select a video to play.");
+			JOptionPane.showMessageDialog(this, "Please select a video to play.");
 			selectVideo(btnPlay);
 		} else {
 			video.playMedia(getVideoPath());
@@ -454,17 +442,17 @@ public class MediaPlayerJFrame extends JFrame {
 	 *            - the current frame, used in JOptionPane
 	 * @return mp3Name - name of the created mp3
 	 */
-	private String createValidMP3(MediaPlayerJFrame parentFrame, AbstractMP3Creator menuItem) {
+	private String createValidMP3(AbstractMP3Creator menuItem) {
 		// check if number of word is within limit
 		if (txtInputText.checkTxtLength()) {
-			String mp3Name = JOptionPane.showInputDialog(parentFrame, "Enter a name for the mp3 file");
+			String mp3Name = JOptionPane.showInputDialog(this, "Enter a name for the mp3 file");
 			if ((mp3Name != null) && !mp3Name.startsWith(" ")) {
 				menuItem.createMP3(txtInputText.getText(), mp3Name);
 				// Return the name of the mp3 that was created
 				return mp3Name + ".mp3";
 			}
 		} else {
-			JOptionPane.showMessageDialog(parentFrame, MediaPlayerJFrame.ERROR_WORD_LIMIT_MESSAGE);
+			JOptionPane.showMessageDialog(this, MediaPlayerJFrame.ERROR_WORD_LIMIT_MESSAGE);
 		}
 		return null;
 	}
@@ -473,19 +461,19 @@ public class MediaPlayerJFrame extends JFrame {
 		lblProcessing.setText(COMPLETE_TEXT);
 	}
 
-	private void replaceAudio(MediaPlayerJFrame thisFrame, AbstractMediaButton button, String mp3Path) {
+	private void replaceAudio(AbstractMediaButton button, String mp3Path) {
 		String videoPath = getVideoPath();
 		if (videoPath != null && mp3Path != null) {
-			String outputFile = (String) JOptionPane.showInputDialog(thisFrame,
+			String outputFile = (String) JOptionPane.showInputDialog(this,
 					"Please enter a name for the output file", "Output file name", JOptionPane.INFORMATION_MESSAGE);
 			if (outputFile != null) {
 				lblProcessing.setText(PROCESS_TEXT);
-				button.replaceAudio(thisFrame, mp3Path, videoPath, outputFile);
+				button.replaceAudio(this, mp3Path, videoPath, outputFile);
 			} else {
-				JOptionPane.showMessageDialog(thisFrame, "Error: output file name cannot be blank.");
+				JOptionPane.showMessageDialog(this, "Error: output file name cannot be blank.");
 			}
 		} else {
-			JOptionPane.showMessageDialog(thisFrame, "Please select a video and/or and mp3 file.");
+			JOptionPane.showMessageDialog(this, "Please select a video and/or and mp3 file.");
 		}
 	}
 
@@ -495,7 +483,7 @@ public class MediaPlayerJFrame extends JFrame {
 	public void selectVideo(PlayButton btnPlay) {
 		// start file search in current file
 		vfc.setCurrentDirectory(VIDEO_DIR_ABSOLUTE_PATH);
-		int returnVal = vfc.showOpenDialog(thisFrame);
+		int returnVal = vfc.showOpenDialog(this);
 		
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 		
@@ -508,10 +496,10 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 			
 			setVideoPath(vfc.getSelectedFile().getAbsolutePath());
-			JOptionPane.showMessageDialog(thisFrame, vfc.getSelectedFile().getName() + " has been selected.");
+			JOptionPane.showMessageDialog(this, vfc.getSelectedFile().getName() + " has been selected.");
 
 		} else if (returnVal == JFileChooser.ERROR_OPTION) {
-			JOptionPane.showMessageDialog(thisFrame, ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, ERROR_MESSAGE);
 		}
 	}
 

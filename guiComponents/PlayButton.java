@@ -64,7 +64,7 @@ public class PlayButton extends JButton {
 					btnSetPauseIcon();
 					parentFrame.setVideoIsStarted(true);
 					parentFrame.setVideoVolume(MediaPlayerJFrame.DEFAULT_VOLUME);
-					parentFrame.play(parentFrame, this);
+					parentFrame.play(this);
 
 				return;
 			} else {
