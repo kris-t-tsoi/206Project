@@ -19,7 +19,6 @@ import guiComponents.InputTextField;
 import guiComponents.OverlayExistingMp3Button;
 import guiComponents.OverlayTextButton;
 import guiComponents.PlayButton;
-import guiComponents.PlayTextButton;
 import guiComponents.SaveTextButton;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
@@ -185,27 +184,6 @@ public class MediaPlayerJFrame extends JFrame {
 		// JTextField that allows for user input so that
 		txtInputText = new InputTextField();
 
-		// Button to speak the text in the JTextField using festival
-		final PlayTextButton btnPlayText = new PlayTextButton();
-		btnPlayText.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// check if number of word is within limit
-				if (txtInputText.checkTxtLength()) {
-					btnPlayText.sayWithFestival(txtInputText.getText());
-				} else {
-					JOptionPane.showMessageDialog(thisFrame, ERROR_WORD_LIMIT_MESSAGE);
-				}
-			}
-		});
-
-		// Button to save text as mp3
-		final SaveTextButton btnSaveText = new SaveTextButton();
-		btnSaveText.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				createValidMP3(thisFrame, btnSaveText);
-			}
-		});
-
 		// Button to add the text to the video
 		final OverlayTextButton btnSelectMp3 = new OverlayTextButton(thisFrame);
 		btnSelectMp3.addActionListener(new ActionListener() {
@@ -262,12 +240,12 @@ public class MediaPlayerJFrame extends JFrame {
 		 * MenuBar placed at top of frame Item : Files
 		 */
 		fileMenuBar = new JMenuBar();
-		fileMenuBar.setBounds(55, 28, 129, 21);
+		//fileMenuBar.setBounds(55, 28, 129, 21);
 
 		/**
 		 * JMenu Files -- Select Video and MP3
 		 */
-		fileMenu = new JMenu("Files");
+		fileMenu = new JMenu("File");
 
 		menuItem = new JMenuItem("Choose Video File");
 		menuItem.addActionListener((new ActionListener() {
@@ -297,6 +275,34 @@ public class MediaPlayerJFrame extends JFrame {
 		}));
 		fileMenu.add(menuItem);
 		fileMenuBar.add(fileMenu);
+		
+		fileMenu = new JMenu("Text");
+		
+		menuItem = new JMenuItem("Play Text");
+		menuItem.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (txtInputText.checkTxtLength()) {
+					txtInputText.sayWithFestival(txtInputText.getText());
+				} else {
+					JOptionPane.showMessageDialog(thisFrame, ERROR_WORD_LIMIT_MESSAGE);
+				}
+			}
+		}));
+		fileMenu.add(menuItem);
+		
+		final SaveTextButton saveTextMenuItem = new SaveTextButton();
+		saveTextMenuItem.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				createValidMP3(thisFrame, saveTextMenuItem);
+			}
+		}));
+		fileMenu.add(saveTextMenuItem);
+		
+		fileMenuBar.add(fileMenu);
+		
+		
 		// setJMenuBar(fileMenuBar);
 		mediaPanel.add(fileMenuBar, BorderLayout.NORTH);
 
@@ -330,11 +336,7 @@ public class MediaPlayerJFrame extends JFrame {
 														GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE))
 										.addComponent(txtInputText, GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
 										.addGroup(gl_contentPane.createSequentialGroup()
-												.addComponent(btnPlayText, GroupLayout.PREFERRED_SIZE, 125,
-														GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(ComponentPlacement.RELATED)
-												.addComponent(btnSaveText, GroupLayout.PREFERRED_SIZE, 125,
-														GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnSelectMp3,
 														GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)))
 								.addPreferredGap(ComponentPlacement.RELATED).addComponent(sliderVolume,
@@ -357,8 +359,6 @@ public class MediaPlayerJFrame extends JFrame {
 								GroupLayout.PREFERRED_SIZE)
 						.addPreferredGap(ComponentPlacement.RELATED)
 						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnPlayText, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnSaveText, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
 								.addComponent(btnSelectMp3, GroupLayout.PREFERRED_SIZE, 25,
 										GroupLayout.PREFERRED_SIZE)))
 						)
@@ -425,12 +425,12 @@ public class MediaPlayerJFrame extends JFrame {
 	 *            - the current frame, used in JOptionPane
 	 * @return mp3Name - name of the created mp3
 	 */
-	private String createValidMP3(JFrame parentFrame, AbstractMP3Creator button) {
+	private String createValidMP3(MediaPlayerJFrame parentFrame, AbstractMP3Creator menuItem) {
 		// check if number of word is within limit
 		if (txtInputText.checkTxtLength()) {
 			String mp3Name = JOptionPane.showInputDialog(parentFrame, "Enter a name for the mp3 file");
 			if ((mp3Name != null) && !mp3Name.startsWith(" ")) {
-				button.createMP3(txtInputText.getText(), mp3Name);
+				menuItem.createMP3(txtInputText.getText(), mp3Name);
 				// Return the name of the mp3 that was created
 				return mp3Name + ".mp3";
 			}
