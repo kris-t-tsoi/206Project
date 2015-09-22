@@ -1,4 +1,5 @@
 package main;
+
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -11,30 +12,39 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import guiComponents.AbstractMP3Creator;
 import guiComponents.AbstractMediaButton;
 import guiComponents.InputTextField;
 import guiComponents.OverlayExistingMp3Button;
 import guiComponents.OverlayTextButton;
 import guiComponents.PlayButton;
-import guiComponents.PlayTextButton;
 import guiComponents.SaveTextButton;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.SwingWorker;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+
+/*TODO remove thisFrame with this where possible
+ * do mute and volume image icons
+ * move volume slider
+ * no coding after 12
+ * change mp3 label to something like this
+ * 
+ * Media to overlay:
+ * 		Video:
+ * 		MP3:
+ * 
+ * Check if it actually still works
+ */
 
 public class MediaPlayerJFrame extends JFrame {
 
@@ -56,6 +66,7 @@ public class MediaPlayerJFrame extends JFrame {
 	private static final String ERROR_MESSAGE = "Sorry, an error has occured. please try again.";
 
 	// FileChooser-related fields
+	final MediaPlayerJFrame thisFrame = this;
 	final JFileChooser vfc = new JFileChooser();
 	final JFileChooser mp3fc = new JFileChooser();
 	JMenuBar fileMenuBar;
@@ -73,11 +84,15 @@ public class MediaPlayerJFrame extends JFrame {
 			+ MP3_DIR_RELATIVE_PATH;
 
 	// Dynamic labels for user information
-	private static final String CURRENTLY_SELECTED = "Currently selected: ";
+	private static final String CURRENTLY_SELECTED_TEXT = "Currently selected mp3: ";
 	private static final String PROCESS_TEXT = "Processing...";
 	private static final String COMPLETE_TEXT = "Complete!";
 	JLabel lblCurrentSelection;
 	JLabel lblProcessing = new JLabel(" ");
+	
+	private static final ImageIcon REWIND_IMAGE = new ImageIcon("images/Rewind16.gif");
+	private static final ImageIcon FAST_FORWARD_IMAGE = new ImageIcon("images/Pause16.gif");
+	private static final ImageIcon MUTE_IMAGE = new ImageIcon("images/Pause16.gif");//TODO
 
 	// Getters and setters for FileChoosers
 	public String getVideoPath() {
@@ -104,15 +119,15 @@ public class MediaPlayerJFrame extends JFrame {
 	public void setVideoIsStarted(boolean videoIsStarted) {
 		this.videoIsStarted = videoIsStarted;
 	}
-	
+
 	public void setVideoVolume(int value) {
 		video.setVolume(value);
 	}
-	
+
 	public boolean videoIsPlaying() {
 		return video.isPlaying();
 	}
-	
+
 	public void pauseVideo(boolean pause) {
 		video.setPause(pause);
 	}
@@ -136,41 +151,95 @@ public class MediaPlayerJFrame extends JFrame {
 		// Give the video a border
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		final MediaPlayerJFrame thisFrame = this;
 
 		JPanel mediaPanel = new JPanel(new BorderLayout());
 		mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
 		video = mediaPlayerComponent.getMediaPlayer();
 		mediaPanel.add(mediaPlayerComponent, BorderLayout.CENTER);
 
+		
+		/*
+		 * Button to play the video It also acts as a pause/unpause button, and
+		 * is used to stop skipping backward or forward
+		 */
+		
+		final PlayButton btnPlay = new PlayButton(thisFrame);
+		btnPlay.setIcon(PlayButton.PLAY_IMAGE);
+		btnPlay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnPlay.playPressed();
+			}
+		});
+
+		// Button to skip backwards
+		JButton btnBackward = new JButton();
+		btnBackward.setIcon(REWIND_IMAGE);
+		btnBackward.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (getVideoIsStarted())
+					btnPlay.skipVideoForwards(false);
+			}
+		});
+
+		// Button to skip forward
+		JButton btnForward = new JButton();
+		btnForward.setIcon(FAST_FORWARD_IMAGE);
+		btnForward.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (getVideoIsStarted())
+					btnPlay.skipVideoForwards(true);
+			}
+		});
+
+		// JTextField that allows for user input so that
+		txtInputText = new InputTextField();
+
+		// Button to mute audio
+		final JButton btnMute = new JButton("Mute");
+		//btnMute.setIcon(new ImageIcon("images/Mute16.gif")); TODO make a mute button
+		btnMute.setToolTipText("Mute the audio");
+		btnMute.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (!video.isMute()) {
+					btnMute.setText("Unmute");
+				} else {
+					btnMute.setText("Mute");
+				}
+				video.mute();
+			}
+		});
+
+		// Create a JSlider with 0 and 100 as the volume limits. 50 is the
+		// default (it is set to 50 in the constructor).
+		JSlider sliderVolume = new JSlider(SwingConstants.HORIZONTAL, 0, 100, DEFAULT_VOLUME);
+		sliderVolume.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				video.setVolume(((JSlider) arg0.getSource()).getValue());
+			}
+		});
+		sliderVolume.setMinorTickSpacing(1);
+		sliderVolume.setToolTipText("Change the volume of the video");
+
+		// Label that displays the currently selected mp3
+		lblCurrentSelection = new JLabel(CURRENTLY_SELECTED_TEXT);
+		
 		/**
 		 * MenuBar placed at top of frame Item : Files
 		 */
 		fileMenuBar = new JMenuBar();
-		fileMenuBar.setBounds(55, 28, 129, 21);
-		//contentPane.add(fileMenuBar);
-		
-		
+		//fileMenuBar.setBounds(55, 28, 129, 21);
+
 		/**
 		 * JMenu Files -- Select Video and MP3
 		 */
-		fileMenu = new JMenu("Files");
+		fileMenu = new JMenu("File");
 
 		menuItem = new JMenuItem("Choose Video File");
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// start file search in current file
-				vfc.setCurrentDirectory(VIDEO_DIR_ABSOLUTE_PATH);
-				int returnVal = vfc.showOpenDialog(menuItem);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					setVideoPath(vfc.getSelectedFile().getAbsolutePath());
-
-					JOptionPane.showMessageDialog(thisFrame, vfc.getSelectedFile().getName() + " has been selected.");
-
-				} else if (returnVal == JFileChooser.ERROR_OPTION) {
-					JOptionPane.showMessageDialog(thisFrame, ERROR_MESSAGE);
-				}
+				//select video
+				selectVideo(btnPlay);
 			}
 		}));
 		fileMenu.add(menuItem);
@@ -183,7 +252,7 @@ public class MediaPlayerJFrame extends JFrame {
 				FileNameExtensionFilter filter = new FileNameExtensionFilter("MP3 File", "mp3");
 				mp3fc.setFileFilter(filter);
 				mp3fc.setCurrentDirectory(mp3Dir);
-				int returnVal = mp3fc.showOpenDialog(menuItem);
+				int returnVal = mp3fc.showOpenDialog(thisFrame);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					setMp3Path(mp3fc.getSelectedFile().getAbsolutePath());
 				} else if (returnVal == JFileChooser.ERROR_OPTION) {
@@ -193,112 +262,66 @@ public class MediaPlayerJFrame extends JFrame {
 		}));
 		fileMenu.add(menuItem);
 		fileMenuBar.add(fileMenu);
-		//setJMenuBar(fileMenuBar);
-		mediaPanel.add(fileMenuBar, BorderLayout.NORTH);
-		/*
-		 * Button to play the video It also acts as a pause/unpause button, and
-		 * is used to stop skipping backward or forward
-		 */
-		final PlayButton btnPlay = new PlayButton(thisFrame);
-		btnPlay.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				btnPlay.playPressed();
-			}
-		});
 		
-		// Button to skip backwards
-		JButton btnBackward = new JButton("Back");
-		btnBackward.addActionListener(new ActionListener() {
+		fileMenu = new JMenu("Text");
+		
+		menuItem = new JMenuItem("Play Text");
+		menuItem.addActionListener((new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (getVideoIsStarted())
-					btnPlay.skipVideoForwards(false);
-			}
-		});
-
-		// Button to skip forward
-		JButton btnForward = new JButton("Forward");
-		btnForward.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (getVideoIsStarted())
-					btnPlay.skipVideoForwards(true);
-			}
-		});
-
-		// JTextField that allows for user input so that
-		txtInputText = new InputTextField();
-
-		// Button to speak the text in the JTextField using festival
-		final PlayTextButton btnPlayText = new PlayTextButton();
-		btnPlayText.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// check if number of word is within limit
 				if (txtInputText.checkTxtLength()) {
-					btnPlayText.sayWithFestival(txtInputText.getText());
+					txtInputText.sayWithFestival(txtInputText.getText());
 				} else {
 					JOptionPane.showMessageDialog(thisFrame, ERROR_WORD_LIMIT_MESSAGE);
 				}
 			}
-		});
-
-		// Button to save text as mp3
-		final SaveTextButton btnSaveText = new SaveTextButton();
-		btnSaveText.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				createValidMP3(thisFrame, btnSaveText);
-			}
-		});
-
-		// Button to add the text to the video
-		final OverlayTextButton btnSelectMp3 = new OverlayTextButton(thisFrame);
-		btnSelectMp3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//First create the mp3
-				String mp3 = createValidMP3(thisFrame, btnSelectMp3);
-				
-				//Then replace the audio
-				String localMp3Path = MP3_DIR_ABSOLUTE_PATH + File.separator + mp3;
-				replaceAudio(thisFrame, btnSelectMp3, localMp3Path);
-			}
-		});
-
-		// Button to add a selected mp3 to the file
-		final OverlayExistingMp3Button btnAdd = new OverlayExistingMp3Button(thisFrame);
-		btnAdd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//Get the mp3 and video, then replace the audio
-				String localMp3Path = getMp3Path();
-				replaceAudio(thisFrame, btnSelectMp3, localMp3Path);
-			}
-		});
-
-		// Button to mute audio
-		final JButton btnMute = new JButton("Mute");
-		btnMute.setToolTipText("Mute the audio");
-		btnMute.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (!video.isMute()) {
-					btnMute.setText("Unmute");
-				} else {
-					btnMute.setText("Mute");
-				}
-				video.mute();
-
-			}
-		});
+		}));
+		fileMenu.add(menuItem);
 		
-		// Create a JSlider with 0 and 100 as the volume limits. 50 is the
-		// default (it is set to 50 in the constructor).
-		JSlider sliderVolume = new JSlider(SwingConstants.VERTICAL, 0, 100, DEFAULT_VOLUME);
-		sliderVolume.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent arg0) {
-				video.setVolume(((JSlider) arg0.getSource()).getValue());
+		final SaveTextButton saveTextMenuItem = new SaveTextButton();
+		saveTextMenuItem.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				createValidMP3(thisFrame, saveTextMenuItem);
 			}
-		});
-		sliderVolume.setMinorTickSpacing(1);
-		sliderVolume.setToolTipText("Change the volume of the video");
-
-		// Label that displays the currently selected mp3
-		lblCurrentSelection = new JLabel("Currently selected:");
+		}));
+		fileMenu.add(saveTextMenuItem);
+		fileMenuBar.add(fileMenu);
+		
+		fileMenu = new JMenu("Video");
+		
+		JMenu subMenu = new JMenu("Overlay Current Video With");
+		fileMenu.add(subMenu);
+		
+		final OverlayTextButton overlayTextItem = new OverlayTextButton(this);
+		overlayTextItem.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// First create the mp3
+				String mp3 = createValidMP3(thisFrame, overlayTextItem);
+				
+				// Then replace the audio
+				String localMp3Path = MP3_DIR_ABSOLUTE_PATH + File.separator + mp3;
+				replaceAudio(thisFrame, overlayTextItem, localMp3Path);
+			}
+		}));
+		subMenu.add(overlayTextItem);
+		
+		final OverlayExistingMp3Button overlayMp3Item = new OverlayExistingMp3Button(this);
+		overlayMp3Item.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// Get the mp3 and video, then replace the audio
+				String localMp3Path = getMp3Path();
+				replaceAudio(thisFrame, overlayMp3Item, localMp3Path);
+			}
+		}));
+		subMenu.add(overlayMp3Item);
+		
+		fileMenuBar.add(fileMenu);
+		
+		// setJMenuBar(fileMenuBar);
+		mediaPanel.add(fileMenuBar, BorderLayout.NORTH);
 
 		// Windowbuilder generated code below, enter at your own risk
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
@@ -310,35 +333,28 @@ public class MediaPlayerJFrame extends JFrame {
 						.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
 								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 										.addGroup(gl_contentPane.createSequentialGroup()
-												.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, 125,
-														GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(ComponentPlacement.UNRELATED)
 												.addComponent(lblCurrentSelection, GroupLayout.DEFAULT_SIZE, 246,
 														Short.MAX_VALUE)
 												.addPreferredGap(ComponentPlacement.RELATED).addComponent(lblProcessing,
 														GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE))
 										.addGroup(gl_contentPane.createSequentialGroup()
-												.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 125,
+												.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 60,
 														GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(ComponentPlacement.RELATED)
-												.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, 125,
+												.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, 60,
 														GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(ComponentPlacement.RELATED)
-												.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 125,
+												.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 60,
 														GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnMute,
-														GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE))
+														GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE))
 										.addComponent(txtInputText, GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
 										.addGroup(gl_contentPane.createSequentialGroup()
-												.addComponent(btnPlayText, GroupLayout.PREFERRED_SIZE, 125,
-														GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(ComponentPlacement.RELATED)
-												.addComponent(btnSaveText, GroupLayout.PREFERRED_SIZE, 125,
-														GroupLayout.PREFERRED_SIZE)
-												.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnSelectMp3,
-														GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)))
+												.addPreferredGap(ComponentPlacement.RELATED)))
 								.addPreferredGap(ComponentPlacement.RELATED).addComponent(sliderVolume,
-										GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)))
+										GroupLayout.PREFERRED_SIZE, 150, Short.MAX_VALUE)))
 						.addGap(7)));
 		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup().addComponent(mediaPanel, GroupLayout.DEFAULT_SIZE,
@@ -350,25 +366,23 @@ public class MediaPlayerJFrame extends JFrame {
 								.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
 								.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
 								.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
+								.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+								.addComponent(sliderVolume, 0, 0, Short.MAX_VALUE))
 						.addPreferredGap(ComponentPlacement.RELATED)
 						.addComponent(txtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
 								GroupLayout.PREFERRED_SIZE)
 						.addPreferredGap(ComponentPlacement.RELATED)
 						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnPlayText, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnSaveText, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnSelectMp3, GroupLayout.PREFERRED_SIZE, 25,
-										GroupLayout.PREFERRED_SIZE)))
-						.addComponent(sliderVolume, 0, 0, Short.MAX_VALUE))
+								))
+						)
 				.addPreferredGap(ComponentPlacement.RELATED)
 				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblCurrentSelection).addComponent(lblProcessing)).addContainerGap()));
 		contentPane.setLayout(gl_contentPane);
-		setSize(600, 200);// Custom size so UI behaves nicely
+		setSize(600, 400);// Custom size so UI behaves nicely
 		// Set the frame as visible
 		setVisible(true);
+
 	}
 
 	/**
@@ -380,10 +394,14 @@ public class MediaPlayerJFrame extends JFrame {
 
 	/**
 	 * Function to play a given media
+	 * 
+	 * @return true - user had just selected initial video 
+	 * @return	false -  
 	 */
-	public void play(JFrame thisFrame) {
+	public void play(JFrame thisFrame, PlayButton btnPlay) {
 		if (getVideoPath() == null) {
-			JOptionPane.showMessageDialog(thisFrame, "Please select video to play");
+			JOptionPane.showMessageDialog(thisFrame, "Please select a video to play.");
+			selectVideo(btnPlay);
 		} else {
 			video.playMedia(getVideoPath());
 		}
@@ -399,17 +417,18 @@ public class MediaPlayerJFrame extends JFrame {
 	 */
 	private void setDisplayedMp3(String path) {
 		String[] splitPath = path.split("/");
-		lblCurrentSelection.setText(CURRENTLY_SELECTED + splitPath[splitPath.length - 1]);
+		lblCurrentSelection.setText(CURRENTLY_SELECTED_TEXT + splitPath[splitPath.length - 1]);
 	}
 
 	/**
 	 * Function to skip the video (for use by other objects)
+	 * 
 	 * @param value
 	 */
 	public void skip(int value) {
 		video.skip(value);
 	}
-	
+
 	/**
 	 * Function that creates an mp3 from the textField only if the number of
 	 * words is under the limit. It also returns the name of the created mp3
@@ -418,13 +437,13 @@ public class MediaPlayerJFrame extends JFrame {
 	 *            - the current frame, used in JOptionPane
 	 * @return mp3Name - name of the created mp3
 	 */
-	private String createValidMP3(JFrame parentFrame, AbstractMP3Creator button) {
+	private String createValidMP3(MediaPlayerJFrame parentFrame, AbstractMP3Creator menuItem) {
 		// check if number of word is within limit
 		if (txtInputText.checkTxtLength()) {
 			String mp3Name = JOptionPane.showInputDialog(parentFrame, "Enter a name for the mp3 file");
 			if ((mp3Name != null) && !mp3Name.startsWith(" ")) {
-				button.createMP3(txtInputText.getText(), mp3Name);
-				//Return the name of the mp3 that was created
+				menuItem.createMP3(txtInputText.getText(), mp3Name);
+				// Return the name of the mp3 that was created
 				return mp3Name + ".mp3";
 			}
 		} else {
@@ -432,28 +451,51 @@ public class MediaPlayerJFrame extends JFrame {
 		}
 		return null;
 	}
-	
+
 	public void setLabelComplete() {
 		lblProcessing.setText(COMPLETE_TEXT);
 	}
-	
-	
+
 	private void replaceAudio(MediaPlayerJFrame thisFrame, AbstractMediaButton button, String mp3Path) {
 		String videoPath = getVideoPath();
 		if (videoPath != null && mp3Path != null) {
-			String outputFile = (String) JOptionPane.showInputDialog(thisFrame, "Please enter a name for the output file",
-					"Output file name", JOptionPane.INFORMATION_MESSAGE);
+			String outputFile = (String) JOptionPane.showInputDialog(thisFrame,
+					"Please enter a name for the output file", "Output file name", JOptionPane.INFORMATION_MESSAGE);
 			if (outputFile != null) {
 				lblProcessing.setText(PROCESS_TEXT);
 				button.replaceAudio(thisFrame, mp3Path, videoPath, outputFile);
-			}
-			else {
+			} else {
 				JOptionPane.showMessageDialog(thisFrame, "Error: output file name cannot be blank.");
 			}
-		}
-		else {
+		} else {
 			JOptionPane.showMessageDialog(thisFrame, "Please select a video and/or and mp3 file.");
 		}
 	}
+
+	/**
+	 * Open FileChooser and let user choose video to play
+	 */
+	public void selectVideo(PlayButton btnPlay) {
+		// start file search in current file
+		vfc.setCurrentDirectory(VIDEO_DIR_ABSOLUTE_PATH);
+		int returnVal = vfc.showOpenDialog(thisFrame);
 		
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+		
+		
+			//check if user already playing another video
+			if(getVideoPath() != null){	
+				mediaPlayerComponent.getMediaPlayer().stop();
+				setVideoIsStarted(false);
+				btnPlay.btnSetPlayIcon();
+			}
+			
+			setVideoPath(vfc.getSelectedFile().getAbsolutePath());
+			JOptionPane.showMessageDialog(thisFrame, vfc.getSelectedFile().getName() + " has been selected.");
+
+		} else if (returnVal == JFileChooser.ERROR_OPTION) {
+			JOptionPane.showMessageDialog(thisFrame, ERROR_MESSAGE);
+		}
+	}
+
 }

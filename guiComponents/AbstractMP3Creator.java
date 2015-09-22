@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JMenuItem;
 
 import main.MediaPlayerJFrame;
 
-public abstract class AbstractMP3Creator extends JButton {
+public abstract class AbstractMP3Creator extends JMenuItem {
 	
 	public AbstractMP3Creator() {
+		super();
 	}
 	/**
 	 * Function to create an mp3 from a string of text by: 1. creating a wav
