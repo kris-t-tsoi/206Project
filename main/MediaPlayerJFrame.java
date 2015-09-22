@@ -42,6 +42,8 @@ import javax.swing.JLabel;
  * Media to overlay:
  * 		Video:
  * 		MP3:
+ * 
+ * Check if it actually still works
  */
 
 public class MediaPlayerJFrame extends JFrame {
@@ -191,23 +193,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 		// JTextField that allows for user input so that
 		txtInputText = new InputTextField();
-/*
-		// Button to add the text to the video
-		final OverlayTextButton btnSelectMp3 = new OverlayTextButton(thisFrame);
-		btnSelectMp3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
 
-		// Button to add a selected mp3 to the file
-		final OverlayExistingMp3Button btnAdd = new OverlayExistingMp3Button(thisFrame);
-		btnAdd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
-*/
 		// Button to mute audio
 		final JButton btnMute = new JButton("Mute");
 		//btnMute.setIcon(new ImageIcon("images/Mute16.gif")); TODO make a mute button
@@ -313,7 +299,7 @@ public class MediaPlayerJFrame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				// First create the mp3
 				String mp3 = createValidMP3(thisFrame, overlayTextItem);
-
+				
 				// Then replace the audio
 				String localMp3Path = MP3_DIR_ABSOLUTE_PATH + File.separator + mp3;
 				replaceAudio(thisFrame, overlayTextItem, localMp3Path);
