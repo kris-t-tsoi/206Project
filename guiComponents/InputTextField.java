@@ -1,23 +1,26 @@
 package guiComponents;
 import javax.swing.JTextField;
 
+/**
+ * This class is a modified text field which can also count the number of words in it
+ * and speak its contents with festival
+ *
+ */
 public class InputTextField extends JTextField {
 	public static final int MAX_NUMBER_OF_WORDS = 30;
 	
 	public InputTextField() {
 		super("Text to synthesize here - max 30 words");
 		setToolTipText("Text to synthesize here - max 30 words");
-		//txtInputText.setColumns(10);
 	}
 	
 	/**
 	 * Function to check if the number of words a string of text exceeds a
 	 * certain value. Used before reading or saving any text.
 	 * 
-	 * @param text
-	 *            - from textField
-	 * @return true - number of words is less than 30 false - number of words is
-	 *         greater than 30
+	 * @param text - from textField
+	 * @return 	true if number of words is less than 30, 
+	 * 			false if number of words is greater than 30
 	 * 
 	 */
 	public boolean checkTxtLength() {
@@ -37,7 +40,6 @@ public class InputTextField extends JTextField {
 	
 	/**
 	 * Uses festival to speak the input text by creating a bash process
-	 * 
 	 * @param text
 	 */
 	public void sayWithFestival(String text) {

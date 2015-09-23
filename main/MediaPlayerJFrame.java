@@ -15,9 +15,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import guiComponents.AbstractMP3Creator;
-import guiComponents.AbstractMediaLabel;
+import guiComponents.AbstractReplaceAudioLabel;
 import guiComponents.InputTextField;
-import guiComponents.OverlayExistingMp3Label;
+import guiComponents.OverlayExistingMP3Label;
 import guiComponents.OverlayTextLabel;
 import guiComponents.PlayButton;
 import guiComponents.SaveTextLabel;
@@ -44,9 +44,11 @@ public class MediaPlayerJFrame extends JFrame {
 	private InputTextField txtInputText;
 	EmbeddedMediaPlayerComponent mediaPlayerComponent;
 	EmbeddedMediaPlayer video;
+	
 	private final JButton btnMute;
 	private static final String UNMUTE_TEXT = "Unmute";
 	private static final String MUTE_TEXT = "Mute";
+	
 	private boolean videoIsStarted;
 
 	// Default volume of the video
@@ -59,19 +61,18 @@ public class MediaPlayerJFrame extends JFrame {
 
 	// FileChooser-related fields
 	final MediaPlayerJFrame thisFrame = this;
-	final JFileChooser vfc = new JFileChooser();
-	final JFileChooser mp3fc = new JFileChooser();
+	final JFileChooser videoFC = new JFileChooser();
+	final JFileChooser mp3FC = new JFileChooser();
 	JMenuBar fileMenuBar;
 	JMenu fileMenu;
 	JMenuItem menuItem;
 
 	// Directory location constants
-
 	public static final String VIDEO_DIR_RELATIVE_PATH = "Video";
-	public static final File VIDEO_DIR_ABSOLUTE_PATH = new File(
+	private static final File VIDEO_DIR_ABSOLUTE_PATH = new File(
 			System.getProperty("user.dir") + File.separator + VIDEO_DIR_RELATIVE_PATH);
+	
 	public static final String MP3_DIR_RELATIVE_PATH = "MP3";
-
 	private static final String MP3_DIR_ABSOLUTE_PATH = System.getProperty("user.dir") + File.separator
 			+ MP3_DIR_RELATIVE_PATH;
 
@@ -93,16 +94,16 @@ public class MediaPlayerJFrame extends JFrame {
 		return videoPath;
 	}
 
-	public void setVideoPath(String videoPath) {
+	private void setVideoPath(String videoPath) {
 		this.videoPath = videoPath;
 		setDisplayedMedia(lblCurrentVideo, CURRENT_VIDEO_TEXT, videoPath);
 	}
 
-	public String getMp3Path() {
+	private String getMp3Path() {
 		return mp3Path;
 	}
 
-	public void setMp3Path(String mp3Path) {
+	private void setMp3Path(String mp3Path) {
 		this.mp3Path = mp3Path;
 		setDisplayedMedia(lblCurrentMP3, CURRENT_MP3_TEXT, mp3Path);
 	}
@@ -145,17 +146,14 @@ public class MediaPlayerJFrame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 
+		// Create a second JPanel which will contain the video
 		JPanel mediaPanel = new JPanel(new BorderLayout());
 		mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
 		video = mediaPlayerComponent.getMediaPlayer();
 		mediaPanel.add(mediaPlayerComponent, BorderLayout.CENTER);
-
 		
-		/*
-		 * Button to play the video It also acts as a pause/unpause button, and
-		 * is used to stop skipping backward or forward
-		 */
-		
+		/* Button to play the video. It also acts as a pause/unpause button, and
+		 * is used to stop skipping.*/
 		final PlayButton btnPlay = new PlayButton(this);
 		btnPlay.setIcon(PlayButton.PLAY_IMAGE);
 		btnPlay.addActionListener(new ActionListener() {
@@ -164,7 +162,7 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 
-		// Button to skip backwards
+		// Button to skip backwards - video is muted while skipping
 		JButton btnBackward = new JButton();
 		btnBackward.setIcon(REWIND_IMAGE);
 		btnBackward.addActionListener(new ActionListener() {
@@ -176,7 +174,7 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 
-		// Button to skip forwards
+		// Button to skip forwards - video is muted while skipping
 		JButton btnForward = new JButton();
 		btnForward.setIcon(FAST_FORWARD_IMAGE);
 		btnForward.addActionListener(new ActionListener() {
@@ -198,9 +196,9 @@ public class MediaPlayerJFrame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				//Set the new button text depending on the current state of the video.
 				if (!video.isMute()) {
-					btnMute.setText("Unmute");
+					btnMute.setText(UNMUTE_TEXT);
 				} else {
-					btnMute.setText("Mute");
+					btnMute.setText(MUTE_TEXT);
 				}
 				//video.mute mutes if unmuted and vice versa
 				video.mute();
@@ -219,20 +217,23 @@ public class MediaPlayerJFrame extends JFrame {
 		sliderVolume.setToolTipText("Change the volume of the video");
 
 		
-		//Label which 
+		// Label which simply explains the other labels in the GUI
 		JLabel lblMediaToOverlay = new JLabel("Media to overlay:");
 		
 		// Labels that displays the currently selected mp3 and video
 		lblCurrentMP3 = new JLabel(CURRENT_MP3_TEXT);
-		
 		lblCurrentVideo = new JLabel(CURRENT_VIDEO_TEXT);
 		
-		 //MenuBar placed at top of frame Item : Files
+		/*
+		 * JMenuBar containing most of the functionality
+		 * The tabs are: File, Text, and Video
+		 */
 		fileMenuBar = new JMenuBar();
 
-		//File tab: Select Video, Select MP3
+		//File tab: Choose Video File, Choose MP3 File
 		fileMenu = new JMenu("File");
 
+		//This label opens a FileChooser to select a video
 		menuItem = new JMenuItem("Choose Video File");
 		menuItem.addActionListener((new ActionListener() {
 			@Override
@@ -243,24 +244,27 @@ public class MediaPlayerJFrame extends JFrame {
 		}));
 		fileMenu.add(menuItem);
 
+		//This label opens a FileChooser to select an MP3
+		//TODO merge this method with selectVideo??
 		menuItem = new JMenuItem("Choose MP3 File");
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// Start file search in current directory, and show mp3's
 				FileNameExtensionFilter filter = new FileNameExtensionFilter("MP3 File", "mp3");
-				mp3fc.setFileFilter(filter);
-				mp3fc.setCurrentDirectory(mp3Dir);
+				mp3FC.setFileFilter(filter);
+				mp3FC.setCurrentDirectory(mp3Dir);
 				
-				int returnVal = mp3fc.showOpenDialog(thisFrame);
+				int returnVal = mp3FC.showOpenDialog(thisFrame);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					setMp3Path(mp3fc.getSelectedFile().getAbsolutePath());
+					setMp3Path(mp3FC.getSelectedFile().getAbsolutePath());
 				} else if (returnVal == JFileChooser.ERROR_OPTION) {
 					JOptionPane.showMessageDialog(thisFrame, ERROR_MESSAGE);
 				}
 			}
 		}));
 		fileMenu.add(menuItem);
+		
 		fileMenuBar.add(fileMenu);
 		
 		fileMenu = new JMenu("Text");
@@ -293,6 +297,7 @@ public class MediaPlayerJFrame extends JFrame {
 		
 		fileMenu = new JMenu("Video");
 		
+		//Create a subMenu which contains two more tabs: Text and Existing MP3
 		JMenu subMenu = new JMenu("Overlay Current Video With");
 		fileMenu.add(subMenu);
 		
@@ -301,27 +306,27 @@ public class MediaPlayerJFrame extends JFrame {
 		overlayTextItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// First create the mp3
+				// First create the mp3, and get its name
 				String mp3 = createValidMP3(overlayTextItem);
 				
 				// Then replace the audio
-				String localMp3Path = MP3_DIR_ABSOLUTE_PATH + File.separator + mp3;
-				replaceAudio(overlayTextItem, localMp3Path);
+				String mp3Path = MP3_DIR_ABSOLUTE_PATH + File.separator + mp3;
+				replaceAudio(overlayTextItem, mp3Path);
 			}
 		}));
 		subMenu.add(overlayTextItem);
 		
 		//Sub-label which allows the user to replace a video's audio with a pre-selected mp3
-		final OverlayExistingMp3Label overlayMp3Item = new OverlayExistingMp3Label(this);
-		overlayMp3Item.addActionListener((new ActionListener() {
+		final OverlayExistingMP3Label overlayMP3Item = new OverlayExistingMP3Label(this);
+		overlayMP3Item.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// Get the mp3, then replace the audio
-				String localMp3Path = getMp3Path();
-				replaceAudio(overlayMp3Item, localMp3Path);
+				String mp3Path = getMp3Path();
+				replaceAudio(overlayMP3Item, mp3Path);
 			}
 		}));
-		subMenu.add(overlayMp3Item);
+		subMenu.add(overlayMP3Item);
 		
 		fileMenuBar.add(fileMenu);
 		// setJMenuBar(fileMenuBar);
@@ -498,14 +503,14 @@ public class MediaPlayerJFrame extends JFrame {
 	 * @param label
 	 * @param mp3Path
 	 */
-	private void replaceAudio(AbstractMediaLabel label, String mp3Path) {
+	private void replaceAudio(AbstractReplaceAudioLabel label, String mp3Path) {
 		String videoPath = getVideoPath();
 		if (videoPath != null && mp3Path != null) {
 			String outputFile = (String) JOptionPane.showInputDialog(this,
 					"Please enter a name for the output file", "Output file name", JOptionPane.INFORMATION_MESSAGE);
 			if (outputFile != null) {
 				lblProcessing.setText(PROCESS_TEXT);
-				label.replaceAudio(this, mp3Path, videoPath, outputFile);
+				label.replaceAudio(mp3Path, videoPath, outputFile);
 			} else {
 				JOptionPane.showMessageDialog(this, "Error: output file name cannot be blank.");
 			}
@@ -522,19 +527,21 @@ public class MediaPlayerJFrame extends JFrame {
 	 */
 	public void selectVideo(PlayButton btnPlay) {
 		// start file search in current file
-		vfc.setCurrentDirectory(VIDEO_DIR_ABSOLUTE_PATH);
-		int returnVal = vfc.showOpenDialog(this);
+		videoFC.setCurrentDirectory(VIDEO_DIR_ABSOLUTE_PATH);
+		int returnVal = videoFC.showOpenDialog(this);
 		
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			//check if user already playing another video
+			/* Check if user already playing another video.
+			 * If they are, stop the current one and set isVideoStarted to false and the play button 
+			 * to display the play icon */
 			if(getVideoPath() != null){	
 				mediaPlayerComponent.getMediaPlayer().stop();
 				setVideoIsStarted(false);
 				btnPlay.btnSetPlayIcon();
 			}
 			
-			setVideoPath(vfc.getSelectedFile().getAbsolutePath());
-			JOptionPane.showMessageDialog(this, vfc.getSelectedFile().getName() + " has been selected.");
+			setVideoPath(videoFC.getSelectedFile().getAbsolutePath());
+			JOptionPane.showMessageDialog(this, videoFC.getSelectedFile().getName() + " has been selected.");
 
 		} else if (returnVal == JFileChooser.ERROR_OPTION) {
 			JOptionPane.showMessageDialog(this, ERROR_MESSAGE);

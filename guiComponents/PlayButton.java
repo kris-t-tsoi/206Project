@@ -2,10 +2,8 @@ package guiComponents;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
-
 import main.MediaPlayerJFrame;
 
 /**
@@ -65,6 +63,7 @@ public class PlayButton extends JButton {
 	public void playPressed() {
 		// Cancel any current skipping
 		if (bgTask != null) {
+			System.out.println("restoring muted status");
 			bgTask.cancel(true);
 			bgTask = null;
 			parentFrame.restoreMutedStatus();
@@ -99,7 +98,7 @@ public class PlayButton extends JButton {
 	}
 	
 	/**
-	 * Method to allow other classes to change the button to the pause icon
+	 * Method to change the button to the pause icon
 	 */
 	private void btnSetPauseIcon() {
 		setIcon(PAUSE_IMAGE);
@@ -107,8 +106,8 @@ public class PlayButton extends JButton {
 	
 	/**
 	 * Method to allow MediaPlayerJFrame to change the button to the play icon
-	 * when a new video is selected, as the video does not auto-play but the 
-	 * icon could be a pause icon if the previous video was playing.
+	 * when a new video is selected, as the icon could be a pause icon if the 
+	 * previous video was playing.
 	 */
 	public void btnSetPlayIcon() {
 		setIcon(PLAY_IMAGE);
