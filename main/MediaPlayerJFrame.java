@@ -196,16 +196,13 @@ public class MediaPlayerJFrame extends JFrame {
 		btnMute.setToolTipText("Mute the audio");
 		btnMute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				/*Set the text depending on the current state of the video.
-				 * Doesnt work if put after video.mute(), possibly because it doesnt update the
-				 * videos mute status quickly enough
-				 */
+				//Set the new button text depending on the current state of the video.
 				if (!video.isMute()) {
 					btnMute.setText("Unmute");
 				} else {
 					btnMute.setText("Mute");
 				}
-				
+				//video.mute mutes if unmuted and vice versa
 				video.mute();
 			}
 		});
@@ -230,14 +227,10 @@ public class MediaPlayerJFrame extends JFrame {
 		
 		lblCurrentVideo = new JLabel(CURRENT_VIDEO_TEXT);
 		
-		/**
-		 * MenuBar placed at top of frame Item : Files
-		 */
+		 //MenuBar placed at top of frame Item : Files
 		fileMenuBar = new JMenuBar();
 
-		/**
-		 * JMenu Files -- Select Video and MP3
-		 */
+		//File tab: Select Video, Select MP3
 		fileMenu = new JMenu("File");
 
 		menuItem = new JMenuItem("Choose Video File");

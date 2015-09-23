@@ -9,4 +9,10 @@ public class OverlayExistingMp3Label extends AbstractMediaLabel {
 		setText("Existing MP3");
 	}
 	
+	//Workaround for not being able to extend 2 classes. Thanks java.
+	@Override
+	public void createMP3(String s, String o) {
+		throw new UnsupportedOperationException("This class cannot create Mp3s.");
+	}
+	
 }

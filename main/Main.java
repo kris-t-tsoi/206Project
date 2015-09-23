@@ -12,6 +12,7 @@ public class Main {
 	private final MediaPlayerJFrame frame;
 	
 	public static void main(String args[]) {
+		//Attempt to find users vlc location
 		boolean found = new NativeDiscovery().discover();
        	if(!found) {
        		com.sun.jna.NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(),"/usr/bin/vlc");
