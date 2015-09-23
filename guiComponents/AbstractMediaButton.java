@@ -51,5 +51,8 @@ public abstract class AbstractMediaButton extends AbstractMP3Creator{
 				System.out.println("ffmpeg -y -i \"" + localVideoPath + "\" -i \"" + localMp3Path + "\" -map 0:v -map 1:a \""
 								+ MediaPlayerJFrame.VIDEO_DIR_RELATIVE_PATH + File.separator + outputFile + ".mp4\"");
 				replacer.execute();
+				
+				//ffmpeg -y -i "Video/sample_video_big_buck_bunny_1_minute.avi" -y -i "MP3/test.mp3" -map 0:v -map 1:a -b:a 32k -strict -2 "Video/test.mp4"
+
 	}
 }

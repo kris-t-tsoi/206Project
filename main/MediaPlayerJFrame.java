@@ -89,10 +89,10 @@ public class MediaPlayerJFrame extends JFrame {
 	private static final String COMPLETE_TEXT = "Complete!";
 	JLabel lblCurrentSelection;
 	JLabel lblProcessing = new JLabel(" ");
-	
+
 	private static final ImageIcon REWIND_IMAGE = new ImageIcon("images/Rewind16.gif");
 	private static final ImageIcon FAST_FORWARD_IMAGE = new ImageIcon("images/Pause16.gif");
-	private static final ImageIcon MUTE_IMAGE = new ImageIcon("images/Pause16.gif");//TODO
+	private static final ImageIcon MUTE_IMAGE = new ImageIcon("images/Pause16.gif");// TODO
 
 	// Getters and setters for FileChoosers
 	public String getVideoPath() {
@@ -157,12 +157,11 @@ public class MediaPlayerJFrame extends JFrame {
 		video = mediaPlayerComponent.getMediaPlayer();
 		mediaPanel.add(mediaPlayerComponent, BorderLayout.CENTER);
 
-		
 		/*
 		 * Button to play the video It also acts as a pause/unpause button, and
 		 * is used to stop skipping backward or forward
 		 */
-		
+
 		final PlayButton btnPlay = new PlayButton(thisFrame);
 		btnPlay.setIcon(PlayButton.PLAY_IMAGE);
 		btnPlay.addActionListener(new ActionListener() {
@@ -196,7 +195,8 @@ public class MediaPlayerJFrame extends JFrame {
 
 		// Button to mute audio
 		final JButton btnMute = new JButton("Mute");
-		//btnMute.setIcon(new ImageIcon("images/Mute16.gif")); TODO make a mute button
+		// btnMute.setIcon(new ImageIcon("images/Mute16.gif")); TODO make a mute
+		// button
 		btnMute.setToolTipText("Mute the audio");
 		btnMute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -222,12 +222,12 @@ public class MediaPlayerJFrame extends JFrame {
 
 		// Label that displays the currently selected mp3
 		lblCurrentSelection = new JLabel(CURRENTLY_SELECTED_TEXT);
-		
+
 		/**
 		 * MenuBar placed at top of frame Item : Files
 		 */
 		fileMenuBar = new JMenuBar();
-		//fileMenuBar.setBounds(55, 28, 129, 21);
+		// fileMenuBar.setBounds(55, 28, 129, 21);
 
 		/**
 		 * JMenu Files -- Select Video and MP3
@@ -238,7 +238,7 @@ public class MediaPlayerJFrame extends JFrame {
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//select video
+				// select video
 				selectVideo(btnPlay);
 			}
 		}));
@@ -262,9 +262,9 @@ public class MediaPlayerJFrame extends JFrame {
 		}));
 		fileMenu.add(menuItem);
 		fileMenuBar.add(fileMenu);
-		
+
 		fileMenu = new JMenu("Text");
-		
+
 		menuItem = new JMenuItem("Play Text");
 		menuItem.addActionListener((new ActionListener() {
 			@Override
@@ -277,7 +277,7 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		}));
 		fileMenu.add(menuItem);
-		
+
 		final SaveTextButton saveTextMenuItem = new SaveTextButton();
 		saveTextMenuItem.addActionListener((new ActionListener() {
 			@Override
@@ -287,26 +287,26 @@ public class MediaPlayerJFrame extends JFrame {
 		}));
 		fileMenu.add(saveTextMenuItem);
 		fileMenuBar.add(fileMenu);
-		
+
 		fileMenu = new JMenu("Video");
-		
+
 		JMenu subMenu = new JMenu("Overlay Current Video With");
 		fileMenu.add(subMenu);
-		
+
 		final OverlayTextButton overlayTextItem = new OverlayTextButton(this);
 		overlayTextItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// First create the mp3
 				String mp3 = createValidMP3(thisFrame, overlayTextItem);
-				
+
 				// Then replace the audio
 				String localMp3Path = MP3_DIR_ABSOLUTE_PATH + File.separator + mp3;
 				replaceAudio(thisFrame, overlayTextItem, localMp3Path);
 			}
 		}));
 		subMenu.add(overlayTextItem);
-		
+
 		final OverlayExistingMp3Button overlayMp3Item = new OverlayExistingMp3Button(this);
 		overlayMp3Item.addActionListener((new ActionListener() {
 			@Override
@@ -317,9 +317,9 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		}));
 		subMenu.add(overlayMp3Item);
-		
+
 		fileMenuBar.add(fileMenu);
-		
+
 		// setJMenuBar(fileMenuBar);
 		mediaPanel.add(fileMenuBar, BorderLayout.NORTH);
 
@@ -353,9 +353,9 @@ public class MediaPlayerJFrame extends JFrame {
 										.addGroup(gl_contentPane.createSequentialGroup()
 												.addPreferredGap(ComponentPlacement.RELATED)
 												.addPreferredGap(ComponentPlacement.RELATED)))
-								.addPreferredGap(ComponentPlacement.RELATED).addComponent(sliderVolume,
-										GroupLayout.PREFERRED_SIZE, 150, Short.MAX_VALUE)))
-						.addGap(7)));
+								.addPreferredGap(ComponentPlacement.RELATED)
+								.addComponent(sliderVolume, GroupLayout.PREFERRED_SIZE, 150, Short.MAX_VALUE)))
+				.addGap(7)));
 		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup().addComponent(mediaPanel, GroupLayout.DEFAULT_SIZE,
 						GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -372,12 +372,10 @@ public class MediaPlayerJFrame extends JFrame {
 						.addComponent(txtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
 								GroupLayout.PREFERRED_SIZE)
 						.addPreferredGap(ComponentPlacement.RELATED)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								))
-						)
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE))))
 				.addPreferredGap(ComponentPlacement.RELATED)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblCurrentSelection).addComponent(lblProcessing)).addContainerGap()));
+				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE).addComponent(lblCurrentSelection)
+						.addComponent(lblProcessing)).addContainerGap()));
 		contentPane.setLayout(gl_contentPane);
 		setSize(600, 400);// Custom size so UI behaves nicely
 		// Set the frame as visible
@@ -395,8 +393,8 @@ public class MediaPlayerJFrame extends JFrame {
 	/**
 	 * Function to play a given media
 	 * 
-	 * @return true - user had just selected initial video 
-	 * @return	false -  
+	 * @return true - user had just selected initial video
+	 * @return false -
 	 */
 	public void play(JFrame thisFrame, PlayButton btnPlay) {
 		if (getVideoPath() == null) {
@@ -479,23 +477,36 @@ public class MediaPlayerJFrame extends JFrame {
 		// start file search in current file
 		vfc.setCurrentDirectory(VIDEO_DIR_ABSOLUTE_PATH);
 		int returnVal = vfc.showOpenDialog(thisFrame);
-		
+
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-		
-		
-			//check if user already playing another video
-			if(getVideoPath() != null){	
+
+			// check if user already playing another video
+			if (getVideoPath() != null) {
 				mediaPlayerComponent.getMediaPlayer().stop();
 				setVideoIsStarted(false);
 				btnPlay.btnSetPlayIcon();
 			}
-			
+
 			setVideoPath(vfc.getSelectedFile().getAbsolutePath());
 			JOptionPane.showMessageDialog(thisFrame, vfc.getSelectedFile().getName() + " has been selected.");
 
 		} else if (returnVal == JFileChooser.ERROR_OPTION) {
 			JOptionPane.showMessageDialog(thisFrame, ERROR_MESSAGE);
 		}
+	}
+
+	/**
+	 * Checks to see if video has reached the end
+	 * @return	true - reached the end of the vide0
+	 * @return	false - video is still in playable time range
+	 */
+	boolean checkIsEnd() {
+
+		if (video.getTime() >= video.getLength()) {
+			return true;
+		}
+
+		return false;
 	}
 
 }
