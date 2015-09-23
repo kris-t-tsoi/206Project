@@ -9,17 +9,24 @@ import javax.swing.SwingWorker;
 import main.MediaPlayerJFrame;
 
 /**
+<<<<<<< HEAD
  * This class is the play button of the media player. It alternates between
  * playing and pausing the video with the icon also changing between a pause
  * icon and a play icon. It also acts as a cancel for the skip
  * 
+=======
+ * This class is the play button of the media player.
+ * It alternates between playing and pausing the video with the icon also changing
+ * between a pause icon and a play icon.
+ * It also acts as a cancel for the current skipping, and contains the swingworker for skipping.
+>>>>>>> dd92dc490343774d4242212a607adeb73199a7b2
  *
  */
 public class PlayButton extends JButton {
 
 	private main.MediaPlayerJFrame parentFrame;
-	private BackgroundSkipper bgTask;
-
+	private BackgroundSkipper bgTask = null;
+	
 	private static final ImageIcon PAUSE_IMAGE = new ImageIcon("images/Pause16.gif");
 	public final static ImageIcon PLAY_IMAGE = new ImageIcon("images/Play16.gif");
 
@@ -39,7 +46,6 @@ public class PlayButton extends JButton {
 	class BackgroundSkipper extends SwingWorker<Void, Void> {
 		// If true, video skips forward. If false, backward.
 		private boolean skipForward;
-
 		public BackgroundSkipper(boolean skipFoward) {
 			this.skipForward = skipFoward;
 		}
@@ -65,20 +71,26 @@ public class PlayButton extends JButton {
 
 			return null;
 		}
-
 	}
 
 	/**
+<<<<<<< HEAD
 	 * This method determines what happens when the play button is pressed. 1.
 	 * Any skipping is cancelled. 2. If the video has not been chosen, it lets
 	 * the user choose a video 3. Start the video if not started
+=======
+	 * This method determines what happens when the play button is pressed.
+	 * 1. Any skipping is cancelled.
+	 * 2. If the video has not been chosen, it lets the user choose a video
+	 * 3. Start the video if not started
+>>>>>>> dd92dc490343774d4242212a607adeb73199a7b2
 	 */
 	public void playPressed() {
 		// Cancel any current skipping
 		if (bgTask != null) {
 			bgTask.cancel(true);
 			bgTask = null;
-			return;
+			parentFrame.restoreMutedStatus();
 		} else {
 			// If a video is not currently selected
 			if (parentFrame.getVideoPath() == null) {
@@ -86,17 +98,15 @@ public class PlayButton extends JButton {
 				parentFrame.selectVideo(this);
 			}
 
-			// Start the selected video if not started
 			else if (!parentFrame.getVideoIsStarted()) {
-				btnSetPauseIcon();
-				parentFrame.setVideoIsStarted(true);
-				parentFrame.setVideoVolume(MediaPlayerJFrame.DEFAULT_VOLUME);
-				parentFrame.play(this);
+					btnSetPauseIcon();
+					parentFrame.setVideoIsStarted(true);
+					parentFrame.setVideoVolume(MediaPlayerJFrame.DEFAULT_VOLUME);
+					parentFrame.play(this);
 
-				// Else the video is started
+			// Else the video is started		
 			} else {
 				// Pause or play the video
-
 				if (!parentFrame.videoIsPlaying()) {// Pause video if playing
 					parentFrame.pauseVideo(false);
 					btnSetPauseIcon();
@@ -132,7 +142,7 @@ public class PlayButton extends JButton {
 	 * 
 	 * @param forwards
 	 */
-	public void skipVideoForwards(boolean forwards) {
+	public void skipVideo(boolean forwards) {
 		if (bgTask != null)
 			bgTask.cancel(true);
 		bgTask = new BackgroundSkipper(forwards);
