@@ -39,6 +39,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 	private String videoPath;
 	private String mp3Path;
+	private String videoName;
 	
 	private JPanel contentPane;
 	private InputTextField txtInputText;
@@ -125,6 +126,13 @@ public class MediaPlayerJFrame extends JFrame {
 
 	public void pauseVideo(boolean pause) {
 		video.setPause(pause);
+	}
+	private String getVideoName() {
+		return videoName;
+	}
+
+	private void setVideoName(String videoName) {
+		this.videoName = videoName;
 	}
 
 	/**
@@ -515,7 +523,15 @@ public class MediaPlayerJFrame extends JFrame {
 		String videoPath = getVideoPath();
 		if (videoPath != null && mp3Path != null) {
 			String outputFile = (String) JOptionPane.showInputDialog(this,
-					"Please enter a name for the output file", "Output file name", JOptionPane.INFORMATION_MESSAGE);
+					"Please enter a name for the output file\n(output file can not have the same name as the current video)", "Output file name", JOptionPane.INFORMATION_MESSAGE);
+			
+			//check name user has choosen is not the same as the original video's name
+			while(outputFile.equals(getVideoName())){
+				outputFile = (String) JOptionPane.showInputDialog(this,
+						"Sorry, the output file can not have the same name as the current video\nPlease enter a name for the output file", "Output file name", JOptionPane.INFORMATION_MESSAGE);
+				
+			}	
+			
 			if (outputFile != null) {
 				lblProcessing.setText(PROCESS_TEXT);
 				label.replaceAudio(this, mp3Path, videoPath, outputFile);
@@ -544,9 +560,9 @@ public class MediaPlayerJFrame extends JFrame {
 				stopVideo();
 				btnPlay.btnSetPlayIcon();
 			}
-			
+			setVideoName(vfc.getSelectedFile().getName());
 			setVideoPath(vfc.getSelectedFile().getAbsolutePath());
-			JOptionPane.showMessageDialog(this, vfc.getSelectedFile().getName() + " has been selected.");
+			JOptionPane.showMessageDialog(this, getVideoName() + " has been selected.");
 
 		} else if (returnVal == JFileChooser.ERROR_OPTION) {
 			JOptionPane.showMessageDialog(this, ERROR_MESSAGE);

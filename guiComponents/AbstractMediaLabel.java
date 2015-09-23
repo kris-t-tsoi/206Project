@@ -45,4 +45,11 @@ public abstract class AbstractMediaLabel extends AbstractMP3Creator{
 								+ MediaPlayerJFrame.VIDEO_DIR_RELATIVE_PATH + File.separator + outputFile + ".mp4\"");
 				replacer.execute();
 	}
+	
+	public boolean checkFileName( String localVideoPath, String outputFile){
+		return false;
+		
+		
+	}
+	
 }
