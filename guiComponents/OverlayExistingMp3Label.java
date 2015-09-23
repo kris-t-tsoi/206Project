@@ -6,7 +6,7 @@ public class OverlayExistingMp3Label extends AbstractMediaLabel {
 	
 	public OverlayExistingMp3Label(MediaPlayerJFrame parentFrame) {
 		super(parentFrame);
-		setText("Existing MP3");
+		setText("Currently Selected MP3");
 	}
 	
 }
