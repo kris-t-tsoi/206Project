@@ -39,10 +39,14 @@ public class MediaPlayerJFrame extends JFrame {
 
 	private String videoPath;
 	private String mp3Path;
+	
 	private JPanel contentPane;
 	private InputTextField txtInputText;
 	EmbeddedMediaPlayerComponent mediaPlayerComponent;
 	EmbeddedMediaPlayer video;
+	private final JButton btnMute;
+	private static final String UNMUTE_TEXT = "Unmute";
+	private static final String MUTE_TEXT = "Mute";
 	private boolean videoIsStarted;
 
 	// Default volume of the video
@@ -80,6 +84,7 @@ public class MediaPlayerJFrame extends JFrame {
 	JLabel lblCurrentVideo;
 	JLabel lblProcessing = new JLabel(" ");
 	
+	//Images for fast forward and rewind icons
 	private static final ImageIcon REWIND_IMAGE = new ImageIcon("images/Rewind16.gif");
 	private static final ImageIcon FAST_FORWARD_IMAGE = new ImageIcon("images/FastForward16.gif");
 
@@ -128,12 +133,10 @@ public class MediaPlayerJFrame extends JFrame {
 	public MediaPlayerJFrame(String name) {
 		super(name);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//setBounds(100, 100, 600, 700);
 
 		// Create the folders needed if they don't exist
 		final File videoDir = VIDEO_DIR_ABSOLUTE_PATH;
 		final File mp3Dir = new File(MP3_DIR_RELATIVE_PATH);
-
 		videoDir.mkdir();
 		mp3Dir.mkdir();
 
@@ -167,7 +170,9 @@ public class MediaPlayerJFrame extends JFrame {
 		btnBackward.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (getVideoIsStarted())
-					btnPlay.skipVideoForwards(false);
+					//Skip backwards and mute the video
+					btnPlay.skipVideo(false);
+					video.mute(true);
 			}
 		});
 
@@ -177,19 +182,20 @@ public class MediaPlayerJFrame extends JFrame {
 		btnForward.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (getVideoIsStarted())
-					btnPlay.skipVideoForwards(true);
-			}
+					//Skip forwards and mute the video
+					btnPlay.skipVideo(true);
+					video.mute(true);
+				}
 		});
 
 		// JTextField that allows for user input to add to the video as text
 		txtInputText = new InputTextField();
 
 		// Button to mute audio
-		final JButton btnMute = new JButton("Mute");
+		btnMute = new JButton("Mute");
 		btnMute.setToolTipText("Mute the audio");
 		btnMute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
 				/*Set the text depending on the current state of the video.
 				 * Doesnt work if put after video.mute(), possibly because it doesnt update the
 				 * videos mute status quickly enough
@@ -228,7 +234,6 @@ public class MediaPlayerJFrame extends JFrame {
 		 * MenuBar placed at top of frame Item : Files
 		 */
 		fileMenuBar = new JMenuBar();
-		//fileMenuBar.setBounds(55, 28, 129, 21);
 
 		/**
 		 * JMenu Files -- Select Video and MP3
@@ -416,45 +421,54 @@ public class MediaPlayerJFrame extends JFrame {
 	}
 
 	/**
-	 * Function to allow release of the mediaPlayerComponent from the main class
+	 * Method to allow release of the mediaPlayerComponent from the main class
 	 */
-	public void release() {
+	protected void release() {
 		mediaPlayerComponent.release();
 	}
 
 	/**
-	 * Function to play a given media.
-	 * If there is no selected video, 
-	 * 
+	 * Method to play a given media.
 	 */
 	public void play(PlayButton btnPlay) {
 			video.playMedia(getVideoPath());
 	}
 
 	/**
-	 * Function to extract the media files basename i.e. everything after the
+	 * Method to extract the media files basename i.e. everything after the
 	 * last slash, and sets it as the label's text so the user knows what they
 	 * have selected
-	 * 
-	 * @param path
-	 *            - the path to the video or mp3
+	 * @param path -the path to the video or mp3
+	 *            
 	 */
 	private void setDisplayedMedia(JLabel label, String constantText, String path) {
-		String[] splitPath = path.split("/");
+		String[] splitPath = path.split(File.separator);
 		label.setText(constantText + splitPath[splitPath.length - 1]);
 	}
 
 	/**
-	 * Function to skip the video (for use by other objects)
-	 * 
+	 * Method to skip the video (for use by other objects)
 	 * @param value
 	 */
 	public void skip(int value) {
 		video.skip(value);
 	}
+	
+	/**
+	 * This method is used to restore the videos mute status after the play button is pressed
+	 * 	to stop skipping. During skipping, the video is muted so this method restores it.
+	 */
+	public void restoreMutedStatus() {
+		if (btnMute.getText().equals(MUTE_TEXT)) {
+			video.mute(false);
+		}
+		else {
+			video.mute(true);
+		}
+	}
 
 	/**
-	 * Function that creates an mp3 from the textField only if the number of
+	 * Method that creates an mp3 from the textField only if the number of
 	 * words is under the limit. It also returns the name of the created mp3
 	 * 
 	 * @param parentFrame
@@ -484,7 +498,6 @@ public class MediaPlayerJFrame extends JFrame {
 		lblProcessing.setText(COMPLETE_TEXT);
 	}
 
-
 	/**
 	 * This method replaces the audio of a video with the audio given by mp3Path
 	 * It first asks for a valid output file name, and if it is valid it sets the processing label to say
@@ -509,7 +522,10 @@ public class MediaPlayerJFrame extends JFrame {
 	}
 
 	/**
-	 * Open FileChooser and let the user choose a video to play
+	 * Open FileChooser and let the user choose a video to play.
+	 * If the user is already playing a video, stop the old one, set videoIsStarted to false, and update
+	 * the play button's icon to the play icon
+	 * @param btnPlay - the play button which has its icon set to the play icon.
 	 */
 	public void selectVideo(PlayButton btnPlay) {
 		// start file search in current file
@@ -517,8 +533,6 @@ public class MediaPlayerJFrame extends JFrame {
 		int returnVal = vfc.showOpenDialog(this);
 		
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-		
-		
 			//check if user already playing another video
 			if(getVideoPath() != null){	
 				mediaPlayerComponent.getMediaPlayer().stop();

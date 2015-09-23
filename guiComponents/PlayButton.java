@@ -12,14 +12,13 @@ import main.MediaPlayerJFrame;
  * This class is the play button of the media player.
  * It alternates between playing and pausing the video with the icon also changing
  * between a pause icon and a play icon.
- * It also acts as a cancel for the skip
- * 
+ * It also acts as a cancel for the current skipping, and contains the swingworker for skipping.
  *
  */
 public class PlayButton extends JButton {
 
 	private main.MediaPlayerJFrame parentFrame;
-	private BackgroundSkipper bgTask;
+	private BackgroundSkipper bgTask = null;
 	
 	private static final ImageIcon PAUSE_IMAGE = new ImageIcon("images/Pause16.gif");
 	public final static ImageIcon PLAY_IMAGE = new ImageIcon("images/Play16.gif");
@@ -40,7 +39,6 @@ public class PlayButton extends JButton {
 	class BackgroundSkipper extends SwingWorker<Void, Void> {
 		//If true, video skips forward. If false, backward.
 		private boolean skipForward;
-
 		public BackgroundSkipper(boolean skipFoward) {
 			this.skipForward = skipFoward;
 		}
@@ -56,7 +54,6 @@ public class PlayButton extends JButton {
 			}
 			return null;
 		}
-
 	}
 
 	/**
@@ -70,7 +67,7 @@ public class PlayButton extends JButton {
 		if (bgTask != null) {
 			bgTask.cancel(true);
 			bgTask = null;
-			return;
+			parentFrame.restoreMutedStatus();
 		} else {
 			//If a video is not currently selected
 			if (parentFrame.getVideoPath() == null) {
@@ -123,7 +120,7 @@ public class PlayButton extends JButton {
 	 * 
 	 * @param forwards
 	 */
-	public void skipVideoForwards(boolean forwards) {
+	public void skipVideo(boolean forwards) {
 		if (bgTask != null)
 			bgTask.cancel(true);
 		bgTask = new BackgroundSkipper(forwards);
