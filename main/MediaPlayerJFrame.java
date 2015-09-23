@@ -44,7 +44,6 @@ public class MediaPlayerJFrame extends JFrame {
 	EmbeddedMediaPlayerComponent mediaPlayerComponent;
 	EmbeddedMediaPlayer video;
 	private boolean videoIsStarted;
-	private final int buttonWidth = 125; // Standard width for all buttons
 
 	// Default volume of the video
 	public static final int DEFAULT_VOLUME = 50;
@@ -344,7 +343,6 @@ public class MediaPlayerJFrame extends JFrame {
 						.addComponent(mediaPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addContainerGap()
-							
 							/*Rest of the components are in lines that start from the left side of the frame.
 							 *Components that are in the same place vertically are in the same group, in the order they
 							 *appear from left to right  */
@@ -366,7 +364,7 @@ public class MediaPlayerJFrame extends JFrame {
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(lblImageIcon, GroupLayout.DEFAULT_SIZE, 30, GroupLayout.PREFERRED_SIZE)
 									.addGap(4)
-									.addComponent(sliderVolume, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))
+									.addComponent(sliderVolume, GroupLayout.PREFERRED_SIZE, 230, Short.MAX_VALUE))
 									//textField is in its own group
 								.addComponent(txtInputText, GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE))
 							.addPreferredGap(ComponentPlacement.RELATED)))
@@ -396,13 +394,12 @@ public class MediaPlayerJFrame extends JFrame {
 							.addComponent(lblImageIcon, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
 						.addComponent(sliderVolume, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					//next add the textField
+					//Next add the textField
 					.addComponent(txtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					
 					//Finally add the labels
+					//Processing label is in line with mediaToOverlay label, so they are in their own group
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-							//Processing label is in line with mediaToOverlay label
 						.addComponent(lblProcessing)
 						.addComponent(lblMediaToOverlay))
 					.addPreferredGap(ComponentPlacement.RELATED)
@@ -412,6 +409,7 @@ public class MediaPlayerJFrame extends JFrame {
 					.addContainerGap())
 		);
 		contentPane.setLayout(gl_contentPane);
+		
 		//Set the size of the JFrame
 		setMinimumSize(new Dimension(800, 611));
 		setVisible(true);
@@ -425,18 +423,12 @@ public class MediaPlayerJFrame extends JFrame {
 	}
 
 	/**
-	 * Function to play a given media
+	 * Function to play a given media.
+	 * If there is no selected video, 
 	 * 
-	 * @return true - user had just selected initial video 
-	 * @return	false -  
 	 */
 	public void play(PlayButton btnPlay) {
-		if (getVideoPath() == null) {
-			JOptionPane.showMessageDialog(this, "Please select a video to play.");
-			selectVideo(btnPlay);
-		} else {
 			video.playMedia(getVideoPath());
-		}
 	}
 
 	/**

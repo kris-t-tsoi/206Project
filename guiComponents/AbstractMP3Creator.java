@@ -2,10 +2,7 @@ package guiComponents;
 
 import java.io.File;
 import java.io.IOException;
-
-import javax.swing.JButton;
 import javax.swing.JMenuItem;
-
 import main.MediaPlayerJFrame;
 
 public abstract class AbstractMP3Creator extends JMenuItem {
@@ -14,18 +11,20 @@ public abstract class AbstractMP3Creator extends JMenuItem {
 		super();
 	}
 	/**
-	 * Function to create an mp3 from a string of text by: 1. creating a wav
-	 * file using text2wave 2. creating an mp3 from the wav file using ffmpeg 3.
-	 * removing the wav file NB: this overwrites an existing mp3 with the same
-	 * name
+	 * Function to create an mp3 from a string of text by: 
+	 * 1. creating a wav file using text2wave 
+	 * 2. creating an mp3 from the wav file using ffmpeg 
+	 * 3. removing the wav file NB: this overwrites an existing mp3 with the same name
 	 * 
-	 * @param outputName
-	 *            - the input string
+	 * @param textToSynth - the input string
+	 * @param outputName - name of the output file
+	 * 
 	 * 
 	 */
 	public void createMP3(String textToSynth, String outputName) {
-		useTerminalCommand("echo " + textToSynth + "|text2wave -o " + outputName + ".wav;" + "ffmpeg -y -i " + outputName
-				+ ".wav -f mp3 " + MediaPlayerJFrame.MP3_DIR_RELATIVE_PATH + File.separator + outputName + ".mp3;" + "rm " + outputName + ".wav");
+		useTerminalCommand("echo " + textToSynth + "|text2wave -o \"" + outputName + ".wav\";" + "ffmpeg -y -i \"" + outputName
+				+ ".wav\" -f mp3 \"" + MediaPlayerJFrame.MP3_DIR_RELATIVE_PATH + File.separator + outputName + ".mp3\";" 
+				+ "rm \"" + outputName + ".wav\"");
 	}
 	
 	/**

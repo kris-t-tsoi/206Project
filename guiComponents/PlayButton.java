@@ -60,7 +60,10 @@ public class PlayButton extends JButton {
 	}
 
 	/**
-	 * This method determines what happens when the play button is pressed
+	 * This method determines what happens when the play button is pressed.
+	 * 1. Any skipping is cancelled.
+	 * 2. If the video has not been chosen, it lets the user choose a video
+	 * 3. Start the video if not started
 	 */
 	public void playPressed() {
 		// Cancel any current skipping
@@ -69,22 +72,23 @@ public class PlayButton extends JButton {
 			bgTask = null;
 			return;
 		} else {
-			// Start the video if not started
+			//If a video is not currently selected
 			if (parentFrame.getVideoPath() == null) {
 				JOptionPane.showMessageDialog(parentFrame, "Please select a video to play.");
 				parentFrame.selectVideo(this);
 			}
+			
+			// Start the selected video if not started
 			else if (!parentFrame.getVideoIsStarted()) {
-				// check if video has just been selected or not
 					btnSetPauseIcon();
 					parentFrame.setVideoIsStarted(true);
 					parentFrame.setVideoVolume(MediaPlayerJFrame.DEFAULT_VOLUME);
 					parentFrame.play(this);
 
-				return;
+			// Else the video is started		
 			} else {
-
 				// Pause or play the video
+				
 				if (!parentFrame.videoIsPlaying()) {// Pause video if playing
 					parentFrame.pauseVideo(false);
 					btnSetPauseIcon();
