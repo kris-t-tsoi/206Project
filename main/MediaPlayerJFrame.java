@@ -82,8 +82,7 @@ public class MediaPlayerJFrame extends JFrame {
 	JLabel lblProcessing = new JLabel(" ");
 	
 	private static final ImageIcon REWIND_IMAGE = new ImageIcon("images/Rewind16.gif");
-	private static final ImageIcon FAST_FORWARD_IMAGE = new ImageIcon("images/Pause16.gif");
-	private static final ImageIcon MUTE_IMAGE = new ImageIcon("images/Pause16.gif");//TODO
+	private static final ImageIcon FAST_FORWARD_IMAGE = new ImageIcon("images/FastForward16.gif");
 
 	// Getters and setters for FileChoosers
 	public String getVideoPath() {
@@ -173,7 +172,7 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 
-		// Button to skip forward
+		// Button to skip forwards
 		JButton btnForward = new JButton();
 		btnForward.setIcon(FAST_FORWARD_IMAGE);
 		btnForward.addActionListener(new ActionListener() {
@@ -183,7 +182,7 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 
-		// JTextField that allows for user input so that
+		// JTextField that allows for user input to add to the video as text
 		txtInputText = new InputTextField();
 
 		// Button to mute audio
@@ -202,7 +201,6 @@ public class MediaPlayerJFrame extends JFrame {
 					btnMute.setText("Mute");
 				}
 				
-				//video.mute() unmutes if muted and vice versa
 				video.mute();
 			}
 		});
@@ -337,18 +335,26 @@ public class MediaPlayerJFrame extends JFrame {
 
 		// Windowbuilder generated code below, enter at your own risk
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
+		//First set the horizontal arrangement
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+							//MediaPanel is its own group
 						.addComponent(mediaPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addContainerGap()
+							
+							/*Rest of the components are in lines that start from the left side of the frame.
+							 *Components that are in the same place vertically are in the same group, in the order they
+							 *appear from left to right  */
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+									//Group of labels
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(lblMediaToOverlay)
 									.addPreferredGap(ComponentPlacement.RELATED, 328, Short.MAX_VALUE)
 									.addComponent(lblProcessing, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE))
+									//Group of buttons and volume icon
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
@@ -358,24 +364,29 @@ public class MediaPlayerJFrame extends JFrame {
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(lblImageIcon, GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+									.addComponent(lblImageIcon, GroupLayout.DEFAULT_SIZE, 30, GroupLayout.PREFERRED_SIZE)
 									.addGap(4)
 									.addComponent(sliderVolume, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))
+									//textField is in its own group
 								.addComponent(txtInputText, GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE))
 							.addPreferredGap(ComponentPlacement.RELATED)))
 					.addGap(7))
 				.addGroup(gl_contentPane.createSequentialGroup()
+						//These two labels below are not perfectly left aligned: there is a slight gap
 					.addGap(36)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 						.addComponent(lblCurrentVideo, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE)
 						.addComponent(lblCurrentMP3, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE))
 					.addContainerGap())
 		);
+		//Then set the vertical arrangement
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
+					//mediaPanel first, it can expand (Short.MAX_VALUE is used)
 					.addComponent(mediaPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
+					//Then we create a parallel group with the buttons and the volume slider
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 							.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
@@ -385,9 +396,13 @@ public class MediaPlayerJFrame extends JFrame {
 							.addComponent(lblImageIcon, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
 						.addComponent(sliderVolume, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
+					//next add the textField
 					.addComponent(txtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
+					
+					//Finally add the labels
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+							//Processing label is in line with mediaToOverlay label
 						.addComponent(lblProcessing)
 						.addComponent(lblMediaToOverlay))
 					.addPreferredGap(ComponentPlacement.RELATED)
@@ -397,10 +412,9 @@ public class MediaPlayerJFrame extends JFrame {
 					.addContainerGap())
 		);
 		contentPane.setLayout(gl_contentPane);
-		setSize(603, 476);// Custom size so UI behaves nicely
-		// Set the frame as visible
+		//Set the size of the JFrame
+		setMinimumSize(new Dimension(800, 611));
 		setVisible(true);
-
 	}
 
 	/**
