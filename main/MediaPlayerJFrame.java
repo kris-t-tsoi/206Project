@@ -15,12 +15,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import guiComponents.AbstractMP3Creator;
-import guiComponents.AbstractMediaButton;
+import guiComponents.AbstractMediaLabel;
 import guiComponents.InputTextField;
-import guiComponents.OverlayExistingMp3Button;
-import guiComponents.OverlayTextButton;
+import guiComponents.OverlayExistingMp3Label;
+import guiComponents.OverlayTextLabel;
 import guiComponents.PlayButton;
-import guiComponents.SaveTextButton;
+import guiComponents.SaveTextLabel;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import javax.swing.GroupLayout;
@@ -191,11 +191,18 @@ public class MediaPlayerJFrame extends JFrame {
 		btnMute.setToolTipText("Mute the audio");
 		btnMute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				/*Set the text depending on the current state of the video.
+				 * Doesnt work if put after video.mute(), possibly because it doesnt update the
+				 * videos mute status quickly enough
+				 */
 				if (!video.isMute()) {
 					btnMute.setText("Unmute");
 				} else {
 					btnMute.setText("Mute");
 				}
+				
+				//video.mute() unmutes if muted and vice versa
 				video.mute();
 			}
 		});
@@ -212,10 +219,10 @@ public class MediaPlayerJFrame extends JFrame {
 		sliderVolume.setToolTipText("Change the volume of the video");
 
 		
-		
+		//Label which 
 		JLabel lblMediaToOverlay = new JLabel("Media to overlay:");
 		
-		// Label that displays the currently selected mp3
+		// Labels that displays the currently selected mp3 and video
 		lblCurrentMP3 = new JLabel(CURRENT_MP3_TEXT);
 		
 		lblCurrentVideo = new JLabel(CURRENT_VIDEO_TEXT);
@@ -235,7 +242,7 @@ public class MediaPlayerJFrame extends JFrame {
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//select video
+				//Let the user select a video with a fileChooser
 				selectVideo(btnPlay);
 			}
 		}));
@@ -245,10 +252,11 @@ public class MediaPlayerJFrame extends JFrame {
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// Start file search in current directory
+				// Start file search in current directory, and show mp3's
 				FileNameExtensionFilter filter = new FileNameExtensionFilter("MP3 File", "mp3");
 				mp3fc.setFileFilter(filter);
 				mp3fc.setCurrentDirectory(mp3Dir);
+				
 				int returnVal = mp3fc.showOpenDialog(thisFrame);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					setMp3Path(mp3fc.getSelectedFile().getAbsolutePath());
@@ -262,10 +270,12 @@ public class MediaPlayerJFrame extends JFrame {
 		
 		fileMenu = new JMenu("Text");
 		
+		//Label which allows the user to play the text in the textField with festival
 		menuItem = new JMenuItem("Play Text");
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				//If the text is under the allowed limit, speak the text
 				if (txtInputText.checkTxtLength()) {
 					txtInputText.sayWithFestival(txtInputText.getText());
 				} else {
@@ -275,7 +285,8 @@ public class MediaPlayerJFrame extends JFrame {
 		}));
 		fileMenu.add(menuItem);
 		
-		final SaveTextButton saveTextMenuItem = new SaveTextButton();
+		//Label which allows the user to save the text in the textField to an mp3
+		final SaveTextLabel saveTextMenuItem = new SaveTextLabel();
 		saveTextMenuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -290,7 +301,8 @@ public class MediaPlayerJFrame extends JFrame {
 		JMenu subMenu = new JMenu("Overlay Current Video With");
 		fileMenu.add(subMenu);
 		
-		final OverlayTextButton overlayTextItem = new OverlayTextButton(this);
+		//Label to replace a video's audio with the text in the textField
+		final OverlayTextLabel overlayTextItem = new OverlayTextLabel(this);
 		overlayTextItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -304,11 +316,12 @@ public class MediaPlayerJFrame extends JFrame {
 		}));
 		subMenu.add(overlayTextItem);
 		
-		final OverlayExistingMp3Button overlayMp3Item = new OverlayExistingMp3Button(this);
+		//Sub-label which allows the user to replace a video's audio with a pre-selected mp3
+		final OverlayExistingMp3Label overlayMp3Item = new OverlayExistingMp3Label(this);
 		overlayMp3Item.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// Get the mp3 and video, then replace the audio
+				// Get the mp3, then replace the audio
 				String localMp3Path = getMp3Path();
 				replaceAudio(overlayMp3Item, localMp3Path);
 			}
@@ -316,10 +329,10 @@ public class MediaPlayerJFrame extends JFrame {
 		subMenu.add(overlayMp3Item);
 		
 		fileMenuBar.add(fileMenu);
-		
 		// setJMenuBar(fileMenuBar);
 		mediaPanel.add(fileMenuBar, BorderLayout.NORTH);
 
+		//Image which is on the left of the JSlider
 		JLabel lblImageIcon = new JLabel(new ImageIcon("images/Volume16.gif"));
 
 		// Windowbuilder generated code below, enter at your own risk
@@ -457,18 +470,30 @@ public class MediaPlayerJFrame extends JFrame {
 		return null;
 	}
 
+	/**
+	 * Method to set the processing label to say complete, for use by an AbstractMediaLabel subclass.
+	 * This method is called in the done() of AbstactMediaLabel's swingworker
+	 */
 	public void setLabelComplete() {
 		lblProcessing.setText(COMPLETE_TEXT);
 	}
 
-	private void replaceAudio(AbstractMediaButton button, String mp3Path) {
+
+	/**
+	 * This method replaces the audio of a video with the audio given by mp3Path
+	 * It first asks for a valid output file name, and if it is valid it sets the processing label to say
+	 * "Processing..." and then finally uses the label's replaceAudio method to replace the audio.
+	 * @param label
+	 * @param mp3Path
+	 */
+	private void replaceAudio(AbstractMediaLabel label, String mp3Path) {
 		String videoPath = getVideoPath();
 		if (videoPath != null && mp3Path != null) {
 			String outputFile = (String) JOptionPane.showInputDialog(this,
 					"Please enter a name for the output file", "Output file name", JOptionPane.INFORMATION_MESSAGE);
 			if (outputFile != null) {
 				lblProcessing.setText(PROCESS_TEXT);
-				button.replaceAudio(this, mp3Path, videoPath, outputFile);
+				label.replaceAudio(this, mp3Path, videoPath, outputFile);
 			} else {
 				JOptionPane.showMessageDialog(this, "Error: output file name cannot be blank.");
 			}
@@ -478,7 +503,7 @@ public class MediaPlayerJFrame extends JFrame {
 	}
 
 	/**
-	 * Open FileChooser and let user choose video to play
+	 * Open FileChooser and let the user choose a video to play
 	 */
 	public void selectVideo(PlayButton btnPlay) {
 		// start file search in current file

@@ -8,6 +8,14 @@ import javax.swing.SwingWorker;
 
 import main.MediaPlayerJFrame;
 
+/**
+ * This class is the play button of the media player.
+ * It alternates between playing and pausing the video with the icon also changing
+ * between a pause icon and a play icon.
+ * It also acts as a cancel for the skip
+ * 
+ *
+ */
 public class PlayButton extends JButton {
 
 	private main.MediaPlayerJFrame parentFrame;
@@ -15,6 +23,9 @@ public class PlayButton extends JButton {
 	
 	private static final ImageIcon PAUSE_IMAGE = new ImageIcon("images/Pause16.gif");
 	public final static ImageIcon PLAY_IMAGE = new ImageIcon("images/Play16.gif");
+	
+	private static final int SKIP_AMOUNT = 100;
+	private static final int SLEEP_AMOUNT = 10;
 
 	public PlayButton(MediaPlayerJFrame parentFrame) {
 		super();
@@ -27,6 +38,7 @@ public class PlayButton extends JButton {
 	 * 
 	 */
 	class BackgroundSkipper extends SwingWorker<Void, Void> {
+		//If true, video skips forward. If false, backward.
 		private boolean skipForward;
 
 		public BackgroundSkipper(boolean skipFoward) {
@@ -37,16 +49,19 @@ public class PlayButton extends JButton {
 		protected Void doInBackground() throws Exception {
 			// skipForward is a boolean which determines whether to skip
 			// forwards or backwards
-			int skipValue = skipForward ? 100 : -100;
+			int skipValue = skipForward ? SKIP_AMOUNT : -SKIP_AMOUNT;
 			while (!isCancelled()) {
 				parentFrame.skip(skipValue);
-				Thread.sleep(10);// Sleep in between skips to prevent errors
+				Thread.sleep(SLEEP_AMOUNT);// Sleep in between skips to prevent errors
 			}
 			return null;
 		}
 
 	}
 
+	/**
+	 * This method determines what happens when the play button is pressed
+	 */
 	public void playPressed() {
 		// Cancel any current skipping
 		if (bgTask != null) {
@@ -82,10 +97,18 @@ public class PlayButton extends JButton {
 		}
 	}
 	
-	public void btnSetPauseIcon() {
+	/**
+	 * Method to allow other classes to change the button to the pause icon
+	 */
+	private void btnSetPauseIcon() {
 		setIcon(PAUSE_IMAGE);
 	}
 	
+	/**
+	 * Method to allow MediaPlayerJFrame to change the button to the play icon
+	 * when a new video is selected, as the video does not auto-play but the 
+	 * icon could be a pause icon if the previous video was playing.
+	 */
 	public void btnSetPlayIcon() {
 		setIcon(PLAY_IMAGE);
 	}
