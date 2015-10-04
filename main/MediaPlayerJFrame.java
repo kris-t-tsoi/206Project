@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -14,6 +15,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -22,6 +24,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
 import guiComponents.AbstractMP3Creator;
 import guiComponents.AbstractReplaceAudioLabel;
 import guiComponents.InputTextField;
@@ -132,6 +135,7 @@ public class MediaPlayerJFrame extends JFrame {
 	public MediaPlayerJFrame(String name) {
 		super(name);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 
 		// Create the folders needed if they don't exist
 		final File videoDir = VIDEO_DIR_ABSOLUTE_PATH;
