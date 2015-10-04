@@ -1,53 +1,52 @@
 package main;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import guiComponents.AbstractMP3Creator;
-import guiComponents.AbstractMediaLabel;
+import guiComponents.AbstractReplaceAudioLabel;
 import guiComponents.InputTextField;
-import guiComponents.OverlayExistingMp3Label;
-import guiComponents.OverlayTextLabel;
+import guiComponents.ReplaceWithExistingMP3Label;
+import guiComponents.ReplaceTextLabel;
 import guiComponents.PlayButton;
+import guiComponents.ResizingEmbeddedMediaPlayerComponent;
 import guiComponents.SaveTextLabel;
-import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
+import net.miginfocom.swing.MigLayout;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.SwingConstants;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
 
 public class MediaPlayerJFrame extends JFrame {
 
 	private String videoPath;
 	private String mp3Path;
-	private String videoName;
 	
 	private JPanel contentPane;
 	private InputTextField txtInputText;
-	EmbeddedMediaPlayerComponent mediaPlayerComponent;
+	ResizingEmbeddedMediaPlayerComponent mediaPlayerComponent;
 	EmbeddedMediaPlayer video;
+	
 	private final JButton btnMute;
 	private static final String UNMUTE_TEXT = "Unmute";
 	private static final String MUTE_TEXT = "Mute";
+	
 	private boolean videoIsStarted;
 
 	// Default volume of the video
@@ -60,25 +59,24 @@ public class MediaPlayerJFrame extends JFrame {
 
 	// FileChooser-related fields
 	final MediaPlayerJFrame thisFrame = this;
-	final JFileChooser vfc = new JFileChooser();
-	final JFileChooser mp3fc = new JFileChooser();
+	final JFileChooser videoFC = new JFileChooser();
+	final JFileChooser mp3FC = new JFileChooser();
 	JMenuBar fileMenuBar;
 	JMenu fileMenu;
 	JMenuItem menuItem;
 
 	// Directory location constants
-
 	public static final String VIDEO_DIR_RELATIVE_PATH = "Video";
-	public static final File VIDEO_DIR_ABSOLUTE_PATH = new File(
+	private static final File VIDEO_DIR_ABSOLUTE_PATH = new File(
 			System.getProperty("user.dir") + File.separator + VIDEO_DIR_RELATIVE_PATH);
+	
 	public static final String MP3_DIR_RELATIVE_PATH = "MP3";
-
 	private static final String MP3_DIR_ABSOLUTE_PATH = System.getProperty("user.dir") + File.separator
 			+ MP3_DIR_RELATIVE_PATH;
 
 	// Dynamic labels for user information
-	private static final String CURRENT_MP3_TEXT = "Currently selected mp3: ";
-	private static final String CURRENT_VIDEO_TEXT = "Currently selected video: ";
+	private static final String CURRENT_MP3_TEXT = "Currently Selected MP3: ";
+	private static final String CURRENT_VIDEO_TEXT = "Currently Selected Video: ";
 	private static final String PROCESS_TEXT = "Processing...";
 	private static final String COMPLETE_TEXT = "Complete!";
 	JLabel lblCurrentMP3;
@@ -86,24 +84,24 @@ public class MediaPlayerJFrame extends JFrame {
 	JLabel lblProcessing = new JLabel(" ");
 	
 	//Images for fast forward and rewind icons
-	private static final ImageIcon REWIND_IMAGE = new ImageIcon("images/Rewind16.gif");
-	private static final ImageIcon FAST_FORWARD_IMAGE = new ImageIcon("images/FastForward16.gif");
+	private static final ImageIcon REWIND_IMAGE = new ImageIcon(MediaPlayerJFrame.class.getResource("/Rewind16.gif"));
+	private static final ImageIcon FAST_FORWARD_IMAGE = new ImageIcon(MediaPlayerJFrame.class.getResource("/FastForward16.gif"));
 
 	// Getters and setters for FileChoosers
 	public String getVideoPath() {
 		return videoPath;
 	}
 
-	public void setVideoPath(String videoPath) {
+	private void setVideoPath(String videoPath) {
 		this.videoPath = videoPath;
 		setDisplayedMedia(lblCurrentVideo, CURRENT_VIDEO_TEXT, videoPath);
 	}
 
-	public String getMp3Path() {
+	private String getMp3Path() {
 		return mp3Path;
 	}
 
-	public void setMp3Path(String mp3Path) {
+	private void setMp3Path(String mp3Path) {
 		this.mp3Path = mp3Path;
 		setDisplayedMedia(lblCurrentMP3, CURRENT_MP3_TEXT, mp3Path);
 	}
@@ -127,13 +125,6 @@ public class MediaPlayerJFrame extends JFrame {
 	public void pauseVideo(boolean pause) {
 		video.setPause(pause);
 	}
-	private String getVideoName() {
-		return videoName;
-	}
-
-	private void setVideoName(String videoName) {
-		this.videoName = videoName;
-	}
 
 	/**
 	 * Create the frame.
@@ -153,17 +144,14 @@ public class MediaPlayerJFrame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 
+		// Create a second JPanel which will contain the video
 		JPanel mediaPanel = new JPanel(new BorderLayout());
-		mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
+		mediaPlayerComponent = new ResizingEmbeddedMediaPlayerComponent();
 		video = mediaPlayerComponent.getMediaPlayer();
 		mediaPanel.add(mediaPlayerComponent, BorderLayout.CENTER);
-
 		
-		/*
-		 * Button to play the video It also acts as a pause/unpause button, and
-		 * is used to stop skipping backward or forward
-		 */
-		
+		/* Button to play the video. It also acts as a pause/unpause button, and
+		 * is used to stop skipping.*/
 		final PlayButton btnPlay = new PlayButton(this);
 		btnPlay.setIcon(PlayButton.PLAY_IMAGE);
 		btnPlay.addActionListener(new ActionListener() {
@@ -172,7 +160,7 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 
-		// Button to skip backwards
+		// Button to skip backwards - video is muted while skipping
 		JButton btnBackward = new JButton();
 		btnBackward.setIcon(REWIND_IMAGE);
 		btnBackward.addActionListener(new ActionListener() {
@@ -184,7 +172,7 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 
-		// Button to skip forwards
+		// Button to skip forwards - video is muted while skipping
 		JButton btnForward = new JButton();
 		btnForward.setIcon(FAST_FORWARD_IMAGE);
 		btnForward.addActionListener(new ActionListener() {
@@ -204,16 +192,13 @@ public class MediaPlayerJFrame extends JFrame {
 		btnMute.setToolTipText("Mute the audio");
 		btnMute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				/*Set the text depending on the current state of the video.
-				 * Doesnt work if put after video.mute(), possibly because it doesnt update the
-				 * videos mute status quickly enough
-				 */
+				//Set the new button text depending on the current state of the video.
 				if (!video.isMute()) {
-					btnMute.setText("Unmute");
+					btnMute.setText(UNMUTE_TEXT);
 				} else {
-					btnMute.setText("Mute");
+					btnMute.setText(MUTE_TEXT);
 				}
-				
+				//video.mute mutes if unmuted and vice versa
 				video.mute();
 			}
 		});
@@ -230,24 +215,23 @@ public class MediaPlayerJFrame extends JFrame {
 		sliderVolume.setToolTipText("Change the volume of the video");
 
 		
-		//Label which 
-		JLabel lblMediaToOverlay = new JLabel("Media to overlay:");
+		// Label which simply explains the other labels in the GUI
+		JLabel lblMediaToOverlay = new JLabel("Media to Combine:");
 		
 		// Labels that displays the currently selected mp3 and video
 		lblCurrentMP3 = new JLabel(CURRENT_MP3_TEXT);
-		
 		lblCurrentVideo = new JLabel(CURRENT_VIDEO_TEXT);
 		
-		/**
-		 * MenuBar placed at top of frame Item : Files
+		/*
+		 * JMenuBar containing most of the functionality
+		 * The tabs are: File, Text, and Video
 		 */
 		fileMenuBar = new JMenuBar();
 
-		/**
-		 * JMenu Files -- Select Video and MP3
-		 */
+		//File tab: Choose Video File, Choose MP3 File
 		fileMenu = new JMenu("File");
 
+		//This label opens a FileChooser to select a video
 		menuItem = new JMenuItem("Choose Video File");
 		menuItem.addActionListener((new ActionListener() {
 			@Override
@@ -258,24 +242,26 @@ public class MediaPlayerJFrame extends JFrame {
 		}));
 		fileMenu.add(menuItem);
 
+		//This label opens a FileChooser to select an MP3
 		menuItem = new JMenuItem("Choose MP3 File");
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// Start file search in current directory, and show mp3's
 				FileNameExtensionFilter filter = new FileNameExtensionFilter("MP3 File", "mp3");
-				mp3fc.setFileFilter(filter);
-				mp3fc.setCurrentDirectory(mp3Dir);
+				mp3FC.setFileFilter(filter);
+				mp3FC.setCurrentDirectory(mp3Dir);
 				
-				int returnVal = mp3fc.showOpenDialog(thisFrame);
+				int returnVal = mp3FC.showOpenDialog(thisFrame);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					setMp3Path(mp3fc.getSelectedFile().getAbsolutePath());
+					setMp3Path(mp3FC.getSelectedFile().getAbsolutePath());
 				} else if (returnVal == JFileChooser.ERROR_OPTION) {
 					JOptionPane.showMessageDialog(thisFrame, ERROR_MESSAGE);
 				}
 			}
 		}));
 		fileMenu.add(menuItem);
+		
 		fileMenuBar.add(fileMenu);
 		
 		fileMenu = new JMenu("Text");
@@ -308,123 +294,73 @@ public class MediaPlayerJFrame extends JFrame {
 		
 		fileMenu = new JMenu("Video");
 		
-		JMenu subMenu = new JMenu("Overlay Current Video With");
+		//Create a subMenu which contains two more tabs: Text and Existing MP3
+		JMenu subMenu = new JMenu("Replace Audio With");
 		fileMenu.add(subMenu);
 		
 		//Label to replace a video's audio with the text in the textField
-		final OverlayTextLabel overlayTextItem = new OverlayTextLabel(this);
+		final ReplaceTextLabel overlayTextItem = new ReplaceTextLabel(this);
 		overlayTextItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// First create the mp3
+				// First create the mp3, and get its name
 				String mp3 = createValidMP3(overlayTextItem);
 				
 				// Then replace the audio
-				String localMp3Path = MP3_DIR_ABSOLUTE_PATH + File.separator + mp3;
-				replaceAudio(overlayTextItem, localMp3Path);
+				String mp3Path = MP3_DIR_ABSOLUTE_PATH + File.separator + mp3;
+				replaceAudio(overlayTextItem, mp3Path);
 			}
 		}));
 		subMenu.add(overlayTextItem);
 		
 		//Sub-label which allows the user to replace a video's audio with a pre-selected mp3
-		final OverlayExistingMp3Label overlayMp3Item = new OverlayExistingMp3Label(this);
-		overlayMp3Item.addActionListener((new ActionListener() {
+		final ReplaceWithExistingMP3Label overlayMP3Item = new ReplaceWithExistingMP3Label(this);
+		overlayMP3Item.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// Get the mp3, then replace the audio
-				String localMp3Path = getMp3Path();
-				replaceAudio(overlayMp3Item, localMp3Path);
+				String mp3Path = getMp3Path();
+				replaceAudio(overlayMP3Item, mp3Path);
 			}
 		}));
-		subMenu.add(overlayMp3Item);
+		subMenu.add(overlayMP3Item);
 		
 		fileMenuBar.add(fileMenu);
-		// setJMenuBar(fileMenuBar);
-		mediaPanel.add(fileMenuBar, BorderLayout.NORTH);
+		 setJMenuBar(fileMenuBar);
+		//mediaPanel.add(fileMenuBar, BorderLayout.NORTH);
 
 		//Image which is on the left of the JSlider
-		JLabel lblImageIcon = new JLabel(new ImageIcon("images/Volume16.gif"));
+		JLabel lblImageIcon = new JLabel(new ImageIcon(MediaPlayerJFrame.class.getResource("/Volume16.gif")));
 
-		// Windowbuilder generated code below, enter at your own risk
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		//First set the horizontal arrangement
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-							//MediaPanel is its own group
-						.addComponent(mediaPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addContainerGap()
-							/*Rest of the components are in lines that start from the left side of the frame.
-							 *Components that are in the same place vertically are in the same group, in the order they
-							 *appear from left to right  */
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-									//Group of labels
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(lblMediaToOverlay)
-									.addPreferredGap(ComponentPlacement.RELATED, 328, Short.MAX_VALUE)
-									.addComponent(lblProcessing, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE))
-									//Group of buttons and volume icon
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(lblImageIcon, GroupLayout.DEFAULT_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-									.addGap(4)
-									.addComponent(sliderVolume, GroupLayout.PREFERRED_SIZE, 230, Short.MAX_VALUE))
-									//textField is in its own group
-								.addComponent(txtInputText, GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE))
-							.addPreferredGap(ComponentPlacement.RELATED)))
-					.addGap(7))
-				.addGroup(gl_contentPane.createSequentialGroup()
-						//These two labels below are not perfectly left aligned: there is a slight gap
-					.addGap(36)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(lblCurrentVideo, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE)
-						.addComponent(lblCurrentMP3, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE))
-					.addContainerGap())
-		);
-		//Then set the vertical arrangement
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					//mediaPanel first, it can expand (Short.MAX_VALUE is used)
-					.addComponent(mediaPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					//Then we create a parallel group with the buttons and the volume slider
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-							.addComponent(btnBackward, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-							.addComponent(btnPlay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-							.addComponent(btnForward, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-							.addComponent(btnMute, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-							.addComponent(lblImageIcon, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
-						.addComponent(sliderVolume, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					//Next add the textField
-					.addComponent(txtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					//Finally add the labels
-					//Processing label is in line with mediaToOverlay label, so they are in their own group
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblProcessing)
-						.addComponent(lblMediaToOverlay))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(lblCurrentVideo)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(lblCurrentMP3)
-					.addContainerGap())
-		);
-		contentPane.setLayout(gl_contentPane);
+		// Windowbuilder generated code below
 		
-		//Set the size of the JFrame
-		setMinimumSize(new Dimension(800, 611));
+		/* MigLayout is essentially a gridlayout but with custom sized grids: the grids do not have to be
+		 * square but can be rectangular. First the column sizes are created and then the rows.
+		 * Each column also can have a grow and shrink priority - in this case, only the last column and first row
+		 * can expand.
+		 */
+		contentPane.setLayout(new MigLayout("", "[60px,grow 0,shrink 0][4px,grow 0,shrink 0][60px,grow 0,shrink 0][4px,grow 0,shrink 0]"
+				+ "[60px,grow 0,shrink 0][4px,grow 0,shrink 0][100px,grow 0,shrink 0][4px,grow 0,shrink 0]"
+				+ "[10px,grow 0,shrink 0][2px,grow 0,shrink 0][421px,grow,shrink]", "[406px,grow, shrink][20px][20px][14px][14px][14px]"));
+		
+		/* Then every component is added to a specific grid location, with two extra optional numbers:
+		 * the width and height that the component should cover (in terms of rows and columns).
+		 * Finally, a component can grow in and align to a specific direction (e.g. growy, aligny top) or grow in
+		 * both directions (grow)
+		 */
+		contentPane.add(mediaPlayerComponent, "cell 0 0 11 1,grow");
+		contentPane.add(lblMediaToOverlay, "cell 0 3 3 1,alignx left,aligny top");
+		contentPane.add(lblProcessing, "cell 10 3,alignx right,aligny top");
+		contentPane.add(btnBackward, "cell 0 1,alignx center,grow");
+		contentPane.add(btnPlay, "cell 2 1,grow");
+		contentPane.add(btnForward, "cell 4 1,alignx center,grow");
+		contentPane.add(btnMute, "cell 6 1,grow");
+		contentPane.add(lblImageIcon, "cell 8 1,grow");
+		contentPane.add(sliderVolume, "cell 10 1,grow");
+		contentPane.add(txtInputText, "cell 0 2 11 1,growx,aligny top");
+		contentPane.add(lblCurrentVideo, "cell 2 4 9 1,growx,aligny top");
+		contentPane.add(lblCurrentMP3, "cell 2 5 9 1,growx,aligny top");
+		
 		setVisible(true);
 	}
 
@@ -436,13 +372,7 @@ public class MediaPlayerJFrame extends JFrame {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * Function to play a given media.
-	 * If there is no selected video, 
-	 * 
-=======
 	 * Method to play a given media.
->>>>>>> dd92dc490343774d4242212a607adeb73199a7b2
 	 */
 	public void play(PlayButton btnPlay) {
 			video.playMedia(getVideoPath());
@@ -519,22 +449,14 @@ public class MediaPlayerJFrame extends JFrame {
 	 * @param label
 	 * @param mp3Path
 	 */
-	private void replaceAudio(AbstractMediaLabel label, String mp3Path) {
+	private void replaceAudio(AbstractReplaceAudioLabel label, String mp3Path) {
 		String videoPath = getVideoPath();
 		if (videoPath != null && mp3Path != null) {
 			String outputFile = (String) JOptionPane.showInputDialog(this,
-					"Please enter a name for the output file\n(output file can not have the same name as the current video)", "Output file name", JOptionPane.INFORMATION_MESSAGE);
-			
-			//check name user has choosen is not the same as the original video's name
-			while(outputFile.equals(getVideoName())){
-				outputFile = (String) JOptionPane.showInputDialog(this,
-						"Sorry, the output file can not have the same name as the current video\nPlease enter a name for the output file", "Output file name", JOptionPane.INFORMATION_MESSAGE);
-				
-			}	
-			
+					"Please enter a name for the output file", "Output file name", JOptionPane.INFORMATION_MESSAGE);
 			if (outputFile != null) {
 				lblProcessing.setText(PROCESS_TEXT);
-				label.replaceAudio(this, mp3Path, videoPath, outputFile);
+				label.replaceAudio(mp3Path, videoPath, outputFile);
 			} else {
 				JOptionPane.showMessageDialog(this, "Error: output file name cannot be blank.");
 			}
@@ -551,45 +473,25 @@ public class MediaPlayerJFrame extends JFrame {
 	 */
 	public void selectVideo(PlayButton btnPlay) {
 		// start file search in current file
-		vfc.setCurrentDirectory(VIDEO_DIR_ABSOLUTE_PATH);
-		int returnVal = vfc.showOpenDialog(this);
+		videoFC.setCurrentDirectory(VIDEO_DIR_ABSOLUTE_PATH);
+		int returnVal = videoFC.showOpenDialog(this);
 		
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			//check if user already playing another video
+			/* Check if user already playing another video.
+			 * If they are, stop the current one and set isVideoStarted to false and the play button 
+			 * to display the play icon */
 			if(getVideoPath() != null){	
-				stopVideo();
+				mediaPlayerComponent.getMediaPlayer().stop();
+				setVideoIsStarted(false);
 				btnPlay.btnSetPlayIcon();
 			}
-			setVideoName(vfc.getSelectedFile().getName());
-			setVideoPath(vfc.getSelectedFile().getAbsolutePath());
-			JOptionPane.showMessageDialog(this, getVideoName() + " has been selected.");
+			
+			setVideoPath(videoFC.getSelectedFile().getAbsolutePath());
+			JOptionPane.showMessageDialog(this, videoFC.getSelectedFile().getName() + " has been selected.");
 
 		} else if (returnVal == JFileChooser.ERROR_OPTION) {
 			JOptionPane.showMessageDialog(this, ERROR_MESSAGE);
 		}
 	}
 
-	/**
-	 * Checks to see if video has reached the end
-	 * @return	true - reached the end of the vide0
-	 * @return	false - video is still in playable time range
-	 */
-	public boolean checkIsEnd() {
-		if (video.getTime()>= video.getLength()) {
-			stopVideo();
-			return true;
-		}
-
-		return false;
-	}
-	
-	/**
-	 * Stops the current video,
-	 * video will play from the start
-	 */
-	public void stopVideo(){
-		mediaPlayerComponent.getMediaPlayer().stop();
-		setVideoIsStarted(false);
-	}
-	
 }
