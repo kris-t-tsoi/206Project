@@ -17,8 +17,5 @@ public class VideoTimeSlider extends JSlider{
 	}
 
 	
-	// prints Duration: 00:01:00.04, start: 0.000000, bitrate: 438 kb/s
-	//.split("[^0-9:.]")
-	//ffprobe -i big_buck_bunny_1_minute.avi -show_format 2>&1 | grep Duration
 
 }

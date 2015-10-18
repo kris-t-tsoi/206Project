@@ -370,6 +370,7 @@ public class MediaPlayerJFrame extends JFrame {
 				MediaPlayerJFrame.class.getResource("/Volume16.gif")));
 
 		vidSlide = new VideoTimeSlider(video);
+		vidTotalTime = new VideoTotalTimeLabel();
 
 		// Windowbuilder generated code below
 
@@ -417,7 +418,7 @@ public class MediaPlayerJFrame extends JFrame {
 		JLabel dash = new JLabel(" / ");
 		contentPane.add(dash, "cell 1 1 11 2,growx,aligny top");// total time
 		// total time label TODO
-		// contentPane.add(lblImageIcon, "cell 2 1,grow");
+		contentPane.add(vidTotalTime, "cell 2 1,grow");
 		contentPane.add(vidSlide, "cell 3 1 11 2,growx,aligny top");
 
 		contentPane.add(lblCurrentVideo, "cell 2 4 9 1,growx,aligny top");
@@ -572,6 +573,8 @@ public class MediaPlayerJFrame extends JFrame {
 			// TODO
 			// set total time of video
 			// vidTotalTime.setText(text);
+			vidTotalTime.findVideoDuration(getVideoPath());
+			
 
 		} else if (returnVal == JFileChooser.ERROR_OPTION) {
 			JOptionPane.showMessageDialog(this, ERROR_MESSAGE);
