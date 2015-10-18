@@ -50,7 +50,6 @@ public class MediaPlayerJFrame extends JFrame {
 	VideoTimeSlider vidSlide;
 	VideoTotalTimeLabel vidTotalTime;
 
-
 	private final JButton btnMute;
 	private static final String UNMUTE_TEXT = "Unmute";
 	private static final String MUTE_TEXT = "Mute";
@@ -162,7 +161,6 @@ public class MediaPlayerJFrame extends JFrame {
 		video = mediaPlayerComponent.getMediaPlayer();
 		mediaPanel.add(mediaPlayerComponent, BorderLayout.CENTER);
 
-
 		// Create a JSlider to show the progress of the video
 		// 0 and video length are the limits.
 		// 0 is default starting point
@@ -178,7 +176,6 @@ public class MediaPlayerJFrame extends JFrame {
 		// });
 		// videoBar.setMinorTickSpacing(1);
 		// videoBar.setToolTipText("Change the volume of the video");
-
 
 		/*
 		 * Button to play the video. It also acts as a pause/unpause button, and
@@ -368,13 +365,11 @@ public class MediaPlayerJFrame extends JFrame {
 		setJMenuBar(fileMenuBar);
 		// mediaPanel.add(fileMenuBar, BorderLayout.NORTH);
 
-
 		// Image which is on the left of the JSlider
 		JLabel lblImageIcon = new JLabel(new ImageIcon(
 				MediaPlayerJFrame.class.getResource("/Volume16.gif")));
 
 		vidSlide = new VideoTimeSlider(video);
-
 
 		// Windowbuilder generated code below
 
@@ -396,7 +391,6 @@ public class MediaPlayerJFrame extends JFrame {
 						"[406px,grow, shrink][20px][20px][14px][14px][14px]")); // Row
 																				// Constraints
 
-
 		/*
 		 * Then every component is added to a specific grid location, with two
 		 * extra optional numbers: the width and height that the component
@@ -405,20 +399,27 @@ public class MediaPlayerJFrame extends JFrame {
 		 * grow in both directions (grow)
 		 */
 		contentPane.add(mediaPlayerComponent, "cell 0 0 11 1,grow");
-
-		// contentPane.add(videoBar,"cell 0 0 11 1,grow,wrap");
-
 		contentPane.add(lblMediaToOverlay,
 				"cell 0 3 3 1,alignx left,aligny top");
 		contentPane.add(lblProcessing, "cell 10 3,alignx right,aligny top");
-		contentPane.add(btnBackward, "cell 0 1,alignx center,grow");
-		contentPane.add(btnPlay, "cell 2 1,grow");
-		contentPane.add(btnForward, "cell 4 1,alignx center,grow");
-		contentPane.add(btnMute, "cell 6 1,grow");
-		contentPane.add(lblImageIcon, "cell 8 1,grow");
-		contentPane.add(sliderVolume, "cell 10 1,grow");
+		contentPane.add(btnBackward, "cell 0 2,alignx center,grow");
+		contentPane.add(btnPlay, "cell 2 2,grow");
+		contentPane.add(btnForward, "cell 4 2,alignx center,grow");
+		contentPane.add(btnMute, "cell 6 2,grow");
+		contentPane.add(lblImageIcon, "cell 8 2,grow");
+		contentPane.add(sliderVolume, "cell 10 2,grow");
 		// contentPane.add(txtInputText, "cell 0 2 11 1,growx,aligny top");
-		contentPane.add(vidSlide, "cell 0 2 11 1,growx,aligny top");
+		// TODO do text stuff
+
+		// current playing time
+		// contentPane.add(lblImageIcon, "cell 0 1,grow");
+
+		JLabel dash = new JLabel(" / ");
+		contentPane.add(dash, "cell 1 1 11 2,growx,aligny top");// total time
+		// total time label TODO
+		// contentPane.add(lblImageIcon, "cell 2 1,grow");
+		contentPane.add(vidSlide, "cell 3 1 11 2,growx,aligny top");
+
 		contentPane.add(lblCurrentVideo, "cell 2 4 9 1,growx,aligny top");
 		contentPane.add(lblCurrentMP3, "cell 2 5 9 1,growx,aligny top");
 
@@ -568,12 +569,9 @@ public class MediaPlayerJFrame extends JFrame {
 			JOptionPane.showMessageDialog(this, videoFC.getSelectedFile()
 					.getName() + " has been selected.");
 
-			
-			
-			//TODO 
-			//set total time of video
-			//vidTotalTime.setText(text);
-
+			// TODO
+			// set total time of video
+			// vidTotalTime.setText(text);
 
 		} else if (returnVal == JFileChooser.ERROR_OPTION) {
 			JOptionPane.showMessageDialog(this, ERROR_MESSAGE);
