@@ -40,16 +40,16 @@ public class MediaPlayerJFrame extends JFrame {
 
 	private String videoPath;
 	private String mp3Path;
-	
+
 	private JPanel contentPane;
 	private InputTextField txtInputText;
 	ResizingEmbeddedMediaPlayerComponent mediaPlayerComponent;
 	EmbeddedMediaPlayer video;
-	
+
 	private final JButton btnMute;
 	private static final String UNMUTE_TEXT = "Unmute";
 	private static final String MUTE_TEXT = "Mute";
-	
+
 	private boolean videoIsStarted;
 
 	// Default volume of the video
@@ -71,11 +71,12 @@ public class MediaPlayerJFrame extends JFrame {
 	// Directory location constants
 	public static final String VIDEO_DIR_RELATIVE_PATH = "Video";
 	private static final File VIDEO_DIR_ABSOLUTE_PATH = new File(
-			System.getProperty("user.dir") + File.separator + VIDEO_DIR_RELATIVE_PATH);
-	
+			System.getProperty("user.dir") + File.separator
+					+ VIDEO_DIR_RELATIVE_PATH);
+
 	public static final String MP3_DIR_RELATIVE_PATH = "MP3";
-	private static final String MP3_DIR_ABSOLUTE_PATH = System.getProperty("user.dir") + File.separator
-			+ MP3_DIR_RELATIVE_PATH;
+	private static final String MP3_DIR_ABSOLUTE_PATH = System
+			.getProperty("user.dir") + File.separator + MP3_DIR_RELATIVE_PATH;
 
 	// Dynamic labels for user information
 	private static final String CURRENT_MP3_TEXT = "Currently Selected MP3: ";
@@ -85,10 +86,12 @@ public class MediaPlayerJFrame extends JFrame {
 	JLabel lblCurrentMP3;
 	JLabel lblCurrentVideo;
 	JLabel lblProcessing = new JLabel(" ");
-	
-	//Images for fast forward and rewind icons
-	private static final ImageIcon REWIND_IMAGE = new ImageIcon(MediaPlayerJFrame.class.getResource("/Rewind16.gif"));
-	private static final ImageIcon FAST_FORWARD_IMAGE = new ImageIcon(MediaPlayerJFrame.class.getResource("/FastForward16.gif"));
+
+	// Images for fast forward and rewind icons
+	private static final ImageIcon REWIND_IMAGE = new ImageIcon(
+			MediaPlayerJFrame.class.getResource("/Rewind16.gif"));
+	private static final ImageIcon FAST_FORWARD_IMAGE = new ImageIcon(
+			MediaPlayerJFrame.class.getResource("/FastForward16.gif"));
 
 	// Getters and setters for FileChoosers
 	public String getVideoPath() {
@@ -153,9 +156,29 @@ public class MediaPlayerJFrame extends JFrame {
 		mediaPlayerComponent = new ResizingEmbeddedMediaPlayerComponent();
 		video = mediaPlayerComponent.getMediaPlayer();
 		mediaPanel.add(mediaPlayerComponent, BorderLayout.CENTER);
+
+		// Create a JSlider to show the progress of the video 
+		//0 and video length are the limits. 
+		// 0 is default starting point
+		//video.getLength() is multiplied by 10000 and converted into int to prevent precision loss
+//		JSlider videoBar = new JSlider(SwingConstants.HORIZONTAL, 0, (int)(video.getLength()*10000),0);
+//		videoBar.addChangeListener(new ChangeListener() {
+//			public void stateChanged(ChangeEvent arg0) {
+//				//need to divide get value by 10000
+//				video.setTime(((JSlider) arg0.getSource()).getValue()/10000);
+//			}
+//		});
+//		videoBar.setMinorTickSpacing(1);
+//		videoBar.setToolTipText("Change the volume of the video");
+
 		
-		/* Button to play the video. It also acts as a pause/unpause button, and
-		 * is used to stop skipping.*/
+		
+		
+		
+		/*
+		 * Button to play the video. It also acts as a pause/unpause button, and
+		 * is used to stop skipping.
+		 */
 		final PlayButton btnPlay = new PlayButton(this);
 		btnPlay.setIcon(PlayButton.PLAY_IMAGE);
 		btnPlay.addActionListener(new ActionListener() {
@@ -170,9 +193,9 @@ public class MediaPlayerJFrame extends JFrame {
 		btnBackward.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (getVideoIsStarted())
-					//Skip backwards and mute the video
+					// Skip backwards and mute the video
 					btnPlay.skipVideo(false);
-					video.mute(true);
+				video.mute(true);
 			}
 		});
 
@@ -182,10 +205,10 @@ public class MediaPlayerJFrame extends JFrame {
 		btnForward.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (getVideoIsStarted())
-					//Skip forwards and mute the video
+					// Skip forwards and mute the video
 					btnPlay.skipVideo(true);
-					video.mute(true);
-				}
+				video.mute(true);
+			}
 		});
 
 		// JTextField that allows for user input to add to the video as text
@@ -196,20 +219,22 @@ public class MediaPlayerJFrame extends JFrame {
 		btnMute.setToolTipText("Mute the audio");
 		btnMute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//Set the new button text depending on the current state of the video.
+				// Set the new button text depending on the current state of the
+				// video.
 				if (!video.isMute()) {
 					btnMute.setText(UNMUTE_TEXT);
 				} else {
 					btnMute.setText(MUTE_TEXT);
 				}
-				//video.mute mutes if unmuted and vice versa
+				// video.mute mutes if unmuted and vice versa
 				video.mute();
 			}
 		});
 
 		// Create a JSlider with 0 and 100 as the volume limits. 50 is the
 		// default (it is set to 50 in the constructor).
-		JSlider sliderVolume = new JSlider(SwingConstants.HORIZONTAL, 0, 100, DEFAULT_VOLUME);
+		JSlider sliderVolume = new JSlider(SwingConstants.HORIZONTAL, 0, 100,
+				DEFAULT_VOLUME);
 		sliderVolume.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				video.setVolume(((JSlider) arg0.getSource()).getValue());
@@ -218,44 +243,44 @@ public class MediaPlayerJFrame extends JFrame {
 		sliderVolume.setMinorTickSpacing(1);
 		sliderVolume.setToolTipText("Change the volume of the video");
 
-		
 		// Label which simply explains the other labels in the GUI
 		JLabel lblMediaToOverlay = new JLabel("Media to Combine:");
-		
+
 		// Labels that displays the currently selected mp3 and video
 		lblCurrentMP3 = new JLabel(CURRENT_MP3_TEXT);
 		lblCurrentVideo = new JLabel(CURRENT_VIDEO_TEXT);
-		
+
 		/*
-		 * JMenuBar containing most of the functionality
-		 * The tabs are: File, Text, and Video
+		 * JMenuBar containing most of the functionality The tabs are: File,
+		 * Text, and Video
 		 */
 		fileMenuBar = new JMenuBar();
 
-		//File tab: Choose Video File, Choose MP3 File
+		// File tab: Choose Video File, Choose MP3 File
 		fileMenu = new JMenu("File");
 
-		//This label opens a FileChooser to select a video
+		// This label opens a FileChooser to select a video
 		menuItem = new JMenuItem("Choose Video File");
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//Let the user select a video with a fileChooser
+				// Let the user select a video with a fileChooser
 				selectVideo(btnPlay);
 			}
 		}));
 		fileMenu.add(menuItem);
 
-		//This label opens a FileChooser to select an MP3
+		// This label opens a FileChooser to select an MP3
 		menuItem = new JMenuItem("Choose MP3 File");
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// Start file search in current directory, and show mp3's
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("MP3 File", "mp3");
+				FileNameExtensionFilter filter = new FileNameExtensionFilter(
+						"MP3 File", "mp3");
 				mp3FC.setFileFilter(filter);
 				mp3FC.setCurrentDirectory(mp3Dir);
-				
+
 				int returnVal = mp3FC.showOpenDialog(thisFrame);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					setMp3Path(mp3FC.getSelectedFile().getAbsolutePath());
@@ -265,27 +290,30 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		}));
 		fileMenu.add(menuItem);
-		
+
 		fileMenuBar.add(fileMenu);
-		
+
 		fileMenu = new JMenu("Text");
-		
-		//Label which allows the user to play the text in the textField with festival
+
+		// Label which allows the user to play the text in the textField with
+		// festival
 		menuItem = new JMenuItem("Play Text");
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//If the text is under the allowed limit, speak the text
+				// If the text is under the allowed limit, speak the text
 				if (txtInputText.checkTxtLength()) {
 					txtInputText.sayWithFestival(txtInputText.getText());
 				} else {
-					JOptionPane.showMessageDialog(thisFrame, ERROR_WORD_LIMIT_MESSAGE);
+					JOptionPane.showMessageDialog(thisFrame,
+							ERROR_WORD_LIMIT_MESSAGE);
 				}
 			}
 		}));
 		fileMenu.add(menuItem);
-		
-		//Label which allows the user to save the text in the textField to an mp3
+
+		// Label which allows the user to save the text in the textField to an
+		// mp3
 		final SaveTextLabel saveTextMenuItem = new SaveTextLabel();
 		saveTextMenuItem.addActionListener((new ActionListener() {
 			@Override
@@ -295,30 +323,32 @@ public class MediaPlayerJFrame extends JFrame {
 		}));
 		fileMenu.add(saveTextMenuItem);
 		fileMenuBar.add(fileMenu);
-		
+
 		fileMenu = new JMenu("Video");
-		
-		//Create a subMenu which contains two more tabs: Text and Existing MP3
+
+		// Create a subMenu which contains two more tabs: Text and Existing MP3
 		JMenu subMenu = new JMenu("Replace Audio With");
 		fileMenu.add(subMenu);
-		
-		//Label to replace a video's audio with the text in the textField
+
+		// Label to replace a video's audio with the text in the textField
 		final ReplaceTextLabel overlayTextItem = new ReplaceTextLabel(this);
 		overlayTextItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// First create the mp3, and get its name
 				String mp3 = createValidMP3(overlayTextItem);
-				
+
 				// Then replace the audio
 				String mp3Path = MP3_DIR_ABSOLUTE_PATH + File.separator + mp3;
 				replaceAudio(overlayTextItem, mp3Path);
 			}
 		}));
 		subMenu.add(overlayTextItem);
-		
-		//Sub-label which allows the user to replace a video's audio with a pre-selected mp3
-		final ReplaceWithExistingMP3Label overlayMP3Item = new ReplaceWithExistingMP3Label(this);
+
+		// Sub-label which allows the user to replace a video's audio with a
+		// pre-selected mp3
+		final ReplaceWithExistingMP3Label overlayMP3Item = new ReplaceWithExistingMP3Label(
+				this);
 		overlayMP3Item.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -328,32 +358,45 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		}));
 		subMenu.add(overlayMP3Item);
-		
-		fileMenuBar.add(fileMenu);
-		 setJMenuBar(fileMenuBar);
-		//mediaPanel.add(fileMenuBar, BorderLayout.NORTH);
 
-		//Image which is on the left of the JSlider
-		JLabel lblImageIcon = new JLabel(new ImageIcon(MediaPlayerJFrame.class.getResource("/Volume16.gif")));
+		fileMenuBar.add(fileMenu);
+		setJMenuBar(fileMenuBar);
+		// mediaPanel.add(fileMenuBar, BorderLayout.NORTH);
+
+		// Image which is on the left of the JSlider
+		JLabel lblImageIcon = new JLabel(new ImageIcon(
+				MediaPlayerJFrame.class.getResource("/Volume16.gif")));
+		
+		
 
 		// Windowbuilder generated code below
-		
-		/* MigLayout is essentially a gridlayout but with custom sized grids: the grids do not have to be
-		 * square but can be rectangular. First the column sizes are created and then the rows.
-		 * Each column also can have a grow and shrink priority - in this case, only the last column and first row
-		 * can expand.
+
+		/*
+		 * MigLayout is essentially a gridlayout but with custom sized grids:
+		 * the grids do not have to be square but can be rectangular. First the
+		 * column sizes are created and then the rows. Each column also can have
+		 * a grow and shrink priority - in this case, only the last column and
+		 * first row can expand.
 		 */
-		contentPane.setLayout(new MigLayout("", "[60px,grow 0,shrink 0][4px,grow 0,shrink 0][60px,grow 0,shrink 0][4px,grow 0,shrink 0]"
-				+ "[60px,grow 0,shrink 0][4px,grow 0,shrink 0][100px,grow 0,shrink 0][4px,grow 0,shrink 0]"
-				+ "[10px,grow 0,shrink 0][2px,grow 0,shrink 0][421px,grow,shrink]", "[406px,grow, shrink][20px][20px][14px][14px][14px]"));
-		
-		/* Then every component is added to a specific grid location, with two extra optional numbers:
-		 * the width and height that the component should cover (in terms of rows and columns).
-		 * Finally, a component can grow in and align to a specific direction (e.g. growy, aligny top) or grow in
-		 * both directions (grow)
+		contentPane
+				.setLayout(new MigLayout(
+						"",		//Layout Constraint
+						"[60px,grow 0,shrink 0][4px,grow 0,shrink 0][60px,grow 0,shrink 0][4px,grow 0,shrink 0]"
+								+ "[60px,grow 0,shrink 0][4px,grow 0,shrink 0][100px,grow 0,shrink 0][4px,grow 0,shrink 0]"
+								+ "[10px,grow 0,shrink 0][2px,grow 0,shrink 0][421px,grow,shrink]",		//Column Constraints
+						"[406px,grow, shrink][20px][20px][14px][14px][14px]"));		//Row Constraints
+
+		/*
+		 * Then every component is added to a specific grid location, with two
+		 * extra optional numbers: the width and height that the component
+		 * should cover (in terms of rows and columns). Finally, a component can
+		 * grow in and align to a specific direction (e.g. growy, aligny top) or
+		 * grow in both directions (grow)
 		 */
 		contentPane.add(mediaPlayerComponent, "cell 0 0 11 1,grow");
-		contentPane.add(lblMediaToOverlay, "cell 0 3 3 1,alignx left,aligny top");
+		//contentPane.add(videoBar,"cell 0 0 11 1,grow,wrap");
+		contentPane.add(lblMediaToOverlay,
+				"cell 0 3 3 1,alignx left,aligny top");
 		contentPane.add(lblProcessing, "cell 10 3,alignx right,aligny top");
 		contentPane.add(btnBackward, "cell 0 1,alignx center,grow");
 		contentPane.add(btnPlay, "cell 2 1,grow");
@@ -364,7 +407,7 @@ public class MediaPlayerJFrame extends JFrame {
 		contentPane.add(txtInputText, "cell 0 2 11 1,growx,aligny top");
 		contentPane.add(lblCurrentVideo, "cell 2 4 9 1,growx,aligny top");
 		contentPane.add(lblCurrentMP3, "cell 2 5 9 1,growx,aligny top");
-		
+
 		setVisible(true);
 	}
 
@@ -379,45 +422,49 @@ public class MediaPlayerJFrame extends JFrame {
 	 * Method to play a given media.
 	 */
 	public void play(PlayButton btnPlay) {
-			video.playMedia(getVideoPath());
+		video.playMedia(getVideoPath());
 	}
 
 	/**
-	 * Method to extract the media files basename i.e. everything after the
-	 * last slash, and sets it as the label's text so the user knows what they
-	 * have selected
-	 * @param path -the path to the video or mp3
-	 *            
+	 * Method to extract the media files basename i.e. everything after the last
+	 * slash, and sets it as the label's text so the user knows what they have
+	 * selected
+	 * 
+	 * @param path
+	 *            -the path to the video or mp3
+	 * 
 	 */
-	private void setDisplayedMedia(JLabel label, String constantText, String path) {
+	private void setDisplayedMedia(JLabel label, String constantText,
+			String path) {
 		String[] splitPath = path.split(File.separator);
 		label.setText(constantText + splitPath[splitPath.length - 1]);
 	}
 
 	/**
 	 * Method to skip the video (for use by other objects)
+	 * 
 	 * @param value
 	 */
 	public void skip(int value) {
 		video.skip(value);
 	}
-	
+
 	/**
-	 * This method is used to restore the videos mute status after the play button is pressed
-	 * 	to stop skipping. During skipping, the video is muted so this method restores it.
+	 * This method is used to restore the videos mute status after the play
+	 * button is pressed to stop skipping. During skipping, the video is muted
+	 * so this method restores it.
 	 */
 	public void restoreMutedStatus() {
 		if (btnMute.getText().equals(MUTE_TEXT)) {
 			video.mute(false);
-		}
-		else {
+		} else {
 			video.mute(true);
 		}
 	}
 
 	/**
-	 * Method that creates an mp3 from the textField only if the number of
-	 * words is under the limit. It also returns the name of the created mp3
+	 * Method that creates an mp3 from the textField only if the number of words
+	 * is under the limit. It also returns the name of the created mp3
 	 * 
 	 * @param parentFrame
 	 *            - the current frame, used in JOptionPane
@@ -426,21 +473,24 @@ public class MediaPlayerJFrame extends JFrame {
 	private String createValidMP3(AbstractMP3Creator menuItem) {
 		// check if number of word is within limit
 		if (txtInputText.checkTxtLength()) {
-			String mp3Name = JOptionPane.showInputDialog(this, "Enter a name for the mp3 file");
+			String mp3Name = JOptionPane.showInputDialog(this,
+					"Enter a name for the mp3 file");
 			if ((mp3Name != null) && !mp3Name.startsWith(" ")) {
 				menuItem.createMP3(txtInputText.getText(), mp3Name);
 				// Return the name of the mp3 that was created
 				return mp3Name + ".mp3";
 			}
 		} else {
-			JOptionPane.showMessageDialog(this, MediaPlayerJFrame.ERROR_WORD_LIMIT_MESSAGE);
+			JOptionPane.showMessageDialog(this,
+					MediaPlayerJFrame.ERROR_WORD_LIMIT_MESSAGE);
 		}
 		return null;
 	}
 
 	/**
-	 * Method to set the processing label to say complete, for use by an AbstractMediaLabel subclass.
-	 * This method is called in the done() of AbstactMediaLabel's swingworker
+	 * Method to set the processing label to say complete, for use by an
+	 * AbstractMediaLabel subclass. This method is called in the done() of
+	 * AbstactMediaLabel's swingworker
 	 */
 	public void setLabelComplete() {
 		lblProcessing.setText(COMPLETE_TEXT);
@@ -448,8 +498,10 @@ public class MediaPlayerJFrame extends JFrame {
 
 	/**
 	 * This method replaces the audio of a video with the audio given by mp3Path
-	 * It first asks for a valid output file name, and if it is valid it sets the processing label to say
-	 * "Processing..." and then finally uses the label's replaceAudio method to replace the audio.
+	 * It first asks for a valid output file name, and if it is valid it sets
+	 * the processing label to say "Processing..." and then finally uses the
+	 * label's replaceAudio method to replace the audio.
+	 * 
 	 * @param label
 	 * @param mp3Path
 	 */
@@ -457,41 +509,49 @@ public class MediaPlayerJFrame extends JFrame {
 		String videoPath = getVideoPath();
 		if (videoPath != null && mp3Path != null) {
 			String outputFile = (String) JOptionPane.showInputDialog(this,
-					"Please enter a name for the output file", "Output file name", JOptionPane.INFORMATION_MESSAGE);
+					"Please enter a name for the output file",
+					"Output file name", JOptionPane.INFORMATION_MESSAGE);
 			if (outputFile != null) {
 				lblProcessing.setText(PROCESS_TEXT);
 				label.replaceAudio(mp3Path, videoPath, outputFile);
 			} else {
-				JOptionPane.showMessageDialog(this, "Error: output file name cannot be blank.");
+				JOptionPane.showMessageDialog(this,
+						"Error: output file name cannot be blank.");
 			}
 		} else {
-			JOptionPane.showMessageDialog(this, "Please select a video and/or and mp3 file.");
+			JOptionPane.showMessageDialog(this,
+					"Please select a video and/or and mp3 file.");
 		}
 	}
 
 	/**
-	 * Open FileChooser and let the user choose a video to play.
-	 * If the user is already playing a video, stop the old one, set videoIsStarted to false, and update
-	 * the play button's icon to the play icon
-	 * @param btnPlay - the play button which has its icon set to the play icon.
+	 * Open FileChooser and let the user choose a video to play. If the user is
+	 * already playing a video, stop the old one, set videoIsStarted to false,
+	 * and update the play button's icon to the play icon
+	 * 
+	 * @param btnPlay
+	 *            - the play button which has its icon set to the play icon.
 	 */
 	public void selectVideo(PlayButton btnPlay) {
 		// start file search in current file
 		videoFC.setCurrentDirectory(VIDEO_DIR_ABSOLUTE_PATH);
 		int returnVal = videoFC.showOpenDialog(this);
-		
+
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			/* Check if user already playing another video.
-			 * If they are, stop the current one and set isVideoStarted to false and the play button 
-			 * to display the play icon */
-			if(getVideoPath() != null){	
+			/*
+			 * Check if user already playing another video. If they are, stop
+			 * the current one and set isVideoStarted to false and the play
+			 * button to display the play icon
+			 */
+			if (getVideoPath() != null) {
 				mediaPlayerComponent.getMediaPlayer().stop();
 				setVideoIsStarted(false);
 				btnPlay.btnSetPlayIcon();
 			}
-			
+
 			setVideoPath(videoFC.getSelectedFile().getAbsolutePath());
-			JOptionPane.showMessageDialog(this, videoFC.getSelectedFile().getName() + " has been selected.");
+			JOptionPane.showMessageDialog(this, videoFC.getSelectedFile()
+					.getName() + " has been selected.");
 
 		} else if (returnVal == JFileChooser.ERROR_OPTION) {
 			JOptionPane.showMessageDialog(this, ERROR_MESSAGE);
