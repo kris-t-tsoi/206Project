@@ -50,6 +50,7 @@ public class MediaPlayerJFrame extends JFrame {
 	VideoTimeSlider vidSlide;
 	VideoTotalTimeLabel vidTotalTime;
 
+
 	private final JButton btnMute;
 	private static final String UNMUTE_TEXT = "Unmute";
 	private static final String MUTE_TEXT = "Mute";
@@ -161,6 +162,7 @@ public class MediaPlayerJFrame extends JFrame {
 		video = mediaPlayerComponent.getMediaPlayer();
 		mediaPanel.add(mediaPlayerComponent, BorderLayout.CENTER);
 
+
 		// Create a JSlider to show the progress of the video
 		// 0 and video length are the limits.
 		// 0 is default starting point
@@ -176,6 +178,7 @@ public class MediaPlayerJFrame extends JFrame {
 		// });
 		// videoBar.setMinorTickSpacing(1);
 		// videoBar.setToolTipText("Change the volume of the video");
+
 
 		/*
 		 * Button to play the video. It also acts as a pause/unpause button, and
@@ -365,11 +368,13 @@ public class MediaPlayerJFrame extends JFrame {
 		setJMenuBar(fileMenuBar);
 		// mediaPanel.add(fileMenuBar, BorderLayout.NORTH);
 
+
 		// Image which is on the left of the JSlider
 		JLabel lblImageIcon = new JLabel(new ImageIcon(
 				MediaPlayerJFrame.class.getResource("/Volume16.gif")));
 
 		vidSlide = new VideoTimeSlider(video);
+
 
 		// Windowbuilder generated code below
 
@@ -382,6 +387,7 @@ public class MediaPlayerJFrame extends JFrame {
 		 */
 		contentPane
 				.setLayout(new MigLayout(
+
 						"", // Layout Constraint
 						"[60px,grow 0,shrink 0][4px,grow 0,shrink 0][60px,grow 0,shrink 0][4px,grow 0,shrink 0]"
 								+ "[60px,grow 0,shrink 0][4px,grow 0,shrink 0][100px,grow 0,shrink 0][4px,grow 0,shrink 0]"
@@ -389,6 +395,7 @@ public class MediaPlayerJFrame extends JFrame {
 																									// Constraints
 						"[406px,grow, shrink][20px][20px][14px][14px][14px]")); // Row
 																				// Constraints
+
 
 		/*
 		 * Then every component is added to a specific grid location, with two
@@ -398,7 +405,9 @@ public class MediaPlayerJFrame extends JFrame {
 		 * grow in both directions (grow)
 		 */
 		contentPane.add(mediaPlayerComponent, "cell 0 0 11 1,grow");
+
 		// contentPane.add(videoBar,"cell 0 0 11 1,grow,wrap");
+
 		contentPane.add(lblMediaToOverlay,
 				"cell 0 3 3 1,alignx left,aligny top");
 		contentPane.add(lblProcessing, "cell 10 3,alignx right,aligny top");
@@ -558,12 +567,13 @@ public class MediaPlayerJFrame extends JFrame {
 			setVideoPath(videoFC.getSelectedFile().getAbsolutePath());
 			JOptionPane.showMessageDialog(this, videoFC.getSelectedFile()
 					.getName() + " has been selected.");
+
 			
 			
 			//TODO 
 			//set total time of video
 			//vidTotalTime.setText(text);
-			
+
 
 		} else if (returnVal == JFileChooser.ERROR_OPTION) {
 			JOptionPane.showMessageDialog(this, ERROR_MESSAGE);
