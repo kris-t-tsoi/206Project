@@ -3,6 +3,8 @@ package main;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 
 import javax.swing.ImageIcon;
@@ -25,9 +27,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import mainFrameGUI.AbstractMP3Creator;
 import mainFrameGUI.AbstractReplaceAudioLabel;
-import mainFrameGUI.InputTextField;
 import mainFrameGUI.ReplaceTextLabel;
 import mainFrameGUI.ReplaceWithExistingMP3Label;
 import mainFrameGUI.ResizingEmbeddedMediaPlayerComponent;
@@ -46,7 +46,6 @@ public class MediaPlayerJFrame extends JFrame {
 	private String mp3Path;
 
 	private JPanel contentPane;
-	private InputTextField txtInputText;
 	ResizingEmbeddedMediaPlayerComponent mediaPlayerComponent;
 	EmbeddedMediaPlayer video;
 	VideoTimeSlider vidSlide;
@@ -147,6 +146,8 @@ public class MediaPlayerJFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 
+		//TODO give user warning that files are being made and where they are located
+		
 		// Create the folders needed if they don't exist
 		final File videoDir = VIDEO_DIR_ABSOLUTE_PATH;
 		final File mp3Dir = new File(MP3_DIR_RELATIVE_PATH);
@@ -201,9 +202,7 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 
-		// JTextField that allows for user input to add to the video as text
-		txtInputText = new InputTextField();
-
+		
 		// Button to mute audio
 		btnMute = new JButton("Mute");
 		btnMute.setToolTipText("Mute the audio");
@@ -285,35 +284,6 @@ public class MediaPlayerJFrame extends JFrame {
 
 		fileMenu = new JMenu("Text");
 
-		// Label which allows the user to play the text in the textField with
-		// festival
-		menuItem = new JMenuItem("Play Text");
-		menuItem.addActionListener((new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// If the text is under the allowed limit, speak the text
-				if (txtInputText.checkTxtLength()) {
-					txtInputText.sayWithFestival(txtInputText.getText());
-				} else {
-					JOptionPane.showMessageDialog(thisFrame,
-							ERROR_WORD_LIMIT_MESSAGE);
-				}
-			}
-		}));
-		fileMenu.add(menuItem);
-
-		// Label which allows the user to save the text in the textField to an
-		// mp3
-		final SaveTextLabel saveTextMenuItem = new SaveTextLabel();
-		saveTextMenuItem.addActionListener((new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				createValidMP3(saveTextMenuItem);
-			}
-		}));
-		fileMenu.add(saveTextMenuItem);
-		
-		
 		
 		
 		//TODO text to mp3 frame
@@ -337,20 +307,7 @@ public class MediaPlayerJFrame extends JFrame {
 		JMenu subMenu = new JMenu("Replace Audio With");
 		fileMenu.add(subMenu);
 
-		// Label to replace a video's audio with the text in the textField
-		final ReplaceTextLabel overlayTextItem = new ReplaceTextLabel(this);
-		overlayTextItem.addActionListener((new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// First create the mp3, and get its name
-				String mp3 = createValidMP3(overlayTextItem);
 
-				// Then replace the audio
-				String mp3Path = MP3_DIR_ABSOLUTE_PATH + File.separator + mp3;
-				replaceAudio(overlayTextItem, mp3Path);
-			}
-		}));
-		subMenu.add(overlayTextItem);
 
 		// Sub-label which allows the user to replace a video's audio with a
 		// pre-selected mp3
@@ -374,6 +331,30 @@ public class MediaPlayerJFrame extends JFrame {
 				MediaPlayerJFrame.class.getResource("/Volume16.gif")));
 
 		vidSlide = new VideoTimeSlider(video);
+		vidSlide.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+
+			@Override
+			public void mouseExited(MouseEvent e) {}
+		});
+		
+		
 		vidTotalTime = new VideoTotalTimeLabel();
 		vidCurrentTime = new VideoCurrentTime();
 		JLabel dash = new JLabel(" / ");
@@ -479,30 +460,7 @@ public class MediaPlayerJFrame extends JFrame {
 		}
 	}
 
-	/**
-	 * Method that creates an mp3 from the textField only if the number of words
-	 * is under the limit. It also returns the name of the created mp3
-	 * 
-	 * @param parentFrame
-	 *            - the current frame, used in JOptionPane
-	 * @return mp3Name - name of the created mp3
-	 */
-	private String createValidMP3(AbstractMP3Creator menuItem) {
-		// check if number of word is within limit
-		if (txtInputText.checkTxtLength()) {
-			String mp3Name = JOptionPane.showInputDialog(this,
-					"Enter a name for the mp3 file");
-			if ((mp3Name != null) && !mp3Name.startsWith(" ")) {
-				menuItem.createMP3(txtInputText.getText(), mp3Name);
-				// Return the name of the mp3 that was created
-				return mp3Name + ".mp3";
-			}
-		} else {
-			JOptionPane.showMessageDialog(this,
-					MediaPlayerJFrame.ERROR_WORD_LIMIT_MESSAGE);
-		}
-		return null;
-	}
+
 
 	/**
 	 * Method to set the processing label to say complete, for use by an

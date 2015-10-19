@@ -1,20 +1,23 @@
-package mainFrameGUI;
-import javax.swing.JTextField;
+package textToMP3Frame.textBoxAndSliders;
+
+import javax.swing.JTextArea;
 
 import terminal.UseTerminalCommands;
 
-/**
- * This class is a modified text field which can also count the number of words in it
- * and speak its contents with festival
- *
- */
-public class InputTextField extends JTextField {
+@SuppressWarnings("serial")
+public class TextToMP3TextBox extends JTextArea {
 	public static final int MAX_NUMBER_OF_WORDS = 30;
 	
-	public InputTextField() {
+	
+	public TextToMP3TextBox() {
 		super("Text to synthesize here - max 30 words");
-		setToolTipText("Text to synthesize here - max 30 words");
+		setToolTipText("Type in Text you Wish to Hear as Audio");
+		
+		//if sentence is too long the whole word will go onto the next line
+		setLineWrap(true);
+		setWrapStyleWord(true);
 	}
+
 	
 	/**
 	 * Function to check if the number of words a string of text exceeds a
@@ -55,4 +58,5 @@ public class InputTextField extends JTextField {
 //			e.printStackTrace();
 //		}
 	}
+	
 }
