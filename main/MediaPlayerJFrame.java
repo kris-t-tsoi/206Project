@@ -20,18 +20,14 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import mainFrameGUI.AbstractReplaceAudioLabel;
-import mainFrameGUI.ReplaceTextLabel;
 import mainFrameGUI.ReplaceWithExistingMP3Label;
 import mainFrameGUI.ResizingEmbeddedMediaPlayerComponent;
-import mainFrameGUI.SaveTextLabel;
 import mainFrameGUI.time.VideoCurrentTime;
 import mainFrameGUI.time.VideoTimeSlider;
 import mainFrameGUI.time.VideoTotalTimeLabel;
@@ -147,6 +143,11 @@ public class MediaPlayerJFrame extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 
 		//TODO give user warning that files are being made and where they are located
+		
+		
+		JOptionPane.showMessageDialog(thisFrame, ("Two Folders \"Video\" and \"MP3\" will be created in "+System
+				.getProperty("user.dir")));
+		
 		
 		// Create the folders needed if they don't exist
 		final File videoDir = VIDEO_DIR_ABSOLUTE_PATH;
@@ -282,12 +283,9 @@ public class MediaPlayerJFrame extends JFrame {
 
 		fileMenuBar.add(fileMenu);
 
-		fileMenu = new JMenu("Text");
-
-		
-		
+		fileMenu = new JMenu("Text To MP3");
 		//TODO text to mp3 frame
-		menuItem = new JMenuItem("Text Frame");
+		menuItem = new JMenuItem("Create MP3");
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

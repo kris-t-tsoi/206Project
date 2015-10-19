@@ -42,14 +42,23 @@ public class TextToSpeechFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// If the text is under the allowed limit, speak the text
 				if (userText.checkTxtLength()) {
-					userText.sayWithFestival(userText.getText());
+					playText.sayWithFestival(userText.getText());
+					//TODO get pid so can stop
 				} else {
 					JOptionPane.showMessageDialog(thisFrame, main.MediaPlayerJFrame.ERROR_WORD_LIMIT_MESSAGE);
 				}
+			}
+		});
+		
+		
+		createMP3 = new CreateMP3Btn();
+		createMP3.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
 				
 			}
 		});
-		createMP3 = new CreateMP3Btn();
+		
 		userText = new TextToMP3TextBox();
 		
 		

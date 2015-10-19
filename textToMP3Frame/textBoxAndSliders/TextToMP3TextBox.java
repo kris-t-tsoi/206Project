@@ -42,21 +42,4 @@ public class TextToMP3TextBox extends JTextArea {
 		}
 		return false;
 	}
-	
-	/**
-	 * Uses festival to speak the input text by creating a bash process
-	 * @param text
-	 */
-	public void sayWithFestival(String text) {
-//		String cmd = "echo " + text + " | festival --tts&";
-		UseTerminalCommands term = new UseTerminalCommands();
-		term.terminalCommandVoid("echo " + text + " | festival --tts&");
-//		ProcessBuilder builder = new ProcessBuilder("bash", "-c", cmd);
-//		try {
-//			builder.start();
-//		} catch (java.io.IOException e) {
-//			e.printStackTrace();
-//		}
-	}
-	
 }
