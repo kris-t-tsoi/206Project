@@ -22,7 +22,8 @@ public class PlayTextBtn extends JButton {
 	 */
 	public void sayWithFestival(String text) {
 		UseTerminalCommands term = new UseTerminalCommands();
-		term.terminalCommandVoid("echo " + text + " | festival --tts&");
+		term.terminalCommandVoid("");
+		term.terminalCommandVoid("echo " + text + " | festival --tts");
 		//TODO get pid so can stop
 		
 		

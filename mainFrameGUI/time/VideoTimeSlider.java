@@ -23,10 +23,5 @@ public class VideoTimeSlider extends JSlider{
 	public VideoTimeSlider(EmbeddedMediaPlayer video) {			
 		super(0, 100,0);
 	}
-	
-	@Override
-	public void addChangeListener(ChangeListener l) {
-		super.addChangeListener(l);
-	}
-	
+		
 }

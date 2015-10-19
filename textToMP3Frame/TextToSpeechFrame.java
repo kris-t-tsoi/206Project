@@ -24,9 +24,9 @@ public class TextToSpeechFrame extends JFrame {
 	TextToMP3TextBox userText;
 	
 	
-	public TextToSpeechFrame() {
+	public TextToSpeechFrame(String title) {
 		
-		super("Text to MP3");
+		super(title);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		setBounds(900, 100, 600, 300);

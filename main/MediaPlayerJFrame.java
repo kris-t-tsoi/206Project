@@ -142,12 +142,11 @@ public class MediaPlayerJFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 
-		//TODO check if files exist first before message pop up
-		//Give user warning that files are being made and where they are located	
+		//Check if files exist
 		final File videoDir = VIDEO_DIR_ABSOLUTE_PATH;
-		final File mp3Dir = new File(MP3_DIR_RELATIVE_PATH);
-		
+		final File mp3Dir = new File(MP3_DIR_RELATIVE_PATH);	
 		if(!videoDir.exists() || !mp3Dir.exists()){
+		//Give user warning that files are being made and where they are located	
 		JOptionPane.showMessageDialog(thisFrame, ("Two Folders \"Video\" and \"MP3\" will be created in "+System
 				.getProperty("user.dir")));		
 		
@@ -290,7 +289,7 @@ public class MediaPlayerJFrame extends JFrame {
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				TextToSpeechFrame f = new TextToSpeechFrame();
+				TextToSpeechFrame f = new TextToSpeechFrame("Text to MP3");
 			}
 		}));
 		fileMenu.add(menuItem);
@@ -298,6 +297,7 @@ public class MediaPlayerJFrame extends JFrame {
 		
 		fileMenuBar.add(fileMenu);
 		
+		//TODO create into button
 		
 
 		fileMenu = new JMenu("Video");
