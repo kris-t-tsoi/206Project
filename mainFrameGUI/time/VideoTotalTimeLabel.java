@@ -20,8 +20,7 @@ public class VideoTotalTimeLabel extends JLabel {
 	public void findVideoDuration(String videoPath) {
 		;
 		String inputLine = termCommand.terminalCommandString("ffprobe -i \""
-				+ videoPath + "\" -show_format 2>&1 | grep Duration");
-		System.out.println("input " + inputLine);
+				+ videoPath + "\" -show_format 2>&1 | grep Duration");		
 		if (inputLine != null) {
 			String[] words = inputLine.split("[ ,]");
 			for (int i = 0; i < words.length; i++) {
