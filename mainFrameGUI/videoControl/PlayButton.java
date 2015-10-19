@@ -1,4 +1,4 @@
-package guiComponents;
+package mainFrameGUI.videoControl;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;

@@ -1,4 +1,4 @@
-package guiComponents;
+package mainFrameGUI.time;
 
 import javax.swing.JLabel;
 
@@ -13,12 +13,10 @@ public class VideoTotalTimeLabel extends JLabel {
 		setText("00:00:00.00");
 	}
 
-	// TODO get video time
-
-	// prints Duration: 00:01:00.04, start: 0.000000, bitrate: 438 kb/s
-	// .split("[^0-9:.]")
-	// ffprobe -i big_buck_bunny_1_minute.avi -show_format 2>&1 | grep Duration
-
+	/**
+	 * finds the duration of the video and changes label to the total duration time
+	 * @param videoPath
+	 */
 	public void findVideoDuration(String videoPath) {
 		;
 		String inputLine = termCommand.terminalCommandString("ffprobe -i \""

@@ -1,4 +1,4 @@
-package guiComponents;
+package mainFrameGUI;
 
 import java.io.File;
 import javax.swing.JFrame;

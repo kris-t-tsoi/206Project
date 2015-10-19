@@ -1,5 +1,7 @@
-package guiComponents;
+package mainFrameGUI;
 import javax.swing.JTextField;
+
+import terminal.UseTerminalCommands;
 
 /**
  * This class is a modified text field which can also count the number of words in it
@@ -43,12 +45,14 @@ public class InputTextField extends JTextField {
 	 * @param text
 	 */
 	public void sayWithFestival(String text) {
-		String cmd = "echo " + text + " | festival --tts&";
-		ProcessBuilder builder = new ProcessBuilder("bash", "-c", cmd);
-		try {
-			builder.start();
-		} catch (java.io.IOException e) {
-			e.printStackTrace();
-		}
+//		String cmd = "echo " + text + " | festival --tts&";
+		UseTerminalCommands term = new UseTerminalCommands();
+		term.terminalCommandVoid("echo " + text + " | festival --tts&");
+//		ProcessBuilder builder = new ProcessBuilder("bash", "-c", cmd);
+//		try {
+//			builder.start();
+//		} catch (java.io.IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 }

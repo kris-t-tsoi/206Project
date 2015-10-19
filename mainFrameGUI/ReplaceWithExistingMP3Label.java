@@ -1,4 +1,4 @@
-package guiComponents;
+package mainFrameGUI;
 
 import main.MediaPlayerJFrame;
 

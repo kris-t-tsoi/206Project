@@ -25,17 +25,19 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import guiComponents.AbstractMP3Creator;
-import guiComponents.AbstractReplaceAudioLabel;
-import guiComponents.InputTextField;
-import guiComponents.ReplaceWithExistingMP3Label;
-import guiComponents.ReplaceTextLabel;
-import guiComponents.PlayButton;
-import guiComponents.ResizingEmbeddedMediaPlayerComponent;
-import guiComponents.SaveTextLabel;
-import guiComponents.VideoTimeSlider;
-import guiComponents.VideoTotalTimeLabel;
+import mainFrameGUI.AbstractMP3Creator;
+import mainFrameGUI.AbstractReplaceAudioLabel;
+import mainFrameGUI.InputTextField;
+import mainFrameGUI.ReplaceTextLabel;
+import mainFrameGUI.ReplaceWithExistingMP3Label;
+import mainFrameGUI.ResizingEmbeddedMediaPlayerComponent;
+import mainFrameGUI.SaveTextLabel;
+import mainFrameGUI.time.VideoCurrentTime;
+import mainFrameGUI.time.VideoTimeSlider;
+import mainFrameGUI.time.VideoTotalTimeLabel;
+import mainFrameGUI.videoControl.PlayButton;
 import net.miginfocom.swing.MigLayout;
+import textToMP3Frame.TextToSpeechFrame;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 public class MediaPlayerJFrame extends JFrame {
@@ -49,6 +51,7 @@ public class MediaPlayerJFrame extends JFrame {
 	EmbeddedMediaPlayer video;
 	VideoTimeSlider vidSlide;
 	VideoTotalTimeLabel vidTotalTime;
+	VideoCurrentTime vidCurrentTime;
 
 	private final JButton btnMute;
 	private static final String UNMUTE_TEXT = "Unmute";
@@ -161,22 +164,7 @@ public class MediaPlayerJFrame extends JFrame {
 		video = mediaPlayerComponent.getMediaPlayer();
 		mediaPanel.add(mediaPlayerComponent, BorderLayout.CENTER);
 
-		// Create a JSlider to show the progress of the video
-		// 0 and video length are the limits.
-		// 0 is default starting point
-		// video.getLength() is multiplied by 10000 and converted into int to
-		// prevent precision loss
-		// JSlider videoBar = new JSlider(SwingConstants.HORIZONTAL, 0,
-		// (int)(video.getLength()*10000),0);
-		// videoBar.addChangeListener(new ChangeListener() {
-		// public void stateChanged(ChangeEvent arg0) {
-		// //need to divide get value by 10000
-		// video.setTime(((JSlider) arg0.getSource()).getValue()/10000);
-		// }
-		// });
-		// videoBar.setMinorTickSpacing(1);
-		// videoBar.setToolTipText("Change the volume of the video");
-
+		
 		/*
 		 * Button to play the video. It also acts as a pause/unpause button, and
 		 * is used to stop skipping.
@@ -324,7 +312,24 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		}));
 		fileMenu.add(saveTextMenuItem);
+		
+		
+		
+		
+		//TODO text to mp3 frame
+		menuItem = new JMenuItem("Text Frame");
+		menuItem.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				TextToSpeechFrame f = new TextToSpeechFrame();
+			}
+		}));
+		fileMenu.add(menuItem);
+		
+		
 		fileMenuBar.add(fileMenu);
+		
+		
 
 		fileMenu = new JMenu("Video");
 
@@ -363,7 +368,6 @@ public class MediaPlayerJFrame extends JFrame {
 
 		fileMenuBar.add(fileMenu);
 		setJMenuBar(fileMenuBar);
-		// mediaPanel.add(fileMenuBar, BorderLayout.NORTH);
 
 		// Image which is on the left of the JSlider
 		JLabel lblImageIcon = new JLabel(new ImageIcon(
@@ -371,6 +375,8 @@ public class MediaPlayerJFrame extends JFrame {
 
 		vidSlide = new VideoTimeSlider(video);
 		vidTotalTime = new VideoTotalTimeLabel();
+		vidCurrentTime = new VideoCurrentTime();
+		JLabel dash = new JLabel(" / ");
 
 		// Windowbuilder generated code below
 
@@ -383,7 +389,6 @@ public class MediaPlayerJFrame extends JFrame {
 		 */
 		contentPane
 				.setLayout(new MigLayout(
-
 						"", // Layout Constraint
 						"[60px,grow 0,shrink 0][4px,grow 0,shrink 0][60px,grow 0,shrink 0][4px,grow 0,shrink 0]"
 								+ "[60px,grow 0,shrink 0][4px,grow 0,shrink 0][100px,grow 0,shrink 0][4px,grow 0,shrink 0]"
@@ -409,18 +414,10 @@ public class MediaPlayerJFrame extends JFrame {
 		contentPane.add(btnMute, "cell 6 2,grow");
 		contentPane.add(lblImageIcon, "cell 8 2,grow");
 		contentPane.add(sliderVolume, "cell 10 2,grow");
-		// contentPane.add(txtInputText, "cell 0 2 11 1,growx,aligny top");
-		// TODO do text stuff
-
-		// current playing time
-		// contentPane.add(lblImageIcon, "cell 0 1,grow");
-
-		JLabel dash = new JLabel(" / ");
-		contentPane.add(dash, "cell 1 1 11 2,growx,aligny top");// total time
-		// total time label TODO
+		contentPane.add(vidCurrentTime, "cell 0 1,grow");		
+		contentPane.add(dash, "cell 1 1 11 2,growx,aligny top");
 		contentPane.add(vidTotalTime, "cell 2 1,grow");
 		contentPane.add(vidSlide, "cell 3 1 11 2,growx,aligny top");
-
 		contentPane.add(lblCurrentVideo, "cell 2 4 9 1,growx,aligny top");
 		contentPane.add(lblCurrentMP3, "cell 2 5 9 1,growx,aligny top");
 
@@ -441,6 +438,9 @@ public class MediaPlayerJFrame extends JFrame {
 		video.playMedia(getVideoPath());
 
 	}
+	//TODO make vidCurrentTime label change
+	//TODO make Jslider change with video
+	
 
 	/**
 	 * Method to extract the media files basename i.e. everything after the last
@@ -570,9 +570,8 @@ public class MediaPlayerJFrame extends JFrame {
 			JOptionPane.showMessageDialog(this, videoFC.getSelectedFile()
 					.getName() + " has been selected.");
 
-			// TODO
+			
 			// set total time of video
-			// vidTotalTime.setText(text);
 			vidTotalTime.findVideoDuration(getVideoPath());
 			
 
