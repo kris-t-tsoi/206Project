@@ -142,18 +142,19 @@ public class MediaPlayerJFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 
-		//TODO give user warning that files are being made and where they are located
-		
-		
-		JOptionPane.showMessageDialog(thisFrame, ("Two Folders \"Video\" and \"MP3\" will be created in "+System
-				.getProperty("user.dir")));
-		
-		
-		// Create the folders needed if they don't exist
+		//TODO check if files exist first before message pop up
+		//Give user warning that files are being made and where they are located	
 		final File videoDir = VIDEO_DIR_ABSOLUTE_PATH;
 		final File mp3Dir = new File(MP3_DIR_RELATIVE_PATH);
+		
+		if(!videoDir.exists() || !mp3Dir.exists()){
+		JOptionPane.showMessageDialog(thisFrame, ("Two Folders \"Video\" and \"MP3\" will be created in "+System
+				.getProperty("user.dir")));		
+		
+		// Create the folders needed if they don't exist		
 		videoDir.mkdir();
 		mp3Dir.mkdir();
+		}
 
 		contentPane = new JPanel();
 		// Give the video a border
