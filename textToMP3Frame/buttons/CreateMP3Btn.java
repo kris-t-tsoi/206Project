@@ -7,6 +7,9 @@ import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
+import textToMP3Frame.TextToSpeechFrame;
+import doInBackground.UseTerminalCommands;
+import doInBackground.WriteSchemeFiles;
 import main.MediaPlayerJFrame;
 import mainFrameGUI.AbstractMP3Creator;
 import mainFrameGUI.ReplaceTextLabel;
@@ -14,12 +17,38 @@ import mainFrameGUI.ReplaceTextLabel;
 @SuppressWarnings("serial")
 public class CreateMP3Btn extends JButton {
 
-	public CreateMP3Btn() {
+	private TextToSpeechFrame parentFrame;
+	
+	public CreateMP3Btn(TextToSpeechFrame frame) {
 		super();
+		parentFrame = frame;
 		setText("Create MP3");
 		setToolTipText("Create MP3 File From Text");
 	}
 
+	
+	public void createAudio (float speed, int startPitch, int endPitch, String text) {
+		WriteSchemeFiles write = new WriteSchemeFiles(parentFrame);
+		File playScm = write.createMP3(speed, startPitch, endPitch, text);
+				
+				
+		//TODO get speech to play in background;
+		UseTerminalCommands term = new UseTerminalCommands();
+		term.terminalCommandVoid(("festival -b "+playScm.getAbsolutePath().toString()));
+		
+		
+		
+		
+		//TODO get pid so can stop
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	/**

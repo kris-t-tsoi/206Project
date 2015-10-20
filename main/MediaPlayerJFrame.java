@@ -59,7 +59,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 	// Constants for the textfield - Max number of words which can be
 	// played/saved, and error message
-	public static final String ERROR_WORD_LIMIT_MESSAGE = "Sorry, you have exceeded the maximum word count of 30.";
+	
 	private static final String ERROR_MESSAGE = "Sorry, an error has occured. please try again.";
 
 	// FileChooser-related fields
@@ -276,6 +276,8 @@ public class MediaPlayerJFrame extends JFrame {
 					setMp3Path(mp3FC.getSelectedFile().getAbsolutePath());
 				} else if (returnVal == JFileChooser.ERROR_OPTION) {
 					JOptionPane.showMessageDialog(thisFrame, ERROR_MESSAGE);
+				}else if (returnVal == JFileChooser.CANCEL_OPTION) {
+					//do nothing
 				}
 			}
 		}));
@@ -532,7 +534,10 @@ public class MediaPlayerJFrame extends JFrame {
 			vidTotalTime.findVideoDuration(getVideoPath());
 			
 
-		} else if (returnVal == JFileChooser.ERROR_OPTION) {
+		} else if (returnVal == JFileChooser.CANCEL_OPTION) {
+			//do nothing
+			return;
+		}else if (returnVal == JFileChooser.ERROR_OPTION) {
 			JOptionPane.showMessageDialog(this, ERROR_MESSAGE);
 		}
 	}

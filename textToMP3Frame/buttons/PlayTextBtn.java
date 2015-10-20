@@ -32,12 +32,11 @@ public class PlayTextBtn extends JButton {
 	public void sayWithFestival(float speed, int startPitch, int endPitch, String text) {
 		WriteSchemeFiles write = new WriteSchemeFiles(parentFrame);
 		File playScm = write.sayText(speed, startPitch, endPitch, text);
-		UseTerminalCommands term = new UseTerminalCommands();
-		term.terminalCommandVoid(("festival -b "+playScm.getAbsolutePath().toString()));
 		
-		
-		//TODO get speech to play in background
-		
+		//Festival to speak in the background
+		String cmd = ("festival -b "+playScm.getAbsolutePath().toString());		
+		BackgroundUse backGrd = new BackgroundUse(cmd);
+		backGrd.execute();
 		//TODO get pid so can stop
 	}
 	

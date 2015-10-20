@@ -8,18 +8,14 @@ public class BackgroundUse extends SwingWorker<Void, Void>{
 	private UseTerminalCommands termCmd;
 	
 	public BackgroundUse(String line) {
-		cmd = line;
-		try {
-			doInBackground();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		termCmd = new UseTerminalCommands();
+		cmd = line;		
 	}
 	
 	@Override
 	protected Void doInBackground() throws Exception {
-		termCmd.terminalCommandVoid (cmd);
+		System.out.println(cmd);
+		termCmd.terminalCommandVoid(cmd);
 		return null;
 	}
 

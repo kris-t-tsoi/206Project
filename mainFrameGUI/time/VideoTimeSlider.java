@@ -9,6 +9,7 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicTabbedPaneUI.MouseHandler;
 
+import main.MediaPlayerJFrame;
 import mainFrameGUI.videoControl.PlayButton;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
@@ -23,5 +24,10 @@ public class VideoTimeSlider extends JSlider{
 	public VideoTimeSlider(EmbeddedMediaPlayer video) {			
 		super(0, 100,0);
 	}
+	
+	
+	public void userDrag(MediaPlayerJFrame videoPlayer){
 		
+	}
+	
 }

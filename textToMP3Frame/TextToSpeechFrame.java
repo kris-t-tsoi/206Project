@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.border.EmptyBorder;
+import javax.xml.transform.OutputKeys;
 
 import textToMP3Frame.buttons.CreateMP3Btn;
 import textToMP3Frame.buttons.PlayTextBtn;
@@ -29,12 +30,17 @@ public class TextToSpeechFrame extends JFrame {
 	VoiceSpeedSlider speedSlide;
 	PitchSlider pitchSlide;
 	
+	// Constants for the textfield - Max number of words which can be
+	// played/saved, and error message
+	public static final String ERROR_WORD_LIMIT_MESSAGE = "Sorry, you have exceeded the maximum word count of 30.";
+	private static final String ERROR_MESSAGE = "Sorry, an error has occured. please try again.";
+	
+	
 	//Audio Values
 	private float speed;
 	private int startPitch;
 	private int endPitch;
 	private String text;
-	
 	
 	public float getSpeed() {
 		return speed;
@@ -99,17 +105,29 @@ public class TextToSpeechFrame extends JFrame {
 					playText.sayWithFestival(getSpeed(),getStartPitch(),getEndPitch(),getText());
 					//TODO get pid so can stop
 				} else {
-					JOptionPane.showMessageDialog(thisFrame, main.MediaPlayerJFrame.ERROR_WORD_LIMIT_MESSAGE);
+					JOptionPane.showMessageDialog(thisFrame, ERROR_WORD_LIMIT_MESSAGE);
 				}
 			}
 		});
 		
 		
-		createMP3 = new CreateMP3Btn();
+		createMP3 = new CreateMP3Btn(thisFrame);
 		createMP3.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				if (userText.checkTxtLength()) {
+					String mp3Name = JOptionPane.showInputDialog(thisFrame,
+							"Enter a name for the mp3 file");
+					
+					if ((mp3Name != null) && !mp3Name.startsWith(" ")) {
+						//menuItem.createMP3(txtInputText.getText(), mp3Name);
+						// Return the name of the mp3 that was created
+						//return mp3Name + ".mp3";
+					}
+				} else {
+					JOptionPane.showMessageDialog(thisFrame,
+							ERROR_WORD_LIMIT_MESSAGE);
+				}
 			}
 		});
 		

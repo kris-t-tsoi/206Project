@@ -19,7 +19,7 @@ public class WriteSchemeFiles {
 	 * Write scm file for playing text
 	 */
 	public File sayText(float speed, int startPitch, int endPitch, String text) {
-		File playScm = new File(System.getProperty("user.dir")+ File.separator +".PlayText.scm");
+		File playScm = new File(System.getProperty("user.dir")+ File.separator +"PlayText.scm");
 
 		FileWriter file;
 		try {
@@ -38,7 +38,7 @@ public class WriteSchemeFiles {
 	
 	
 	public File createMP3(float speed, int startPitch, int endPitch, String text){
-		File playScm = new File(System.getProperty("user.dir")+ File.separator +"PlayText.scm");
+		File playScm = new File(System.getProperty("user.dir")+ File.separator +".PlayText.scm");
 
 		FileWriter file;
 		try {

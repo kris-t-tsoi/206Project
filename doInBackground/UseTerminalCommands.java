@@ -11,6 +11,11 @@ import java.io.InputStreamReader;
  */
 public class UseTerminalCommands {
 
+	/**
+	 * Uses input as command for terminal
+	 * returns void
+	 * @param cmd - command input
+	 */
 	public void terminalCommandVoid (String cmd) {
 		ProcessBuilder builder = new ProcessBuilder("bash", "-c", cmd);
 		Process process;
@@ -22,6 +27,11 @@ public class UseTerminalCommands {
 		}
 	}
 	
+	/**
+	 * Uses input as command for terminal
+	 * @param cmd - command input
+	 * @return String
+	 */
 	public String terminalCommandString (String cmd) {
 		ProcessBuilder builder = new ProcessBuilder("bash", "-c", cmd);
 		Process process;
