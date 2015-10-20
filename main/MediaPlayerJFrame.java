@@ -83,11 +83,10 @@ public class MediaPlayerJFrame extends JFrame {
 			.getProperty("user.dir") + File.separator + MP3_DIR_RELATIVE_PATH;
 
 	// Dynamic labels for user information
-	private static final String CURRENT_MP3_TEXT = "Currently Selected MP3: ";
+	
 	private static final String CURRENT_VIDEO_TEXT = "Currently Selected Video: ";
 	private static final String PROCESS_TEXT = "Processing...";
 	private static final String COMPLETE_TEXT = "Complete!";
-	JLabel lblCurrentMP3;
 	JLabel lblCurrentVideo;
 	JLabel lblProcessing = new JLabel(" ");
 
@@ -107,14 +106,6 @@ public class MediaPlayerJFrame extends JFrame {
 		setDisplayedMedia(lblCurrentVideo, CURRENT_VIDEO_TEXT, videoPath);
 	}
 
-	private String getMp3Path() {
-		return mp3Path;
-	}
-
-	private void setMp3Path(String mp3Path) {
-		this.mp3Path = mp3Path;
-		setDisplayedMedia(lblCurrentMP3, CURRENT_MP3_TEXT, mp3Path);
-	}
 
 	public boolean getVideoIsStarted() {
 		return videoIsStarted;
@@ -282,8 +273,6 @@ public class MediaPlayerJFrame extends JFrame {
 		sliderVolume.setMinorTickSpacing(1);
 		sliderVolume.setToolTipText("Change the volume of the video");
 
-		// Label which simply explains the other labels in the GUI
-		JLabel lblMediaToOverlay = new JLabel("Media to Combine:");
 
 		// Labels that displays the currently selected mp3 and video
 		lblCurrentVideo = new JLabel(CURRENT_VIDEO_TEXT);
@@ -309,7 +298,7 @@ public class MediaPlayerJFrame extends JFrame {
 		fileMenu.add(menuItem);
 
 		// This label opens a FileChooser to select an MP3
-		menuItem = new JMenuItem("Choose MP3 File");
+/*		menuItem = new JMenuItem("Choose MP3 File");
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -330,6 +319,8 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		}));
 		fileMenu.add(menuItem);
+		
+		*/
 
 		fileMenuBar.add(fileMenu);
 
@@ -422,8 +413,6 @@ public class MediaPlayerJFrame extends JFrame {
 		 * grow in both directions (grow)
 		 */
 		contentPane.add(mediaPlayerComponent, "cell 0 0 11 1,grow");
-		contentPane.add(lblMediaToOverlay,
-				"cell 0 3 3 1,alignx left,aligny top");
 		contentPane.add(btnBackward, "cell 0 2,alignx center,grow");
 		contentPane.add(btnPlay, "cell 2 2,grow");
 		contentPane.add(btnForward, "cell 4 2,alignx center,grow");
