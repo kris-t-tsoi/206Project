@@ -6,11 +6,11 @@ import doInBackground.UseTerminalCommands;
 
 @SuppressWarnings("serial")
 public class TextToMP3TextBox extends JTextArea {
-	public static final int MAX_NUMBER_OF_WORDS = 30;
+	public static final int MAX_NUMBER_OF_WORDS = 50;
 	
 	
 	public TextToMP3TextBox() {
-		super("Text to synthesize here - max 30 words");
+		super("Text to synthesize here - max 50 words");
 		setToolTipText("Type in Text you Wish to Hear as Audio");
 		
 		//if sentence is too long the whole word will go onto the next line

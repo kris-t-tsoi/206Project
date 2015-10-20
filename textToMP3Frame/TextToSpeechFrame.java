@@ -32,8 +32,7 @@ public class TextToSpeechFrame extends JFrame {
 	
 	// Constants for the textfield - Max number of words which can be
 	// played/saved, and error message
-	public static final String ERROR_WORD_LIMIT_MESSAGE = "Sorry, you have exceeded the maximum word count of 30.";
-	private static final String ERROR_MESSAGE = "Sorry, an error has occured. please try again.";
+	public static final String ERROR_WORD_LIMIT_MESSAGE = "Sorry, you have exceeded the maximum word count of 50.";
 	
 	
 	//Audio Values
@@ -115,14 +114,13 @@ public class TextToSpeechFrame extends JFrame {
 		createMP3.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				getSliderValues();
 				if (userText.checkTxtLength()) {
 					String mp3Name = JOptionPane.showInputDialog(thisFrame,
 							"Enter a name for the mp3 file");
 					
 					if ((mp3Name != null) && !mp3Name.startsWith(" ")) {
-						//menuItem.createMP3(txtInputText.getText(), mp3Name);
-						// Return the name of the mp3 that was created
-						//return mp3Name + ".mp3";
+						createMP3.createAudio(getSpeed(),getStartPitch(),getEndPitch(),getText(), mp3Name);
 					}
 				} else {
 					JOptionPane.showMessageDialog(thisFrame,

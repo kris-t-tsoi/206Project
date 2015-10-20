@@ -35,6 +35,8 @@ public abstract class AbstractReplaceAudioLabel extends AbstractMP3Creator{
 		@Override
 		protected Void doInBackground() throws Exception {
 			useTerminalCommand(cmd);
+			//TODO progressbar
+			
 			return null;
 		}
 

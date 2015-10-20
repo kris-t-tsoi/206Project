@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 import textToMP3Frame.TextToSpeechFrame;
+import doInBackground.BackgroundUse;
 import doInBackground.UseTerminalCommands;
 import doInBackground.WriteSchemeFiles;
 import main.MediaPlayerJFrame;
@@ -18,7 +19,7 @@ import mainFrameGUI.ReplaceTextLabel;
 public class CreateMP3Btn extends JButton {
 
 	private TextToSpeechFrame parentFrame;
-	
+
 	public CreateMP3Btn(TextToSpeechFrame frame) {
 		super();
 		parentFrame = frame;
@@ -26,77 +27,23 @@ public class CreateMP3Btn extends JButton {
 		setToolTipText("Create MP3 File From Text");
 	}
 
-	
-	public void createAudio (float speed, int startPitch, int endPitch, String text) {
+	public void createAudio(float speed, int startPitch, int endPitch,
+			String text, String audioName) {
+		// create scm file
 		WriteSchemeFiles write = new WriteSchemeFiles(parentFrame);
-		File playScm = write.createMP3(speed, startPitch, endPitch, text);
-				
-				
-		//TODO get speech to play in background;
-		UseTerminalCommands term = new UseTerminalCommands();
-		term.terminalCommandVoid(("festival -b "+playScm.getAbsolutePath().toString()));
+		File playScm = write.createMP3(speed, startPitch, endPitch, text,
+				audioName);
 		
-		
-		
-		
-		//TODO get pid so can stop
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/**
-	 * Method that creates an mp3 from the textField only if the number of words
-	 * is under the limit. It also returns the name of the created mp3
-	 * 
-	 * @param parentFrame
-	 *            - the current frame, used in JOptionPane
-	 * @return mp3Name - name of the created mp3
-	 */
-/*	private String createValidMP3(AbstractMP3Creator menuItem) {
-		// check if number of word is within limit
-		if (txtInputText.checkTxtLength()) {
-			String mp3Name = JOptionPane.showInputDialog(this,
-					"Enter a name for the mp3 file");
-			if ((mp3Name != null) && !mp3Name.startsWith(" ")) {
-				menuItem.createMP3(txtInputText.getText(), mp3Name);
-				// Return the name of the mp3 that was created
-				return mp3Name + ".mp3";
-			}
-		} else {
-			JOptionPane.showMessageDialog(this,
-					MediaPlayerJFrame.ERROR_WORD_LIMIT_MESSAGE);
-		}
-		return null;
-	}
-	*/
-	
-	
-	
-	
-	
-	/*
-	
-	// Label to replace a video's audio with the text in the textField
-	final ReplaceTextLabel overlayTextItem = new ReplaceTextLabel(this);
-	overlayTextItem.addActionListener((new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			// First create the mp3, and get its name
-			String mp3 = createValidMP3(overlayTextItem);
+		String mp3Path = MediaPlayerJFrame.MP3_DIR_RELATIVE_PATH+ File.separator +"";
 
-			// Then replace the audio
-			String mp3Path = MP3_DIR_ABSOLUTE_PATH + File.separator + mp3;
-			replaceAudio(overlayTextItem, mp3Path);
-		}
-	}));
-	subMenu.add(overlayTextItem);
-	
-	*/
+		// MP3 created in the background
+		// String cmd = ("festival -b "+playScm.getAbsolutePath().toString());
+		BackgroundUse backGrd = new BackgroundUse("festival -b "+ playScm.getAbsolutePath().toString() + ";"
+				+ "ffmpeg -y -i \"" + mp3Path + audioName + ".wav\" -f mp3 \""+ mp3Path+ audioName + ".mp3\";" 
+				+ "rm \"" + mp3Path+audioName + ".wav\"");
+		backGrd.execute();
+		
+		// TODO get pid so can stop
+	}
+
 }

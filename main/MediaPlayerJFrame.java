@@ -57,9 +57,7 @@ public class MediaPlayerJFrame extends JFrame {
 	// Default volume of the video
 	public static final int DEFAULT_VOLUME = 50;
 
-	// Constants for the textfield - Max number of words which can be
-	// played/saved, and error message
-	
+	//Error Message
 	private static final String ERROR_MESSAGE = "Sorry, an error has occured. please try again.";
 
 	// FileChooser-related fields

@@ -30,7 +30,7 @@ public abstract class AbstractMP3Creator extends JMenuItem {
 	 */
 	public void createMP3(String textToSynth, String outputName) {
 		useTerminalCommand("echo " + textToSynth + "|text2wave -o \"" + outputName + ".wav\";" 
-		+ "ffmpeg -y -i \"" + outputName + ".wav\" -f mp3 \"" + MediaPlayerJFrame.MP3_DIR_RELATIVE_PATH + File.separator + outputName + ".mp3\";" 
+		+ "ffmpeg -y -i \"" + outputName + ".wav\" -f mp3 \"" + MediaPlayerJFrame.MP3_DIR_RELATIVE_PATH+ File.separator + outputName + ".mp3\";" 
 		+ "rm \"" + outputName + ".wav\"");
 	}
 	
