@@ -4,11 +4,11 @@ import javax.swing.JLabel;
 
 import doInBackground.UseTerminalCommands;
 
-public class VideoTotalTimeLabel extends JLabel {
+public class TotalTimeLabel extends JLabel {
 
 	UseTerminalCommands termCommand = new UseTerminalCommands();
 
-	public VideoTotalTimeLabel() {
+	public TotalTimeLabel() {
 		super();
 		setText("00:00:00.00");
 	}
@@ -17,10 +17,10 @@ public class VideoTotalTimeLabel extends JLabel {
 	 * finds the duration of the video and changes label to the total duration time
 	 * @param videoPath
 	 */
-	public double findVideoDuration(String videoPath) {
+	public double findVideoDuration(String path) {
 		;
 		String inputLine = termCommand.terminalCommandString("ffprobe -i \""
-				+ videoPath + "\" -show_format 2>&1 | grep Duration");		
+				+ path + "\" -show_format 2>&1 | grep Duration");		
 		if (inputLine != null) {
 			String[] words = inputLine.split("[ ,]");
 			for (int i = 0; i < words.length; i++) {

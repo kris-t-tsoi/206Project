@@ -1,5 +1,8 @@
 package overlayFrame;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -8,24 +11,25 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
+import overlayFrame.addAudioTrackPanel.AudioToAddPanel;
 import main.MediaPlayerJFrame;
-import mainFrameGUI.time.VideoTotalTimeLabel;
+import mainFrameGUI.time.TotalTimeLabel;
 import net.miginfocom.swing.MigLayout;
 
-public class OverlayAudioToVideo extends JFrame {
+public class OverlayAudioToVideoFrame extends JFrame {
 
-	final OverlayAudioToVideo thisFrame = this;
+	final OverlayAudioToVideoFrame thisFrame = this;
 	JPanel contentPane;
 	JLabel vidName;
-	VideoTotalTimeLabel vidDuration;
+	TotalTimeLabel vidDuration;
 	JCheckBox removeVideoAudio;
 	JScrollPane scrollPanel;
 
-	public OverlayAudioToVideo(MediaPlayerJFrame video) {
+	public OverlayAudioToVideoFrame(MediaPlayerJFrame video) {
 		super("Overlay Video");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		setBounds(900, 400, 730, 500);
+		setBounds(900, 400, 800, 500);
 		setVisible(true);
 
 		contentPane = new JPanel();
@@ -44,10 +48,20 @@ public class OverlayAudioToVideo extends JFrame {
 		
 		//Add new audiotrack button		
 		AddAudioButton addAudioBtn = new AddAudioButton();
-		
+		addAudioBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AudioToAddPanel addAudioTrack = new AudioToAddPanel();
+				scrollPanel.add(addAudioTrack); //TODO get pane to fit in properly
+			}
+		});
 		
 		//overlay video button
 		OverlayVidAndAudioButton overlayVidBtn = new OverlayVidAndAudioButton();
+		overlayVidBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 		
 		//Scroll pane for adding multiple audio
 		scrollPanel = new JScrollPane();
@@ -56,8 +70,8 @@ public class OverlayAudioToVideo extends JFrame {
 		contentPane
 				.setLayout(new MigLayout(
 						"", // Layout Constraint
-						"[7px,grow 0,shrink 0][234px,grow, shrink][7px,grow 0,shrink 0][234px,grow, shrink]"
-						+"[7px,grow 0,shrink 0][234px,grow, shrink][7px,grow 0,shrink 0]", // Column Constraints
+						"[7px,grow 0,shrink 0][257px,grow, shrink][7px,grow 0,shrink 0][258px,grow, shrink]"
+						+"[7px,grow 0,shrink 0][257px,grow, shrink][7px,grow 0,shrink 0]", // Column Constraints
 						"[50px][40px][40px][50px][220px,grow, shrink]")); // Row
 																	// Constraints
 		//add(mediaPlayerComponent, "cell 0 0 11 1,grow");

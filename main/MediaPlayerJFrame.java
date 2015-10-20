@@ -25,13 +25,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import overlayFrame.OverlayAudioToVideo;
+import overlayFrame.OverlayAudioToVideoFrame;
 import mainFrameGUI.AbstractReplaceAudioLabel;
 import mainFrameGUI.ReplaceWithExistingMP3Label;
 import mainFrameGUI.ResizingEmbeddedMediaPlayerComponent;
 import mainFrameGUI.time.VideoCurrentTime;
 import mainFrameGUI.time.VideoTimeSlider;
-import mainFrameGUI.time.VideoTotalTimeLabel;
+import mainFrameGUI.time.TotalTimeLabel;
 import mainFrameGUI.videoControl.PlayButton;
 import net.miginfocom.swing.MigLayout;
 import textToMP3Frame.TextToSpeechFrame;
@@ -48,7 +48,7 @@ public class MediaPlayerJFrame extends JFrame {
 	ResizingEmbeddedMediaPlayerComponent mediaPlayerComponent;
 	EmbeddedMediaPlayer video;
 	VideoTimeSlider vidSlide;
-	private VideoTotalTimeLabel vidTotalTime;
+	private TotalTimeLabel vidTotalTime;
 	VideoCurrentTime vidCurrentTime;
 
 	private final JButton btnMute;
@@ -135,11 +135,11 @@ public class MediaPlayerJFrame extends JFrame {
 		this.videoDuration = videoDuration;
 	}
 
-	public VideoTotalTimeLabel getVidTotalTime() {
+	public TotalTimeLabel getVidTotalTime() {
 		return vidTotalTime;
 	}
 
-	public void setVidTotalTime(VideoTotalTimeLabel vidTotalTime) {
+	public void setVidTotalTime(TotalTimeLabel vidTotalTime) {
 		this.vidTotalTime = vidTotalTime;
 	}
 
@@ -240,7 +240,7 @@ public class MediaPlayerJFrame extends JFrame {
 		overlayBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// open overlay video frame
-				OverlayAudioToVideo o = new OverlayAudioToVideo(thisFrame);
+				OverlayAudioToVideoFrame o = new OverlayAudioToVideoFrame(thisFrame);
 			}
 		});
 
@@ -296,32 +296,6 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		}));
 		fileMenu.add(menuItem);
-
-		// This label opens a FileChooser to select an MP3
-/*		menuItem = new JMenuItem("Choose MP3 File");
-		menuItem.addActionListener((new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// Start file search in current directory, and show mp3's
-				FileNameExtensionFilter filter = new FileNameExtensionFilter(
-						"MP3 File", "mp3");
-				mp3FC.setFileFilter(filter);
-				mp3FC.setCurrentDirectory(mp3Dir);
-
-				int returnVal = mp3FC.showOpenDialog(thisFrame);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					setMp3Path(mp3FC.getSelectedFile().getAbsolutePath());
-				} else if (returnVal == JFileChooser.ERROR_OPTION) {
-					JOptionPane.showMessageDialog(thisFrame, ERROR_MESSAGE);
-				} else if (returnVal == JFileChooser.CANCEL_OPTION) {
-					// do nothing
-				}
-			}
-		}));
-		fileMenu.add(menuItem);
-		
-		*/
-
 		fileMenuBar.add(fileMenu);
 
 		fileMenu = new JMenu("Text To MP3");
@@ -342,7 +316,7 @@ public class MediaPlayerJFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// open overlay video frame
-				OverlayAudioToVideo o = new OverlayAudioToVideo(thisFrame);
+				OverlayAudioToVideoFrame o = new OverlayAudioToVideoFrame(thisFrame);
 			}
 		}));
 		fileMenu.add(menuItem);
@@ -382,7 +356,7 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 
-		setVidTotalTime(new VideoTotalTimeLabel());
+		setVidTotalTime(new TotalTimeLabel());
 		vidCurrentTime = new VideoCurrentTime();
 		JLabel dash = new JLabel(" / ");
 
