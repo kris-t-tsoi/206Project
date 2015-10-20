@@ -18,7 +18,12 @@ public class WriteSchemeFiles {
 	}
 
 	/**
-	 * Write scm file for playing text
+	 * Write scheme file for playing text
+	 * @param speed - speed of voice
+	 * @param startPitch - starting pitch of voice
+	 * @param endPitch - ending pitch of voice
+	 * @param text - text user wishes to turn into text
+	 * @return
 	 */
 	public File sayText(float speed, int startPitch, int endPitch, String text) {
 		File playScm = new File(System.getProperty("user.dir")+ File.separator +".PlayText.scm");
@@ -38,7 +43,15 @@ public class WriteSchemeFiles {
 		//TODO get pid so can stop
 	}
 	
-	
+	/**
+	 * Write scheme file for creating mp3
+	 * @param speed - speed of voice
+	 * @param startPitch - starting pitch of voice
+	 * @param endPitch - ending pitch of voice
+	 * @param text - text user wishes to turn into text
+	 * @param audioName - name user wish to call mp3
+	 * @return
+	 */
 	public File createMP3(float speed, int startPitch, int endPitch, String text,String audioName){
 		File scm = new File(System.getProperty("user.dir")+ File.separator +".CreateMP3.scm");
 

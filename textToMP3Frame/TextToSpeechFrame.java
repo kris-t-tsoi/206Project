@@ -131,7 +131,7 @@ public class TextToSpeechFrame extends JFrame {
 		
 		userText = new TextToMP3TextBox();
 		
-		
+		//TODO increase font size
 		JLabel titleLbl = new JLabel("Type in Text to Synthesis into MP3 Audio");
 		JLabel speedLbl = new JLabel("Voice Speed");
 		JLabel pitchLbl = new JLabel("Vocal Pitch");
