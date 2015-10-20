@@ -85,7 +85,7 @@ public class TextToSpeechFrame extends JFrame {
 		super(title);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		setBounds(900, 100, 600, 350);
+		setBounds(900, 50, 600, 350);
 		setVisible(true);
 		
 		

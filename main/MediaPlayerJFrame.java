@@ -25,6 +25,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import overlayFrame.OverlayAudioToVideo;
 import mainFrameGUI.AbstractReplaceAudioLabel;
 import mainFrameGUI.ReplaceWithExistingMP3Label;
 import mainFrameGUI.ResizingEmbeddedMediaPlayerComponent;
@@ -40,24 +41,27 @@ public class MediaPlayerJFrame extends JFrame {
 
 	private String videoPath;
 	private String mp3Path;
+	private String currentVideo;
+	private double videoDuration;
 
 	private JPanel contentPane;
 	ResizingEmbeddedMediaPlayerComponent mediaPlayerComponent;
 	EmbeddedMediaPlayer video;
 	VideoTimeSlider vidSlide;
-	VideoTotalTimeLabel vidTotalTime;
+	private VideoTotalTimeLabel vidTotalTime;
 	VideoCurrentTime vidCurrentTime;
 
 	private final JButton btnMute;
 	private static final String UNMUTE_TEXT = "Unmute";
 	private static final String MUTE_TEXT = "Mute";
+	JSlider sliderVolume;
 
 	private boolean videoIsStarted;
 
 	// Default volume of the video
 	public static final int DEFAULT_VOLUME = 50;
 
-	//Error Message
+	// Error Message
 	private static final String ERROR_MESSAGE = "Sorry, an error has occured. please try again.";
 
 	// FileChooser-related fields
@@ -124,6 +128,30 @@ public class MediaPlayerJFrame extends JFrame {
 		video.setVolume(value);
 	}
 
+	public String getCurrentVideo() {
+		return currentVideo;
+	}
+
+	public void setCurrentVideo(String currentVideo) {
+		this.currentVideo = currentVideo;
+	}
+
+	public double getVideoDuration() {
+		return videoDuration;
+	}
+
+	public void setVideoDuration(double videoDuration) {
+		this.videoDuration = videoDuration;
+	}
+
+	public VideoTotalTimeLabel getVidTotalTime() {
+		return vidTotalTime;
+	}
+
+	public void setVidTotalTime(VideoTotalTimeLabel vidTotalTime) {
+		this.vidTotalTime = vidTotalTime;
+	}
+
 	public boolean videoIsPlaying() {
 		return video.isPlaying();
 	}
@@ -140,17 +168,21 @@ public class MediaPlayerJFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 
-		//Check if files exist
+		// Check if files exist
 		final File videoDir = VIDEO_DIR_ABSOLUTE_PATH;
-		final File mp3Dir = new File(MP3_DIR_RELATIVE_PATH);	
-		if(!videoDir.exists() || !mp3Dir.exists()){
-		//Give user warning that files are being made and where they are located	
-		JOptionPane.showMessageDialog(thisFrame, ("Two Folders \"Video\" and \"MP3\" will be created in "+System
-				.getProperty("user.dir")));		
-		
-		// Create the folders needed if they don't exist		
-		videoDir.mkdir();
-		mp3Dir.mkdir();
+		final File mp3Dir = new File(MP3_DIR_RELATIVE_PATH);
+		if (!videoDir.exists() || !mp3Dir.exists()) {
+			// Give user warning that files are being made and where they are
+			// located
+			JOptionPane
+					.showMessageDialog(
+							thisFrame,
+							("Two Folders \"Video\" and \"MP3\" will be created in " + System
+									.getProperty("user.dir")));
+
+			// Create the folders needed if they don't exist
+			videoDir.mkdir();
+			mp3Dir.mkdir();
 		}
 
 		contentPane = new JPanel();
@@ -164,7 +196,6 @@ public class MediaPlayerJFrame extends JFrame {
 		video = mediaPlayerComponent.getMediaPlayer();
 		mediaPanel.add(mediaPlayerComponent, BorderLayout.CENTER);
 
-		
 		/*
 		 * Button to play the video. It also acts as a pause/unpause button, and
 		 * is used to stop skipping.
@@ -173,6 +204,7 @@ public class MediaPlayerJFrame extends JFrame {
 		btnPlay.setIcon(PlayButton.PLAY_IMAGE);
 		btnPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				setVideoVolume(sliderVolume.getValue());
 				btnPlay.playPressed();
 			}
 		});
@@ -201,7 +233,26 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 
-		
+		// Button to create MP3 from text
+		JButton makeMP3Btn = new JButton();
+		makeMP3Btn.setText("Text to Speech");
+		makeMP3Btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// open text to speech frame
+				TextToSpeechFrame f = new TextToSpeechFrame("Text to MP3");
+			}
+		});
+
+		// Button to overlay video with MP3
+		JButton overlayBtn = new JButton();
+		overlayBtn.setText("Overlay Video");
+		overlayBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// open overlay video frame
+				OverlayAudioToVideo o = new OverlayAudioToVideo(thisFrame);
+			}
+		});
+
 		// Button to mute audio
 		btnMute = new JButton("Mute");
 		btnMute.setToolTipText("Mute the audio");
@@ -221,7 +272,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 		// Create a JSlider with 0 and 100 as the volume limits. 50 is the
 		// default (it is set to 50 in the constructor).
-		JSlider sliderVolume = new JSlider(SwingConstants.HORIZONTAL, 0, 100,
+		sliderVolume = new JSlider(SwingConstants.HORIZONTAL, 0, 100,
 				DEFAULT_VOLUME);
 		sliderVolume.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
@@ -235,7 +286,6 @@ public class MediaPlayerJFrame extends JFrame {
 		JLabel lblMediaToOverlay = new JLabel("Media to Combine:");
 
 		// Labels that displays the currently selected mp3 and video
-		lblCurrentMP3 = new JLabel(CURRENT_MP3_TEXT);
 		lblCurrentVideo = new JLabel(CURRENT_VIDEO_TEXT);
 
 		/*
@@ -274,8 +324,8 @@ public class MediaPlayerJFrame extends JFrame {
 					setMp3Path(mp3FC.getSelectedFile().getAbsolutePath());
 				} else if (returnVal == JFileChooser.ERROR_OPTION) {
 					JOptionPane.showMessageDialog(thisFrame, ERROR_MESSAGE);
-				}else if (returnVal == JFileChooser.CANCEL_OPTION) {
-					//do nothing
+				} else if (returnVal == JFileChooser.CANCEL_OPTION) {
+					// do nothing
 				}
 			}
 		}));
@@ -284,8 +334,7 @@ public class MediaPlayerJFrame extends JFrame {
 		fileMenuBar.add(fileMenu);
 
 		fileMenu = new JMenu("Text To MP3");
-		//TODO text to mp3 frame
-		menuItem = new JMenuItem("Create MP3");
+		menuItem = new JMenuItem("Listen and Create MP3");
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -293,36 +342,22 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		}));
 		fileMenu.add(menuItem);
-		
-		
 		fileMenuBar.add(fileMenu);
 		
-		//TODO create into button
-		
 
-		fileMenu = new JMenu("Video");
-
-		// Create a subMenu which contains two more tabs: Text and Existing MP3
-		JMenu subMenu = new JMenu("Replace Audio With");
-		fileMenu.add(subMenu);
-
-
-
-		// Sub-label which allows the user to replace a video's audio with a
-		// pre-selected mp3
-		final ReplaceWithExistingMP3Label overlayMP3Item = new ReplaceWithExistingMP3Label(
-				this);
-		overlayMP3Item.addActionListener((new ActionListener() {
+		fileMenu = new JMenu("Current Video");
+		menuItem = new JMenuItem("Overlay Video");
+		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// Get the mp3, then replace the audio
-				String mp3Path = getMp3Path();
-				replaceAudio(overlayMP3Item, mp3Path);
+				// open overlay video frame
+				OverlayAudioToVideo o = new OverlayAudioToVideo(thisFrame);
 			}
 		}));
-		subMenu.add(overlayMP3Item);
-
+		fileMenu.add(menuItem);
 		fileMenuBar.add(fileMenu);
+		
+		//set Menubar to frame
 		setJMenuBar(fileMenuBar);
 
 		// Image which is on the left of the JSlider
@@ -330,31 +365,33 @@ public class MediaPlayerJFrame extends JFrame {
 				MediaPlayerJFrame.class.getResource("/Volume16.gif")));
 
 		vidSlide = new VideoTimeSlider(video);
-		vidSlide.addMouseListener(new MouseListener(){
+		vidSlide.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void mousePressed(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
-			public void mouseClicked(MouseEvent e) {}
+			public void mouseClicked(MouseEvent e) {
+			}
 
 			@Override
-			public void mouseEntered(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {
+			}
 
 			@Override
-			public void mouseExited(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {
+			}
 		});
-		
-		
-		vidTotalTime = new VideoTotalTimeLabel();
+
+		setVidTotalTime(new VideoTotalTimeLabel());
 		vidCurrentTime = new VideoCurrentTime();
 		JLabel dash = new JLabel(" / ");
 
@@ -374,7 +411,7 @@ public class MediaPlayerJFrame extends JFrame {
 								+ "[60px,grow 0,shrink 0][4px,grow 0,shrink 0][100px,grow 0,shrink 0][4px,grow 0,shrink 0]"
 								+ "[10px,grow 0,shrink 0][2px,grow 0,shrink 0][421px,grow,shrink]", // Column
 																									// Constraints
-						"[406px,grow, shrink][20px][20px][14px][14px][14px]")); // Row
+						"[406px,grow, shrink][20px][20px][17px][17px][8px]")); // Row
 																				// Constraints
 
 		/*
@@ -387,19 +424,19 @@ public class MediaPlayerJFrame extends JFrame {
 		contentPane.add(mediaPlayerComponent, "cell 0 0 11 1,grow");
 		contentPane.add(lblMediaToOverlay,
 				"cell 0 3 3 1,alignx left,aligny top");
-		contentPane.add(lblProcessing, "cell 10 3,alignx right,aligny top");
 		contentPane.add(btnBackward, "cell 0 2,alignx center,grow");
 		contentPane.add(btnPlay, "cell 2 2,grow");
 		contentPane.add(btnForward, "cell 4 2,alignx center,grow");
 		contentPane.add(btnMute, "cell 6 2,grow");
 		contentPane.add(lblImageIcon, "cell 8 2,grow");
 		contentPane.add(sliderVolume, "cell 10 2,grow");
-		contentPane.add(vidCurrentTime, "cell 0 1,grow");		
+		contentPane.add(vidCurrentTime, "cell 0 1,grow");
 		contentPane.add(dash, "cell 1 1 11 2,growx,aligny top");
-		contentPane.add(vidTotalTime, "cell 2 1,grow");
+		contentPane.add(getVidTotalTime(), "cell 2 1,grow");
 		contentPane.add(vidSlide, "cell 3 1 11 2,growx,aligny top");
-		contentPane.add(lblCurrentVideo, "cell 2 4 9 1,growx,aligny top");
-		contentPane.add(lblCurrentMP3, "cell 2 5 9 1,growx,aligny top");
+		contentPane.add(makeMP3Btn, "cell 10 3 ,grow");
+		contentPane.add(overlayBtn, "cell 10 4 ,grow");
+		contentPane.add(lblCurrentVideo, "cell 0 4 9 0,growx,aligny top");
 
 		setVisible(true);
 	}
@@ -418,9 +455,9 @@ public class MediaPlayerJFrame extends JFrame {
 		video.playMedia(getVideoPath());
 
 	}
-	//TODO make vidCurrentTime label change
-	//TODO make Jslider change with video
-	
+
+	// TODO make vidCurrentTime label change
+	// TODO make Jslider change with video
 
 	/**
 	 * Method to extract the media files basename i.e. everything after the last
@@ -458,8 +495,6 @@ public class MediaPlayerJFrame extends JFrame {
 			video.mute(true);
 		}
 	}
-
-
 
 	/**
 	 * Method to set the processing label to say complete, for use by an
@@ -527,15 +562,16 @@ public class MediaPlayerJFrame extends JFrame {
 			JOptionPane.showMessageDialog(this, videoFC.getSelectedFile()
 					.getName() + " has been selected.");
 
-			
+			setCurrentVideo(videoFC.getSelectedFile().getName());
+
 			// set total time of video
-			vidTotalTime.findVideoDuration(getVideoPath());
-			
+			setVideoDuration(getVidTotalTime()
+					.findVideoDuration(getVideoPath()));
 
 		} else if (returnVal == JFileChooser.CANCEL_OPTION) {
-			//do nothing
+			// do nothing
 			return;
-		}else if (returnVal == JFileChooser.ERROR_OPTION) {
+		} else if (returnVal == JFileChooser.ERROR_OPTION) {
 			JOptionPane.showMessageDialog(this, ERROR_MESSAGE);
 		}
 	}
