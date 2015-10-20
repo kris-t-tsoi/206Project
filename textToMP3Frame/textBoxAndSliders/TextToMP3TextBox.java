@@ -2,7 +2,7 @@ package textToMP3Frame.textBoxAndSliders;
 
 import javax.swing.JTextArea;
 
-import terminal.UseTerminalCommands;
+import doInBackground.UseTerminalCommands;
 
 @SuppressWarnings("serial")
 public class TextToMP3TextBox extends JTextArea {

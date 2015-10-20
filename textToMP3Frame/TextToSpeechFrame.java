@@ -20,6 +20,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class TextToSpeechFrame extends JFrame {
 	
+	//GUI Components
 	final TextToSpeechFrame thisFrame = this;
 	JPanel contentPane;
 	PlayTextBtn playText;
@@ -28,7 +29,52 @@ public class TextToSpeechFrame extends JFrame {
 	VoiceSpeedSlider speedSlide;
 	PitchSlider pitchSlide;
 	
+	//Audio Values
+	private float speed;
+	private int startPitch;
+	private int endPitch;
+	private String text;
 	
+	
+	public float getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
+
+	public int getStartPitch() {
+		return startPitch;
+	}
+
+	public void setStartPitch(int startPitch) {
+		this.startPitch = startPitch;
+	}
+
+	public int getEndPitch() {
+		return endPitch;
+	}
+
+	public void setEndPitch(int endPitch) {
+		this.endPitch = endPitch;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	
+	/**
+	 * Constructor for Text to Speech Frame
+	 * Used for - playing text to audio
+	 * 			- creating MP3 
+	 * @param title
+	 */
 	public TextToSpeechFrame(String title) {
 		
 		super(title);
@@ -41,13 +87,16 @@ public class TextToSpeechFrame extends JFrame {
 		contentPane = new JPanel();		
 		setContentPane(contentPane);
 		
-		playText = new PlayTextBtn();
+		playText = new PlayTextBtn(thisFrame);
 		playText.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				//get values from sliders and text box
+				getSliderValues();
+				
 				// If the text is under the allowed limit, speak the text
 				if (userText.checkTxtLength()) {
-					playText.sayWithFestival(userText.getText());
+					playText.sayWithFestival(getSpeed(),getStartPitch(),getEndPitch(),getText());
 					//TODO get pid so can stop
 				} else {
 					JOptionPane.showMessageDialog(thisFrame, main.MediaPlayerJFrame.ERROR_WORD_LIMIT_MESSAGE);
@@ -92,6 +141,17 @@ public class TextToSpeechFrame extends JFrame {
 		contentPane.add(createMP3, "cell 5 3,grow");
 		setVisible(true);
 		
+	}
+	
+	/**
+	 * get the current slider and textbox values
+	 */
+	private void getSliderValues(){
+		setSpeed((float) (speedSlide.getValue())/10);
+		int[] pitchRange = pitchSlide.findRange(pitchSlide.getValue());
+		setStartPitch(pitchRange[0]);
+		setEndPitch(pitchRange[1]);
+		setText(userText.getText());
 	}
 	
 }

@@ -2,7 +2,7 @@ package mainFrameGUI.time;
 
 import javax.swing.JLabel;
 
-import terminal.UseTerminalCommands;
+import doInBackground.UseTerminalCommands;
 
 public class VideoTotalTimeLabel extends JLabel {
 
