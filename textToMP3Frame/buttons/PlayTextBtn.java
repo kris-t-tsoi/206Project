@@ -35,7 +35,9 @@ public class PlayTextBtn extends JButton {
 		UseTerminalCommands term = new UseTerminalCommands();
 		term.terminalCommandVoid(("festival -b "+playScm.getAbsolutePath().toString()));
 		
-		//BackgroundUse back = new BackgroundUse(("festival -b "+playScm.getAbsolutePath().toString()));
+		
+		//TODO get speech to play in background
+		
 		//TODO get pid so can stop
 	}
 	
