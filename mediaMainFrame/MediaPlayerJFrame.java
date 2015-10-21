@@ -80,16 +80,17 @@ public class MediaPlayerJFrame extends JFrame {
 					+ VIDEO_DIR_RELATIVE_PATH);
 
 	public static final String MP3_DIR_RELATIVE_PATH = "MP3";
-	private static final File MP3_DIR_ABSOLUTE_PATH = new File(System
-			.getProperty("user.dir") + File.separator + MP3_DIR_RELATIVE_PATH);
+	private static final File MP3_DIR_ABSOLUTE_PATH = new File(
+			System.getProperty("user.dir") + File.separator
+					+ MP3_DIR_RELATIVE_PATH);
 
 	// Dynamic labels for user information
-	
+
 	private static final String CURRENT_VIDEO_TEXT = "Currently Selected Video: ";
 	private static final String PROCESS_TEXT = "Processing...";
 	private static final String COMPLETE_TEXT = "Complete!";
 	JLabel curVidTitle;
-	NameLabel currentVidName; 
+	NameLabel currentVidName;
 	JLabel lblProcessing = new JLabel(" ");
 
 	// Images for fast forward and rewind icons
@@ -106,7 +107,6 @@ public class MediaPlayerJFrame extends JFrame {
 	private void setVideoPath(String videoPath) {
 		this.videoPath = videoPath;
 	}
-
 
 	public boolean getVideoIsStarted() {
 		return videoIsStarted;
@@ -182,11 +182,9 @@ public class MediaPlayerJFrame extends JFrame {
 		if (!videoDir.exists() || !mp3Dir.exists()) {
 			// Give user warning that files are being made and where they are
 			// located
-			JOptionPane
-					.showMessageDialog(
-							thisFrame,
-							("Two Folders \"Video\" and \"MP3\" will be created in " + System
-									.getProperty("user.dir")));
+			JOptionPane.showMessageDialog(
+				thisFrame,("Two Folders \"Video\" and \"MP3\" will be created in " 
+						+ System.getProperty("user.dir")));
 
 			// Create the folders needed if they don't exist
 			videoDir.mkdir();
@@ -247,7 +245,8 @@ public class MediaPlayerJFrame extends JFrame {
 		makeMP3Btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// open text to speech frame
-				TextToSpeechFrame f = new TextToSpeechFrame("Text to MP3",contentPane);
+				TextToSpeechFrame f = new TextToSpeechFrame("Text to MP3",
+						contentPane);
 			}
 		});
 
@@ -257,7 +256,8 @@ public class MediaPlayerJFrame extends JFrame {
 		overlayBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// open overlay video frame
-				OverlayAudioToVideoFrame o = new OverlayAudioToVideoFrame(thisFrame);
+				OverlayAudioToVideoFrame o = new OverlayAudioToVideoFrame(
+						thisFrame);
 			}
 		});
 
@@ -284,16 +284,15 @@ public class MediaPlayerJFrame extends JFrame {
 				DEFAULT_VOLUME);
 		sliderVolume.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
-				//get volume in case moved before video is played
+				// get volume in case moved before video is played
 				setVolume(((JSlider) arg0.getSource()).getValue());
-				//if video is playing then the volume changes as it plays
+				// if video is playing then the volume changes as it plays
 				video.setVolume(getVolume());
-				
+
 			}
 		});
 		sliderVolume.setMinorTickSpacing(1);
 		sliderVolume.setToolTipText("Change the volume of the video");
-
 
 		// Labels that displays the currently selected mp3 and video
 		curVidTitle = new JLabel(CURRENT_VIDEO_TEXT);
@@ -325,12 +324,12 @@ public class MediaPlayerJFrame extends JFrame {
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				TextToSpeechFrame f = new TextToSpeechFrame("Text to MP3",contentPane);
+				TextToSpeechFrame f = new TextToSpeechFrame("Text to MP3",
+						contentPane);
 			}
 		}));
 		fileMenu.add(menuItem);
 		fileMenuBar.add(fileMenu);
-		
 
 		fileMenu = new JMenu("Current Video");
 		menuItem = new JMenuItem("Overlay Video");
@@ -338,24 +337,23 @@ public class MediaPlayerJFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// open overlay video frame
-				OverlayAudioToVideoFrame o = new OverlayAudioToVideoFrame(thisFrame);
+				OverlayAudioToVideoFrame o = new OverlayAudioToVideoFrame(
+						thisFrame);
 			}
 		}));
 		fileMenu.add(menuItem);
 		fileMenuBar.add(fileMenu);
-		
-		//set Menubar to frame
+
+		// set Menubar to frame
 		setJMenuBar(fileMenuBar);
 
 		// Image which is on the left of the JSlider
 		JLabel lblImageIcon = new JLabel(new ImageIcon(
 				MediaPlayerJFrame.class.getResource("/Volume16.gif")));
 
-		
 		// TODO make vidCurrentTime label change
 		// TODO make Jslider change with video
 		vidSlide = new VideoTimeSlider(video);
-		
 
 		setVidTotalTime(new TimeLabel());
 		vidCurrentTime = new VideoCurrentTime();
@@ -421,9 +419,6 @@ public class MediaPlayerJFrame extends JFrame {
 
 	}
 
-	
-
-	
 	/**
 	 * Method to skip the video (for use by other objects)
 	 * 
@@ -455,8 +450,6 @@ public class MediaPlayerJFrame extends JFrame {
 		lblProcessing.setText(COMPLETE_TEXT);
 	}
 
-
-
 	/**
 	 * Open FileChooser and let the user choose a video to play. If the user is
 	 * already playing a video, stop the old one, set videoIsStarted to false,
@@ -466,31 +459,29 @@ public class MediaPlayerJFrame extends JFrame {
 	 *            - the play button which has its icon set to the play icon.
 	 */
 	public void selectVideo(PlayButton btnPlay) {
-		
+
 		String path = fileChoose.chooseVideoPath(thisFrame, btnPlay);
-		
-		if(!path.equals("")){
+
+		if (!path.equals("")) {
 
 			setVideoPath(path);
 			setCurrentVideo(currentVidName.getFileName(path));
-			
-			JOptionPane.showMessageDialog(this, getCurrentVideo()+ " has been selected.");
+
+			JOptionPane.showMessageDialog(this, getCurrentVideo()
+					+ " has been selected.");
 
 			// set total time of video
-			setVideoDuration(getVidTotalTime()
-					.findDuration(getVideoPath()));			
+			setVideoDuration(getVidTotalTime().findDuration(getVideoPath()));
 		}
-		
+
 	}
-	
-	
-	
+
 	/**
-	 * Stops the current video
-	 * set the play button to display play icon
+	 * Stops the current video set the play button to display play icon
+	 * 
 	 * @param btnPlay
 	 */
-	public void removeVideo(PlayButton btnPlay){
+	public void removeVideo(PlayButton btnPlay) {
 		mediaPlayerComponent.getMediaPlayer().stop();
 		setVideoIsStarted(false);
 		btnPlay.btnSetPlayIcon();

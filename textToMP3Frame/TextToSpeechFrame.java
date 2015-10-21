@@ -139,6 +139,12 @@ public class TextToSpeechFrame extends JFrame {
 						
 						//TODO file created in
 						
+						// Give user warning that files are being made and where they are
+						// located
+						JOptionPane.showMessageDialog(
+							thisFrame,(mp3Name+".mp3 was created in " 
+									+ getCreatedMP3Path()));
+						
 						dispose();
 					}
 				} else {

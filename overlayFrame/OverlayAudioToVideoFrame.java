@@ -2,6 +2,7 @@ package overlayFrame;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -10,7 +11,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 
 import overlayFrame.addAudioTrackPanel.AudioToAddPanel;
 import sharedGUIComponets.TimeLabel;
@@ -21,6 +24,7 @@ import net.miginfocom.swing.MigLayout;
 public class OverlayAudioToVideoFrame extends JFrame {
 
 	final OverlayAudioToVideoFrame thisFrame = this;
+	ArrayList<AudioToAddPanel> audioTrackList;
 	JPanel contentPane;
 	JLabel vidName;
 	TimeLabel vidDuration;
@@ -36,6 +40,7 @@ public class OverlayAudioToVideoFrame extends JFrame {
 
 		contentPane = new JPanel();
 		setContentPane(contentPane);
+		audioTrackList = new ArrayList<AudioToAddPanel>();
 		
 		//TODO increase font size
 		JLabel frameTitleLbl = new JLabel("Overlay Video and Audio");
@@ -48,19 +53,24 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		//Remove audio checkbox
 		removeVideoAudio = new JCheckBox("Remove Video's Audio Track", false);
 		
+		AudioToAddPanel addAudioTrack = new AudioToAddPanel(video);
+		
 		//Add new audiotrack button		
-		AddAudioButton addAudioBtn = new AddAudioButton();
+/*		AddAudioButton addAudioBtn = new AddAudioButton();
 		addAudioBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AudioToAddPanel addAudioTrack = new AudioToAddPanel(video);
-				scrollPanel.add(addAudioTrack); //TODO get pane to fit in properly
-				scrollPanel.setVisible(true);
+				audioTrackList.add(addAudioTrack);
+				//scrollPanel.add(addAudioTrack); //TODO get pane to fit in properly
+				//scrollPanel.setVisible(true);
 				//contentPane.add(addAudioTrack);
-				contentPane.setVisible(true);
+				//contentPane.setVisible(true);
 				setVisible(true);
 				
 			}
 		});
+
+		*/
 		
 		//overlay video button
 		OverlayVidAndAudioButton overlayVidBtn = new OverlayVidAndAudioButton();
@@ -80,7 +90,7 @@ public class OverlayAudioToVideoFrame extends JFrame {
 						"", // Layout Constraint
 						"[7px,grow 0,shrink 0][257px,grow, shrink][7px,grow 0,shrink 0][258px,grow, shrink]"
 						+"[7px,grow 0,shrink 0][257px,grow, shrink][7px,grow 0,shrink 0]", // Column Constraints
-						"[50px][40px][40px][50px][220px,grow, shrink]")); // Row
+						"[50px][40px][40px][50px][5px][220px,grow, shrink]")); // Row
 																	// Constraints
 		//add(mediaPlayerComponent, "cell 0 0 11 1,grow");
 		add(frameTitleLbl, "cell 1 0 5 1,grow");
@@ -89,9 +99,11 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		add(duraTitleLbl, "cell 1 2 ,grow");
 		add(vidDuration, "cell 1 2 ,grow");
 		add(removeVideoAudio, "cell 4 2,grow");
-		add(addAudioBtn, "cell 1 3 ,grow");
+//		add(addAudioBtn, "cell 1 3 ,grow");
 		add(overlayVidBtn, "cell 4 3 ,grow");
-		add(scrollPanel, "cell 0 4 6 0 ,grow");
+		add(new JSeparator(SwingConstants.HORIZONTAL), "cell 0 4 6 0 ,grow");
+		add(addAudioTrack, "cell 0 5 6 0 ,grow");
+		//add(scrollPanel, "cell 0 4 6 0 ,grow");
 		setVisible(true);
 		
 		
