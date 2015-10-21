@@ -27,7 +27,7 @@ public class OverlayAudioToVideoFrame extends JFrame {
 	JCheckBox removeVideoAudio;
 	JScrollPane scrollPanel;
 
-	public OverlayAudioToVideoFrame(MediaPlayerJFrame video) {
+	public OverlayAudioToVideoFrame(final MediaPlayerJFrame video) {
 		super("Overlay Video");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
@@ -52,7 +52,7 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		AddAudioButton addAudioBtn = new AddAudioButton();
 		addAudioBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AudioToAddPanel addAudioTrack = new AudioToAddPanel();
+				AudioToAddPanel addAudioTrack = new AudioToAddPanel(video);
 				scrollPanel.add(addAudioTrack); //TODO get pane to fit in properly
 			}
 		});

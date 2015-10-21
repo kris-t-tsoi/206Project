@@ -65,7 +65,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 	// FileChooser-related fields
 	final MediaPlayerJFrame thisFrame = this;
-	final UserFileChoose fileChoose = new UserFileChoose();
+	final private UserFileChoose fileChoose = new UserFileChoose();
 	final JFileChooser videoFC = new JFileChooser();
 	final JFileChooser mp3FC = new JFileChooser();
 	JMenuBar fileMenuBar;
@@ -79,8 +79,8 @@ public class MediaPlayerJFrame extends JFrame {
 					+ VIDEO_DIR_RELATIVE_PATH);
 
 	public static final String MP3_DIR_RELATIVE_PATH = "MP3";
-	private static final String MP3_DIR_ABSOLUTE_PATH = System
-			.getProperty("user.dir") + File.separator + MP3_DIR_RELATIVE_PATH;
+	private static final File MP3_DIR_ABSOLUTE_PATH = new File(System
+			.getProperty("user.dir") + File.separator + MP3_DIR_RELATIVE_PATH);
 
 	// Dynamic labels for user information
 	
@@ -141,6 +141,10 @@ public class MediaPlayerJFrame extends JFrame {
 
 	public void setVidTotalTime(TimeLabel vidTotalTime) {
 		this.vidTotalTime = vidTotalTime;
+	}
+
+	public static File getMp3DirAbsolutePath() {
+		return MP3_DIR_ABSOLUTE_PATH;
 	}
 
 	public static String getErrorMessage() {
@@ -404,7 +408,7 @@ public class MediaPlayerJFrame extends JFrame {
 		contentPane.add(vidSlide, "cell 3 1 11 2,growx,aligny top");
 		contentPane.add(makeMP3Btn, "cell 10 3 ,grow");
 		contentPane.add(overlayBtn, "cell 10 4 ,grow");
-		contentPane.add(curVidTitle, "cell 0 3 9 0,growx,aligny top");
+		contentPane.add(curVidTitle, "cell 0 3 9 0,growx");
 		contentPane.add(currentVidName, "cell 0 4 9 0,growx,aligny top");
 
 		setVisible(true);

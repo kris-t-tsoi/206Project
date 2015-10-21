@@ -6,19 +6,26 @@ import java.awt.event.ActionListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import fileChoosing.UserFileChoose;
 import sharedGUIComponets.NameLabel;
 import sharedGUIComponets.TimeLabel;
+import mediaMainFrame.MediaPlayerJFrame;
 import net.miginfocom.swing.MigLayout;
 
 public class AudioToAddPanel extends JPanel {
 	
+	AudioToAddPanel thisFrame;
+	final MediaPlayerJFrame mediaPlayerFrame;
 	TimeLabel durationLbl;
 	NameLabel mp3NameLbl;
 	SelectMP3Btn selectAudio;
 	CreateMp3ForAudioPanelBtn createAudio;
+	final private UserFileChoose fileChoose = new UserFileChoose();
 	
-	public AudioToAddPanel() {
-		
+	
+	public AudioToAddPanel(MediaPlayerJFrame mainFrame) {
+		thisFrame = this;
+		mediaPlayerFrame = mainFrame;
 		setSize(700, 150);
 		
 		JLabel mp3TitleLbl = new JLabel("MP3 :");
@@ -31,6 +38,7 @@ public class AudioToAddPanel extends JPanel {
 		selectAudio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//TODO get file
+				fileChoose.chooseMP3Path(mediaPlayerFrame);
 				
 			}
 		});
