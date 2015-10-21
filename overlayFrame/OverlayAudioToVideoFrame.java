@@ -85,7 +85,17 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		add(overlayVidBtn, "cell 4 3 ,grow");
 		add(scrollPanel, "cell 1 4 5 1 ,grow");
 		setVisible(true);
+		
+		
+		//ffmpeg -i Video/big_buck_bunny_1_minute.avi -i MP3/haehah.mp3 -filter_complex [media number:channel]adelay=delayinMilisec4,amix=inputs=2 out.mp4
+
+		
+		
+		//adds audio to beginning
+		//ffmpeg -i Video/big_buck_bunny_1_minute.avi -i MP3/haehah.mp3 -filter_complex adelay=50000,amix=inputs=2 out.mp4
 
 	}
 
+	
+	
 }

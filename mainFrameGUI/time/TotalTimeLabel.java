@@ -10,7 +10,7 @@ public class TotalTimeLabel extends JLabel {
 
 	public TotalTimeLabel() {
 		super();
-		setText("00:00:00.00");
+		setText("00:00:00");
 	}
 
 	/**
@@ -22,7 +22,7 @@ public class TotalTimeLabel extends JLabel {
 		String inputLine = termCommand.terminalCommandString("ffprobe -i \""
 				+ path + "\" -show_format 2>&1 | grep Duration");		
 		if (inputLine != null) {
-			String[] words = inputLine.split("[ ,]");
+			String[] words = inputLine.split("[ ,.]");
 			for (int i = 0; i < words.length; i++) {
 				if(words[i].equals("Duration:")){					
 					setText(words[i+1]);
@@ -40,14 +40,13 @@ public class TotalTimeLabel extends JLabel {
 	 * @return time in seconds
 	 */
 	private double  getDurationFloatTime (String timeString){
-		//00:00:00.00	hour:min:sec.millisec
-		String[] timeSplit = timeString.split("[:.]");
-		double milli = Double.parseDouble(timeSplit[3])/100; 		
+		//00:00:00	hour:min:sec
+		String[] timeSplit = timeString.split("[:]");		
 		double sec =  Double.parseDouble(timeSplit[2]); 
 		double min =  Double.parseDouble(timeSplit[1])*60; 
 		double hour =  Double.parseDouble(timeSplit[0])*360; 
 		
-		return hour+min+sec+milli;
+		return hour+min+sec;
 		
 	}
 }

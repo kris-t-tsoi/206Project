@@ -45,6 +45,10 @@ public class AudioToAddPanel extends JPanel {
 	}
 
 	
+
+
+
+	
 	//TODO get duration and name of MP3	
 	private void getMP3Information(){
 		
