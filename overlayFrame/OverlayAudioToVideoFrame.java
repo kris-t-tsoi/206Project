@@ -101,7 +101,6 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		add(removeVideoAudio, "cell 4 2,grow");
 //		add(addAudioBtn, "cell 1 3 ,grow");
 		add(overlayVidBtn, "cell 4 3 ,grow");
-		add(new JSeparator(SwingConstants.HORIZONTAL), "cell 0 4 6 0 ,grow");
 		add(addAudioTrack, "cell 0 5 6 0 ,grow");
 		//add(scrollPanel, "cell 0 4 6 0 ,grow");
 		setVisible(true);

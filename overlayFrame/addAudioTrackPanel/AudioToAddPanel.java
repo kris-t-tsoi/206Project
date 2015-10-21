@@ -1,10 +1,14 @@
 package overlayFrame.addAudioTrackPanel;
 
+import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import fileChoosing.UserFileChoose;
 import sharedGUIComponets.NameLabel;
@@ -23,6 +27,9 @@ public class AudioToAddPanel extends JPanel {
 	JLabel startLbl;
 	JLabel endLbl;
 	TimeLabel endTime;
+	JTextField startMin;
+	JTextField startSec;
+	JTextField startMili;
 	private SelectMP3Btn selectAudio;
 	private CreateMp3ForAudioPanelBtn createAudio;
 	final private UserFileChoose fileChoose;
@@ -49,7 +56,11 @@ public class AudioToAddPanel extends JPanel {
 		durationLbl = new TimeLabel();
 
 		startLbl = new JLabel("Start [MM:SS.ms]:");
-
+		startMin = new JTextField("00");
+		JLabel semiCol = new JLabel(":");
+		startSec = new JTextField("00");
+		JLabel dot = new JLabel(".");
+		startMili = new JTextField("00");
 		endLbl = new JLabel("End: ");
 
 		// select existing MP3
@@ -77,21 +88,29 @@ public class AudioToAddPanel extends JPanel {
 			}
 		});
 
+		
+		
 		setLayout(new MigLayout(
 				"", // Layout Constraint
 				"[3px,grow 0,shrink 0][300px,grow,shrink][3px,grow 0,shrink 0][250px,grow,shrink]"
 						+ "[3px,grow 0,shrink 0][150px,grow,shrink][3px,grow 0,shrink 0]", // Column
 																							// Constraints
-				"[60px][60px][30px]")); // Row Constraints
-
-		add(mp3TitleLbl, "cell 1 0 ,grow");
-		add(mp3NameLbl, "cell 1 0 ,grow");
-		add(duraTitleLbl, "cell 3 0 ,grow");
-		add(durationLbl, "cell 3 0 ,grow");
-		add(selectAudio, "cell 5 0 ,grow");
-		add(createAudio, "cell 5 1 ,grow");
-		add(startLbl, "cell 1 1 ,grow");
-		add(endLbl, "cell 3 1 ,grow");
+				"[5px][40px][40px][40px]")); // Row Constraints
+		
+		add(new JSeparator(SwingConstants.HORIZONTAL), "cell 0 0 6 0 ,grow");
+		add(mp3TitleLbl, "cell 1 1 ,grow");
+		add(mp3NameLbl, "cell 1 1 ,grow");
+		add(duraTitleLbl, "cell 3 1 ,grow");
+		add(durationLbl, "cell 3 1 ,grow");
+		add(selectAudio, "cell 5 1 ,grow");
+		add(createAudio, "cell 5 2 ,grow");
+		add(startLbl, "cell 1 2 ,grow");
+		add(startMin, "cell 1 2 ,grow");
+		add(semiCol, "cell 1 2 ,grow");
+		add(startSec, "cell 1 2 ,grow");
+		add(dot, "cell 1 2 ,grow");
+		add(startMili, "cell 1 2 ,grow");
+		add(endLbl, "cell 3 2 ,grow");
 		setVisible(true);
 
 		// TODO Play mp3 file to listen
