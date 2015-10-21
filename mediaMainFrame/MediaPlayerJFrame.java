@@ -59,6 +59,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 	// Default volume of the video
 	private static final int DEFAULT_VOLUME = 50;
+	private static int volume;
 
 	// Error Message
 	private static final String ERROR_MESSAGE = "Sorry, an error has occured. please try again.";
@@ -149,6 +150,14 @@ public class MediaPlayerJFrame extends JFrame {
 
 	public static String getErrorMessage() {
 		return ERROR_MESSAGE;
+	}
+
+	public static int getVolume() {
+		return volume;
+	}
+
+	public void setVolume(int volume) {
+		this.volume = volume;
 	}
 
 	public boolean videoIsPlaying() {
@@ -275,7 +284,11 @@ public class MediaPlayerJFrame extends JFrame {
 				DEFAULT_VOLUME);
 		sliderVolume.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
-				video.setVolume(((JSlider) arg0.getSource()).getValue());
+				//get volume in case moved before video is played
+				setVolume(((JSlider) arg0.getSource()).getValue());
+				//if video is playing then the volume changes as it plays
+				video.setVolume(getVolume());
+				
 			}
 		});
 		sliderVolume.setMinorTickSpacing(1);
