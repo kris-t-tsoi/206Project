@@ -1,4 +1,4 @@
-package mainFrameGUI;
+package mediaMainFrame;
 
 import java.awt.Dimension;
 

@@ -1,4 +1,4 @@
-package mainFrameGUI;
+package mediaMainFrame;
 
 /**
  * This class is a JMenuItem that can save text to an mp3 file by extending the AbstractMP3Creator class

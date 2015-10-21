@@ -1,14 +1,14 @@
-package mainFrameGUI.time;
+package sharedGUIComponets;
 
 import javax.swing.JLabel;
 
 import doInBackground.UseTerminalCommands;
 
-public class TotalTimeLabel extends JLabel {
+public class TimeLabel extends JLabel {
 
 	UseTerminalCommands termCommand = new UseTerminalCommands();
 
-	public TotalTimeLabel() {
+	public TimeLabel() {
 		super();
 		setText("00:00:00");
 	}
@@ -17,7 +17,7 @@ public class TotalTimeLabel extends JLabel {
 	 * finds the duration of the video and changes label to the total duration time
 	 * @param videoPath
 	 */
-	public double findVideoDuration(String path) {
+	public double findDuration(String path) {
 		;
 		String inputLine = termCommand.terminalCommandString("ffprobe -i \""
 				+ path + "\" -show_format 2>&1 | grep Duration");		

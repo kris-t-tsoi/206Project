@@ -1,6 +1,5 @@
-package mainFrameGUI;
+package mediaMainFrame;
 
-import main.MediaPlayerJFrame;
 
 /**
  * This class can only replace audio with an mp3 file - createMP3 is not needed as part of the functionality.

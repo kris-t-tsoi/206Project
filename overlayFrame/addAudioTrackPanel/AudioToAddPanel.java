@@ -1,30 +1,48 @@
 package overlayFrame.addAudioTrackPanel;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import mainFrameGUI.time.TotalTimeLabel;
+import sharedGUIComponets.NameLabel;
+import sharedGUIComponets.TimeLabel;
 import net.miginfocom.swing.MigLayout;
 
 public class AudioToAddPanel extends JPanel {
 	
-	TotalTimeLabel durationLbl;
-	JLabel mp3NameLbl;
+	TimeLabel durationLbl;
+	NameLabel mp3NameLbl;
+	SelectMP3Btn selectAudio;
+	CreateMp3ForAudioPanelBtn createAudio;
 	
 	public AudioToAddPanel() {
 		
 		setSize(700, 150);
 		
 		JLabel mp3TitleLbl = new JLabel("MP3 :");
-		mp3NameLbl = new JLabel("");
+		mp3NameLbl = new NameLabel();
 		JLabel duraTitleLbl = new JLabel("Duration :");
-		durationLbl = new TotalTimeLabel();
+		durationLbl = new TimeLabel();
 		
 		//select existing MP3
-		SelectMP3Btn selectAudio = new SelectMP3Btn();
+		selectAudio = new SelectMP3Btn();
+		selectAudio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO get file
+				
+			}
+		});
 		
 		//Create a new MP3
-		CreateMp3ForAudioPanelBtn createAudio = new CreateMp3ForAudioPanelBtn();
+		createAudio = new CreateMp3ForAudioPanelBtn();
+		createAudio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO open text to speech frame
+				
+			}
+		});
 		
 		setLayout(new MigLayout(
 				"", // Layout Constraint
@@ -43,15 +61,10 @@ public class AudioToAddPanel extends JPanel {
 		
 		
 	}
-
-	
-
-
-
 	
 	//TODO get duration and name of MP3	
-	private void getMP3Information(){
-		
+	private void getMP3Information(String mp3Path){
+		durationLbl.findDuration(mp3Path);
 	}
 	
 }

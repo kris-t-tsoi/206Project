@@ -8,7 +8,7 @@ import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import main.MediaPlayerJFrame;
+import mediaMainFrame.MediaPlayerJFrame;
 
 public class WriteSchemeFiles {
 	private JFrame parentFrame;

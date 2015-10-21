@@ -1,6 +1,5 @@
-package mainFrameGUI;
+package mediaMainFrame;
 
-import main.MediaPlayerJFrame;
 
 /**
  * This class can contains the functionality required to first create an mp3 out of text, 

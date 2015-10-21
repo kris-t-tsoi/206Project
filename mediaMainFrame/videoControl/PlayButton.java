@@ -1,10 +1,11 @@
-package mainFrameGUI.videoControl;
+package mediaMainFrame.videoControl;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
-import main.MediaPlayerJFrame;
+
+import mediaMainFrame.MediaPlayerJFrame;
 
 /**
  * This class is the play button of the media player.
@@ -15,7 +16,7 @@ import main.MediaPlayerJFrame;
  */
 public class PlayButton extends JButton {
 
-	private main.MediaPlayerJFrame parentFrame;
+	private mediaMainFrame.MediaPlayerJFrame parentFrame;
 	private BackgroundSkipper bgTask = null;
 	
 	private static final ImageIcon PAUSE_IMAGE = new ImageIcon(MediaPlayerJFrame.class.getResource("/Pause16.gif"));

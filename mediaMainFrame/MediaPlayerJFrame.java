@@ -1,4 +1,4 @@
-package main;
+package mediaMainFrame;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -25,15 +25,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import fileChoosing.UserFileChoose;
 import overlayFrame.OverlayAudioToVideoFrame;
-import mainFrameGUI.AbstractReplaceAudioLabel;
-import mainFrameGUI.ReplaceWithExistingMP3Label;
-import mainFrameGUI.ResizingEmbeddedMediaPlayerComponent;
-import mainFrameGUI.time.VideoCurrentTime;
-import mainFrameGUI.time.VideoTimeSlider;
-import mainFrameGUI.time.TotalTimeLabel;
-import mainFrameGUI.videoControl.PlayButton;
+import mediaMainFrame.time.VideoCurrentTime;
+import mediaMainFrame.time.VideoTimeSlider;
+import mediaMainFrame.videoControl.PlayButton;
 import net.miginfocom.swing.MigLayout;
+import sharedGUIComponets.NameLabel;
+import sharedGUIComponets.TimeLabel;
 import textToMP3Frame.TextToSpeechFrame;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
@@ -48,7 +47,7 @@ public class MediaPlayerJFrame extends JFrame {
 	ResizingEmbeddedMediaPlayerComponent mediaPlayerComponent;
 	EmbeddedMediaPlayer video;
 	VideoTimeSlider vidSlide;
-	private TotalTimeLabel vidTotalTime;
+	private TimeLabel vidTotalTime;
 	VideoCurrentTime vidCurrentTime;
 
 	private final JButton btnMute;
@@ -66,6 +65,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 	// FileChooser-related fields
 	final MediaPlayerJFrame thisFrame = this;
+	final UserFileChoose fileChoose = new UserFileChoose();
 	final JFileChooser videoFC = new JFileChooser();
 	final JFileChooser mp3FC = new JFileChooser();
 	JMenuBar fileMenuBar;
@@ -74,7 +74,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 	// Directory location constants
 	public static final String VIDEO_DIR_RELATIVE_PATH = "Video";
-	private static final File VIDEO_DIR_ABSOLUTE_PATH = new File(
+	public static final File VIDEO_DIR_ABSOLUTE_PATH = new File(
 			System.getProperty("user.dir") + File.separator
 					+ VIDEO_DIR_RELATIVE_PATH);
 
@@ -87,7 +87,8 @@ public class MediaPlayerJFrame extends JFrame {
 	private static final String CURRENT_VIDEO_TEXT = "Currently Selected Video: ";
 	private static final String PROCESS_TEXT = "Processing...";
 	private static final String COMPLETE_TEXT = "Complete!";
-	JLabel lblCurrentVideo;
+	JLabel curVidTitle;
+	NameLabel currentVidName; 
 	JLabel lblProcessing = new JLabel(" ");
 
 	// Images for fast forward and rewind icons
@@ -103,7 +104,6 @@ public class MediaPlayerJFrame extends JFrame {
 
 	private void setVideoPath(String videoPath) {
 		this.videoPath = videoPath;
-		setDisplayedMedia(lblCurrentVideo, CURRENT_VIDEO_TEXT, videoPath);
 	}
 
 
@@ -135,12 +135,16 @@ public class MediaPlayerJFrame extends JFrame {
 		this.videoDuration = videoDuration;
 	}
 
-	public TotalTimeLabel getVidTotalTime() {
+	public TimeLabel getVidTotalTime() {
 		return vidTotalTime;
 	}
 
-	public void setVidTotalTime(TotalTimeLabel vidTotalTime) {
+	public void setVidTotalTime(TimeLabel vidTotalTime) {
 		this.vidTotalTime = vidTotalTime;
+	}
+
+	public static String getErrorMessage() {
+		return ERROR_MESSAGE;
 	}
 
 	public boolean videoIsPlaying() {
@@ -275,7 +279,8 @@ public class MediaPlayerJFrame extends JFrame {
 
 
 		// Labels that displays the currently selected mp3 and video
-		lblCurrentVideo = new JLabel(CURRENT_VIDEO_TEXT);
+		curVidTitle = new JLabel(CURRENT_VIDEO_TEXT);
+		currentVidName = new NameLabel();
 
 		/*
 		 * JMenuBar containing most of the functionality The tabs are: File,
@@ -356,7 +361,7 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 
-		setVidTotalTime(new TotalTimeLabel());
+		setVidTotalTime(new TimeLabel());
 		vidCurrentTime = new VideoCurrentTime();
 		JLabel dash = new JLabel(" / ");
 
@@ -399,7 +404,8 @@ public class MediaPlayerJFrame extends JFrame {
 		contentPane.add(vidSlide, "cell 3 1 11 2,growx,aligny top");
 		contentPane.add(makeMP3Btn, "cell 10 3 ,grow");
 		contentPane.add(overlayBtn, "cell 10 4 ,grow");
-		contentPane.add(lblCurrentVideo, "cell 0 4 9 0,growx,aligny top");
+		contentPane.add(curVidTitle, "cell 0 3 9 0,growx,aligny top");
+		contentPane.add(currentVidName, "cell 0 4 9 0,growx,aligny top");
 
 		setVisible(true);
 	}
@@ -407,7 +413,7 @@ public class MediaPlayerJFrame extends JFrame {
 	/**
 	 * Method to allow release of the mediaPlayerComponent from the main class
 	 */
-	protected void release() {
+	public void release() {
 		mediaPlayerComponent.release();
 	}
 
@@ -422,21 +428,7 @@ public class MediaPlayerJFrame extends JFrame {
 	// TODO make vidCurrentTime label change
 	// TODO make Jslider change with video
 
-	/**
-	 * Method to extract the media files basename i.e. everything after the last
-	 * slash, and sets it as the label's text so the user knows what they have
-	 * selected
-	 * 
-	 * @param path
-	 *            -the path to the video or mp3
-	 * 
-	 */
-	private void setDisplayedMedia(JLabel label, String constantText,
-			String path) {
-		String[] splitPath = path.split(File.separator);
-		label.setText(constantText + splitPath[splitPath.length - 1]);
-	}
-
+	
 	/**
 	 * Method to skip the video (for use by other objects)
 	 * 
@@ -468,33 +460,7 @@ public class MediaPlayerJFrame extends JFrame {
 		lblProcessing.setText(COMPLETE_TEXT);
 	}
 
-	/**
-	 * This method replaces the audio of a video with the audio given by mp3Path
-	 * It first asks for a valid output file name, and if it is valid it sets
-	 * the processing label to say "Processing..." and then finally uses the
-	 * label's replaceAudio method to replace the audio.
-	 * 
-	 * @param label
-	 * @param mp3Path
-	 */
-	private void replaceAudio(AbstractReplaceAudioLabel label, String mp3Path) {
-		String videoPath = getVideoPath();
-		if (videoPath != null && mp3Path != null) {
-			String outputFile = (String) JOptionPane.showInputDialog(this,
-					"Please enter a name for the output file",
-					"Output file name", JOptionPane.INFORMATION_MESSAGE);
-			if (outputFile != null) {
-				lblProcessing.setText(PROCESS_TEXT);
-				label.replaceAudio(mp3Path, videoPath, outputFile);
-			} else {
-				JOptionPane.showMessageDialog(this,
-						"Error: output file name cannot be blank.");
-			}
-		} else {
-			JOptionPane.showMessageDialog(this,
-					"Please select a video and/or and mp3 file.");
-		}
-	}
+
 
 	/**
 	 * Open FileChooser and let the user choose a video to play. If the user is
@@ -505,38 +471,34 @@ public class MediaPlayerJFrame extends JFrame {
 	 *            - the play button which has its icon set to the play icon.
 	 */
 	public void selectVideo(PlayButton btnPlay) {
-		// start file search in current file
-		videoFC.setCurrentDirectory(VIDEO_DIR_ABSOLUTE_PATH);
-		int returnVal = videoFC.showOpenDialog(this);
+		
+		String path = fileChoose.chooseVideoPath(thisFrame, btnPlay);
+		
+		if(!path.equals("")){
 
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			/*
-			 * Check if user already playing another video. If they are, stop
-			 * the current one and set isVideoStarted to false and the play
-			 * button to display the play icon
-			 */
-			if (getVideoPath() != null) {
-				mediaPlayerComponent.getMediaPlayer().stop();
-				setVideoIsStarted(false);
-				btnPlay.btnSetPlayIcon();
-			}
-
-			setVideoPath(videoFC.getSelectedFile().getAbsolutePath());
-			JOptionPane.showMessageDialog(this, videoFC.getSelectedFile()
-					.getName() + " has been selected.");
-
-			setCurrentVideo(videoFC.getSelectedFile().getName());
+			setVideoPath(path);
+			setCurrentVideo(currentVidName.getFileName(path));
+			
+			JOptionPane.showMessageDialog(this, getCurrentVideo()+ " has been selected.");
 
 			// set total time of video
 			setVideoDuration(getVidTotalTime()
-					.findVideoDuration(getVideoPath()));
-
-		} else if (returnVal == JFileChooser.CANCEL_OPTION) {
-			// do nothing
-			return;
-		} else if (returnVal == JFileChooser.ERROR_OPTION) {
-			JOptionPane.showMessageDialog(this, ERROR_MESSAGE);
+					.findDuration(getVideoPath()));			
 		}
+		
+	}
+	
+	
+	
+	/**
+	 * Stops the current video
+	 * set the play button to display play icon
+	 * @param btnPlay
+	 */
+	public void removeVideo(PlayButton btnPlay){
+		mediaPlayerComponent.getMediaPlayer().stop();
+		setVideoIsStarted(false);
+		btnPlay.btnSetPlayIcon();
 	}
 
 }

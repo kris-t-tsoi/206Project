@@ -1,9 +1,9 @@
-package mainFrameGUI;
+package mediaMainFrame;
 
 import java.io.File;
 import java.io.IOException;
+
 import javax.swing.JMenuItem;
-import main.MediaPlayerJFrame;
 
 /**
  * Abstract subclass of JMenuItem which has the functionality to use a bash terminal command

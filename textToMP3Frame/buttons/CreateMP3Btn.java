@@ -11,9 +11,9 @@ import textToMP3Frame.TextToSpeechFrame;
 import doInBackground.BackgroundUse;
 import doInBackground.UseTerminalCommands;
 import doInBackground.WriteSchemeFiles;
-import main.MediaPlayerJFrame;
-import mainFrameGUI.AbstractMP3Creator;
-import mainFrameGUI.ReplaceTextLabel;
+import mediaMainFrame.AbstractMP3Creator;
+import mediaMainFrame.MediaPlayerJFrame;
+import mediaMainFrame.ReplaceTextLabel;
 
 @SuppressWarnings("serial")
 public class CreateMP3Btn extends JButton {

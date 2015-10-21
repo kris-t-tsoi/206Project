@@ -1,10 +1,9 @@
-package mainFrameGUI;
+package mediaMainFrame;
 
 import java.io.File;
+
 import javax.swing.JFrame;
 import javax.swing.SwingWorker;
-
-import main.MediaPlayerJFrame;
 
 /**
  * This abstract class allows extending classes to replace the audio of a video with an mp3 as well as
