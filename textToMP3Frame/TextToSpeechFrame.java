@@ -29,6 +29,7 @@ public class TextToSpeechFrame extends JFrame {
 	TextToMP3TextBox userText;
 	VoiceSpeedSlider speedSlide;
 	PitchSlider pitchSlide;
+	private String createdMP3Path;
 	
 	// Constants for the textfield - Max number of words which can be
 	// played/saved, and error message
@@ -74,13 +75,21 @@ public class TextToSpeechFrame extends JFrame {
 	}
 
 	
+	public String getCreatedMP3Path() {
+		return createdMP3Path;
+	}
+
+	public void setCreatedMP3Path(String createdMP3Path) {
+		this.createdMP3Path = createdMP3Path;
+	}
+
 	/**
 	 * Constructor for Text to Speech Frame
 	 * Used for - playing text to audio
 	 * 			- creating MP3 
 	 * @param title
 	 */
-	public TextToSpeechFrame(String title) {
+	public TextToSpeechFrame(final String title, JPanel pane) {
 		
 		super(title);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -97,7 +106,7 @@ public class TextToSpeechFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//get values from sliders and text box
-				getSliderValues();
+				getFestivalValues();
 				
 				// If the text is under the allowed limit, speak the text
 				if (userText.checkTxtLength()) {
@@ -114,13 +123,23 @@ public class TextToSpeechFrame extends JFrame {
 		createMP3.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				getSliderValues();
+				getFestivalValues();
 				if (userText.checkTxtLength()) {
+					//TODO change naming frame
 					String mp3Name = JOptionPane.showInputDialog(thisFrame,
 							"Enter a name for the mp3 file");
 					
 					if ((mp3Name != null) && !mp3Name.startsWith(" ")) {
-						createMP3.createAudio(getSpeed(),getStartPitch(),getEndPitch(),getText(), mp3Name);
+						String path = createMP3.createAudio(getSpeed(),getStartPitch(),getEndPitch(),getText(), mp3Name);
+						
+						//if this came from AudioToAddPanel then return and set the created mp3's path
+						if(title.equals("Created MP3 To Overlay")){
+							setCreatedMP3Path(path);
+						}
+						
+						//TODO file created in
+						
+						dispose();
 					}
 				} else {
 					JOptionPane.showMessageDialog(thisFrame,
@@ -159,10 +178,11 @@ public class TextToSpeechFrame extends JFrame {
 		
 	}
 	
+		
 	/**
 	 * get the current slider and textbox values
 	 */
-	private void getSliderValues(){
+	private void getFestivalValues(){
 		setSpeed((float) (speedSlide.getValue())/10);
 		int[] pitchRange = pitchSlide.findRange(pitchSlide.getValue());
 		setStartPitch(pitchRange[0]);

@@ -9,22 +9,33 @@ import javax.swing.JPanel;
 import fileChoosing.UserFileChoose;
 import sharedGUIComponets.NameLabel;
 import sharedGUIComponets.TimeLabel;
+import textToMP3Frame.TextToSpeechFrame;
 import mediaMainFrame.MediaPlayerJFrame;
 import net.miginfocom.swing.MigLayout;
 
 public class AudioToAddPanel extends JPanel {
 	
-	AudioToAddPanel thisFrame;
+	AudioToAddPanel thisPane;
 	final MediaPlayerJFrame mediaPlayerFrame;
+	TextToSpeechFrame create;
 	private TimeLabel durationLbl;
 	private NameLabel mp3NameLbl;
 	private SelectMP3Btn selectAudio;
 	private CreateMp3ForAudioPanelBtn createAudio;
 	final private UserFileChoose fileChoose = new UserFileChoose();
 	private  String mp3Path;
+	private final String createMP3Title = "Created MP3 To Overlay";
 	
+	public String getMp3Path() {
+		return mp3Path;
+	}
+
+	public void setMp3Path(String mp3Path) {
+		this.mp3Path = mp3Path;
+	}
+
 	public AudioToAddPanel(MediaPlayerJFrame mainFrame) {
-		thisFrame = this;
+		thisPane = this;
 		mediaPlayerFrame = mainFrame;
 		setSize(700, 150);
 		
@@ -46,8 +57,12 @@ public class AudioToAddPanel extends JPanel {
 		createAudio = new CreateMp3ForAudioPanelBtn();
 		createAudio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO open text to speech frame
 				
+				create = new TextToSpeechFrame(createMP3Title, thisPane);
+				while (create.isActive()){
+					mp3Path = create.getCreatedMP3Path();
+				}//TODO doesnt quite work
+				mp3NameLbl.setText(mp3NameLbl.getFileName(mp3Path));
 			}
 		});
 		

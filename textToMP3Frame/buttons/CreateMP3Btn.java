@@ -27,7 +27,7 @@ public class CreateMP3Btn extends JButton {
 		setToolTipText("Create MP3 File From Text");
 	}
 
-	public void createAudio(float speed, int startPitch, int endPitch,
+	public String createAudio(float speed, int startPitch, int endPitch,
 			String text, String audioName) {
 		// create scm file
 		WriteSchemeFiles write = new WriteSchemeFiles(parentFrame);
@@ -46,6 +46,9 @@ public class CreateMP3Btn extends JButton {
 		
 		
 		// TODO get pid so can stop
+		
+		return mp3Path+ audioName + ".mp3";
+		
 	}
 
 }

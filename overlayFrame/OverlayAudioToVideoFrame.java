@@ -54,6 +54,11 @@ public class OverlayAudioToVideoFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				AudioToAddPanel addAudioTrack = new AudioToAddPanel(video);
 				scrollPanel.add(addAudioTrack); //TODO get pane to fit in properly
+				scrollPanel.setVisible(true);
+				//contentPane.add(addAudioTrack);
+				contentPane.setVisible(true);
+				setVisible(true);
+				
 			}
 		});
 		

@@ -17,6 +17,13 @@ public class UserFileChoose extends JFileChooser {
 
 	}
 
+	/**
+	 * allows user to choose a video file
+	 * video files allowed are .avi and .mp4
+	 * @param parentFrame
+	 * @param playBtn
+	 * @return
+	 */
 	public String chooseVideoPath(MediaPlayerJFrame parentFrame,
 			PlayButton playBtn) {
 
@@ -53,6 +60,11 @@ public class UserFileChoose extends JFileChooser {
 		return "";
 	}
 
+	/**
+	 * Allows user to choose an .mp3 file
+	 * @param parentFrame
+	 * @return
+	 */
 	public String chooseMP3Path(MediaPlayerJFrame parentFrame) {
 		// mp3 media filters
 		FileFilter mp3 = new FileTypeFilter(".mp3", "MP3 Files");		

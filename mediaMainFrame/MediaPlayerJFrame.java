@@ -247,7 +247,7 @@ public class MediaPlayerJFrame extends JFrame {
 		makeMP3Btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// open text to speech frame
-				TextToSpeechFrame f = new TextToSpeechFrame("Text to MP3");
+				TextToSpeechFrame f = new TextToSpeechFrame("Text to MP3",contentPane);
 			}
 		});
 
@@ -325,7 +325,7 @@ public class MediaPlayerJFrame extends JFrame {
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				TextToSpeechFrame f = new TextToSpeechFrame("Text to MP3");
+				TextToSpeechFrame f = new TextToSpeechFrame("Text to MP3",contentPane);
 			}
 		}));
 		fileMenu.add(menuItem);
