@@ -16,12 +16,12 @@ public class AudioToAddPanel extends JPanel {
 	
 	AudioToAddPanel thisFrame;
 	final MediaPlayerJFrame mediaPlayerFrame;
-	TimeLabel durationLbl;
-	NameLabel mp3NameLbl;
-	SelectMP3Btn selectAudio;
-	CreateMp3ForAudioPanelBtn createAudio;
+	private TimeLabel durationLbl;
+	private NameLabel mp3NameLbl;
+	private SelectMP3Btn selectAudio;
+	private CreateMp3ForAudioPanelBtn createAudio;
 	final private UserFileChoose fileChoose = new UserFileChoose();
-	
+	private  String mp3Path;
 	
 	public AudioToAddPanel(MediaPlayerJFrame mainFrame) {
 		thisFrame = this;
@@ -37,9 +37,8 @@ public class AudioToAddPanel extends JPanel {
 		selectAudio = new SelectMP3Btn();
 		selectAudio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO get file
-				fileChoose.chooseMP3Path(mediaPlayerFrame);
-				
+				mp3Path = fileChoose.chooseMP3Path(mediaPlayerFrame);
+				mp3NameLbl.setText(mp3NameLbl.getFileName(mp3Path));
 			}
 		});
 		
@@ -66,6 +65,11 @@ public class AudioToAddPanel extends JPanel {
 		add(selectAudio, "cell 5 0 ,grow");
 		add(createAudio, "cell 5 1 ,grow");
 		setVisible(true);
+		
+		
+		//TODO Play mp3 file to listen
+		//TODO allow user to set start time
+		//TODO work out mp3 end time
 		
 		
 	}

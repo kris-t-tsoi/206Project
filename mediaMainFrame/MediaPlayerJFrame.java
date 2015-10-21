@@ -58,7 +58,7 @@ public class MediaPlayerJFrame extends JFrame {
 	private boolean videoIsStarted;
 
 	// Default volume of the video
-	public static final int DEFAULT_VOLUME = 50;
+	private static final int DEFAULT_VOLUME = 50;
 
 	// Error Message
 	private static final String ERROR_MESSAGE = "Sorry, an error has occured. please try again.";
@@ -338,32 +338,11 @@ public class MediaPlayerJFrame extends JFrame {
 		JLabel lblImageIcon = new JLabel(new ImageIcon(
 				MediaPlayerJFrame.class.getResource("/Volume16.gif")));
 
+		
+		// TODO make vidCurrentTime label change
+		// TODO make Jslider change with video
 		vidSlide = new VideoTimeSlider(video);
-		vidSlide.addMouseListener(new MouseListener() {
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-			}
-		});
+		
 
 		setVidTotalTime(new TimeLabel());
 		vidCurrentTime = new VideoCurrentTime();
@@ -429,8 +408,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 	}
 
-	// TODO make vidCurrentTime label change
-	// TODO make Jslider change with video
+	
 
 	
 	/**
