@@ -66,7 +66,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 	// FileChooser-related fields
 	final MediaPlayerJFrame thisFrame = this;
-	final private UserFileChoose fileChoose = new UserFileChoose();
+	final private UserFileChoose fileChoose = new UserFileChoose(thisFrame);
 	final JFileChooser videoFC = new JFileChooser();
 	final JFileChooser mp3FC = new JFileChooser();
 	JMenuBar fileMenuBar;

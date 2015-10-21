@@ -10,7 +10,7 @@ public class TimeLabel extends JLabel {
 
 	public TimeLabel() {
 		super();
-		setText("00:00:00");
+		setText("00:00.00");
 	}
 
 	/**
@@ -22,11 +22,13 @@ public class TimeLabel extends JLabel {
 		String inputLine = termCommand.terminalCommandString("ffprobe -i \""
 				+ path + "\" -show_format 2>&1 | grep Duration");		
 		if (inputLine != null) {
-			String[] words = inputLine.split("[ ,.]");
+			String[] words = inputLine.split("[ ,]");
 			for (int i = 0; i < words.length; i++) {
-				if(words[i].equals("Duration:")){					
-					setText(words[i+1]);
-					return getDurationFloatTime(words[i+1]);
+				if(words[i].equals("Duration:")){	
+					String[] times = words[i+1].split("[:.]");
+					String minSecMilli = times[1]+":"+times[2]+"."+times[3];
+					setText(minSecMilli);
+					return getDurationFloatTime(minSecMilli);
 				}
 			}
 			
@@ -40,13 +42,13 @@ public class TimeLabel extends JLabel {
 	 * @return time in seconds
 	 */
 	private double  getDurationFloatTime (String timeString){
-		//00:00:00	hour:min:sec
-		String[] timeSplit = timeString.split("[:]");		
-		double sec =  Double.parseDouble(timeSplit[2]); 
-		double min =  Double.parseDouble(timeSplit[1])*60; 
-		double hour =  Double.parseDouble(timeSplit[0])*360; 
+		//00:00.00	min:sec.mil
+		String[] timeSplit = timeString.split("[:.]");	
+		double millli  = (Double.parseDouble(timeSplit[2])/10);
+		double sec =  Double.parseDouble(timeSplit[1]); 
+		double min =  Double.parseDouble(timeSplit[0])*60; 
 		
-		return hour+min+sec;
+		return min+sec;
 		
 	}
 }

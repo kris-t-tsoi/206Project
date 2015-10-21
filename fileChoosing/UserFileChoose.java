@@ -3,7 +3,9 @@ package fileChoosing;
 import java.io.File;
 
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -13,8 +15,10 @@ import mediaMainFrame.videoControl.PlayButton;
 
 public class UserFileChoose extends JFileChooser {
 
-	public UserFileChoose() {
-
+	MediaPlayerJFrame vidFrame;
+	
+	public UserFileChoose(MediaPlayerJFrame parentFrame) {
+		vidFrame = parentFrame;
 	}
 
 	/**
@@ -24,7 +28,7 @@ public class UserFileChoose extends JFileChooser {
 	 * @param playBtn
 	 * @return
 	 */
-	public String chooseVideoPath(MediaPlayerJFrame parentFrame,
+	public String chooseVideoPath(JFrame parentFrame,
 			PlayButton playBtn) {
 
 		// video media filters
@@ -41,20 +45,20 @@ public class UserFileChoose extends JFileChooser {
 		setAcceptAllFileFilterUsed(false);
 
 		// start file search in current file
-		setCurrentDirectory(parentFrame.VIDEO_DIR_ABSOLUTE_PATH);
+		setCurrentDirectory(vidFrame.VIDEO_DIR_ABSOLUTE_PATH);
 		int returnVal = showOpenDialog(parentFrame);
 
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			// if user is already playing a video, then remove it
-			if (parentFrame.getVideoPath() != null) {
-				parentFrame.removeVideo(playBtn);
+			if (vidFrame.getVideoPath() != null) {
+				vidFrame.removeVideo(playBtn);
 			}
 			return getSelectedFile().getAbsolutePath();
 
 		} else if (returnVal == JFileChooser.CANCEL_OPTION) {
 		} else if (returnVal == JFileChooser.ERROR_OPTION) {
 			JOptionPane.showMessageDialog(parentFrame,
-					parentFrame.getErrorMessage());
+					vidFrame.getErrorMessage());
 		}
 
 		return "";
@@ -65,7 +69,7 @@ public class UserFileChoose extends JFileChooser {
 	 * @param parentFrame
 	 * @return
 	 */
-	public String chooseMP3Path(MediaPlayerJFrame parentFrame) {
+	public String chooseMP3Path(JPanel parent) {
 		// mp3 media filters
 		FileFilter mp3 = new FileTypeFilter(".mp3", "MP3 Files");		
 		addChoosableFileFilter(mp3);
@@ -77,14 +81,14 @@ public class UserFileChoose extends JFileChooser {
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(
 				"MP3 File", "mp3");
 		setFileFilter(filter);
-		setCurrentDirectory(parentFrame.getMp3DirAbsolutePath());
+		setCurrentDirectory(vidFrame.getMp3DirAbsolutePath());
 
-		int returnVal = showOpenDialog(parentFrame);
+		int returnVal = showOpenDialog(parent);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			return getSelectedFile().getAbsolutePath();
 		} else if (returnVal == JFileChooser.ERROR_OPTION) {
-			JOptionPane.showMessageDialog(parentFrame,
-					parentFrame.getErrorMessage());
+			JOptionPane.showMessageDialog(parent,
+					vidFrame.getErrorMessage());
 		}
 
 		return "";

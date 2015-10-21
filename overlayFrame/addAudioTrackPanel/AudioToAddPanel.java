@@ -22,9 +22,10 @@ public class AudioToAddPanel extends JPanel {
 	private NameLabel mp3NameLbl;
 	JLabel startLbl;
 	JLabel endLbl;
+	TimeLabel endTime;
 	private SelectMP3Btn selectAudio;
 	private CreateMp3ForAudioPanelBtn createAudio;
-	final private UserFileChoose fileChoose = new UserFileChoose();
+	final private UserFileChoose fileChoose;
 	private String mp3Path;
 	private final String createMP3Title = "Created MP3 To Overlay";
 
@@ -40,13 +41,14 @@ public class AudioToAddPanel extends JPanel {
 		thisPane = this;
 		mediaPlayerFrame = mainFrame;
 		setSize(700, 150);
-
+		fileChoose = new UserFileChoose(mediaPlayerFrame);
+		
 		JLabel mp3TitleLbl = new JLabel("MP3 :");
 		mp3NameLbl = new NameLabel();
 		JLabel duraTitleLbl = new JLabel("Duration :");
 		durationLbl = new TimeLabel();
 
-		startLbl = new JLabel("Start [hh:mm:ss]:");
+		startLbl = new JLabel("Start [MM:SS.ms]:");
 
 		endLbl = new JLabel("End: ");
 
@@ -54,8 +56,9 @@ public class AudioToAddPanel extends JPanel {
 		selectAudio = new SelectMP3Btn();
 		selectAudio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mp3Path = fileChoose.chooseMP3Path(mediaPlayerFrame);
+				mp3Path = fileChoose.chooseMP3Path(thisPane);
 				mp3NameLbl.setText(mp3NameLbl.getFileName(mp3Path));
+				getMP3Information(mp3Path);
 			}
 		});
 
