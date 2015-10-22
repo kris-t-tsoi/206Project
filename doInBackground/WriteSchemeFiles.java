@@ -60,7 +60,7 @@ public class WriteSchemeFiles {
 			file = new FileWriter(scm, false);
 			BufferedWriter buffwrite = new BufferedWriter(file);
 			writeSpeedPitch(buffwrite, speed, startPitch, endPitch, text);
-			buffwrite.write("(utt.save.wave (SayText \""+text+"\") \""+MediaPlayerJFrame.MP3_DIR_RELATIVE_PATH + File.separator+audioName+".wav\" 'riff)");
+			//buffwrite.write("(utt.save.wave (SayText \""+text+"\") \""+MediaPlayerJFrame.MP3_DIR_RELATIVE_PATH + File.separator+audioName+".wav\" 'riff)");
 			buffwrite.close();
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(parentFrame, "Sorry, MP3 Could Not Be Created");
@@ -68,6 +68,23 @@ public class WriteSchemeFiles {
 		}
 	return scm;
 	}
+	
+	
+	public File createTxt(String text,String audioName){
+		File txtFile = new File(System.getProperty("user.dir")+ File.separator +".toSpeech.txt");
+		FileWriter file;
+		try {
+			file = new FileWriter(txtFile, false);
+			BufferedWriter buffwrite = new BufferedWriter(file);
+			buffwrite.write(text);
+			buffwrite.close();
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(parentFrame, "Sorry, MP3 Could Not Be Created");
+			e.printStackTrace();
+		}
+		return txtFile;
+	}
+	
 	
 	/**
 	 * Write the speed and pitch of text in file

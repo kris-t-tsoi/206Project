@@ -28,12 +28,16 @@ public class CreateMP3Btn extends JButton {
 		File playScm = write.createMP3(speed, startPitch, endPitch, text,
 				audioName);
 		
+		File textFile = write.createTxt(text, audioName);
+		
 		String mp3Path = MediaPlayerJFrame.MP3_DIR_RELATIVE_PATH+ File.separator +"";
 
 		// MP3 created in the background
-		BackgroundUse backGrd = new BackgroundUse("festival -b "+ playScm.getAbsolutePath().toString() + ";"
+		BackgroundUse backGrd = new BackgroundUse("text2wave -o \""+mp3Path +audioName+".wav\" "
+				+textFile.getAbsolutePath().toString()+" -eval "+playScm.getAbsolutePath().toString()+ ";"
 				+ "ffmpeg -y -i \"" + mp3Path + audioName + ".wav\" -f mp3 \""+ mp3Path+ audioName + ".mp3\";" 
 				+ "rm \"" + mp3Path+audioName + ".wav\"");
+	
 		backGrd.execute();
 		
 		//TODO Progress bar
