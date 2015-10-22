@@ -24,7 +24,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
-import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -41,10 +40,10 @@ import sharedLabels.TimeLabel;
 import textToMP3Frame.TextToSpeechFrame;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
+@SuppressWarnings("serial")
 public class MediaPlayerJFrame extends JFrame {
 
 	private String videoPath;
-	private String mp3Path;
 	private String currentVideo;
 
 	// video duration in millisec
@@ -68,7 +67,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 	// Default volume of the video
 	private static final int DEFAULT_VOLUME = 50;
-	private static int volume;
+	private int volume;
 
 	// Error Message
 	private static final String ERROR_MESSAGE = "Sorry, an error has occured. please try again.";
@@ -159,7 +158,7 @@ public class MediaPlayerJFrame extends JFrame {
 		return ERROR_MESSAGE;
 	}
 
-	public static int getVolume() {
+	public int getVolume() {
 		return volume;
 	}
 
@@ -184,7 +183,7 @@ public class MediaPlayerJFrame extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * Create the main media frame.
 	 */
 	public MediaPlayerJFrame(String name) {
 		super(name);
@@ -267,8 +266,7 @@ public class MediaPlayerJFrame extends JFrame {
 		makeMP3Btn.setText("Text to Speech");
 		makeMP3Btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// open text to speech frame
-				TextToSpeechFrame f = new TextToSpeechFrame("Text to MP3",
+				new TextToSpeechFrame("Text to MP3",
 						contentPane);
 			}
 		});
@@ -278,8 +276,7 @@ public class MediaPlayerJFrame extends JFrame {
 		overlayBtn.setText("Overlay Video");
 		overlayBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// open overlay video frame
-				OverlayAudioToVideoFrame o = new OverlayAudioToVideoFrame(
+				new OverlayAudioToVideoFrame(
 						thisFrame);
 			}
 		});
@@ -347,7 +344,7 @@ public class MediaPlayerJFrame extends JFrame {
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				TextToSpeechFrame f = new TextToSpeechFrame("Text to MP3",
+				new TextToSpeechFrame("Text to MP3",
 						contentPane);
 			}
 		}));
@@ -359,8 +356,7 @@ public class MediaPlayerJFrame extends JFrame {
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// open overlay video frame
-				OverlayAudioToVideoFrame o = new OverlayAudioToVideoFrame(
+				new OverlayAudioToVideoFrame(
 						thisFrame);
 			}
 		}));

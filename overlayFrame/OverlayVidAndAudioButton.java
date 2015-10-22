@@ -8,10 +8,9 @@ import javax.swing.JButton;
 import overlayFrame.addAudioTrackPanel.AudioToAddPanel;
 import sharedLabels.TimeLabel;
 import mediaMainFrame.MediaPlayerJFrame;
-import doInBackground.BackgroundUse;
 import doInBackground.CreateInBackground;
-import doInBackground.WriteSchemeFiles;
 
+@SuppressWarnings("serial")
 public class OverlayVidAndAudioButton extends JButton {
 
 	TimeLabel time;
@@ -53,6 +52,7 @@ public class OverlayVidAndAudioButton extends JButton {
 			count++;
 		}
 
+		@SuppressWarnings("static-access")
 		String ffmpegAmix = ",amix=inputs=" + count + "\" "
 				+ video.VIDEO_DIR_RELATIVE_PATH + File.separator + outName
 				+ ".mp4";
@@ -73,22 +73,7 @@ public class OverlayVidAndAudioButton extends JButton {
 		// -filter_complex [media
 		// number:channel]adelay=delayinMilisec4,amix=inputs=2 out.mp4
 
-		/*
-		 * 
-		 * String mp3Path = MediaPlayerJFrame.MP3_DIR_RELATIVE_PATH+
-		 * File.separator +"";
-		 * 
-		 * // MP3 created in the background BackgroundUse backGrd = new
-		 * BackgroundUse("festival -b "+ playScm.getAbsolutePath().toString() +
-		 * ";" + "ffmpeg -y -i \"" + mp3Path + audioName + ".wav\" -f mp3 \""+
-		 * mp3Path+ audioName + ".mp3\";" + "rm \"" + mp3Path+audioName +
-		 * ".wav\""); backGrd.execute();
-		 * 
-		 * //TODO Progress bar
-		 * 
-		 * return mp3Path+ audioName + ".mp3";
-		 */
-
+		//TODO return path file ?
 		return "";
 	}
 

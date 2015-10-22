@@ -109,6 +109,9 @@ public class AudioToAddPanel extends JPanel {
 			}
 		});
 
+		// TODO Play mp3 file to listen
+		
+		
 		
 		//TODO set restriction on textfields
 		
@@ -136,18 +139,27 @@ public class AudioToAddPanel extends JPanel {
 		add(endLbl, "cell 3 2 ,grow");
 		setVisible(true);
 
-		// TODO Play mp3 file to listen
 		
 		
 		
 		
-		// TODO work out mp3 end time
+		
+		
 
 	}
 
-	// TODO get duration and name of MP3
+	/**
+	 * Finds the duration of a MP3 file
+	 * @param mp3Path
+	 */
 	private void getMP3Information(String mp3Path) {
 		durationLbl.findDuration(mp3Path);
+	}
+	
+	
+	// TODO work out mp3 end time
+	private void addForEndtime(){
+		
 	}
 
 }

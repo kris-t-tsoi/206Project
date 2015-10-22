@@ -1,13 +1,13 @@
 package doInBackground;
 
-import java.util.List;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
-import doInBackground.progress.ProgressFrame;
-
+/**
+ * Does terminal commands in background
+ * No progress bar
+ * @author kristy
+ *
+ */
 public class BackgroundUse extends SwingWorker<Void, Void> {
 	private String cmd;
 	private UseTerminalCommands termCmd;

@@ -14,9 +14,10 @@ import mediaMainFrame.MediaPlayerJFrame;
  * It also acts as a cancel for the current skipping, and contains the swingworker for skipping.
  *
  */
+@SuppressWarnings("serial")
 public class PlayButton extends JButton {
 
-	private mediaMainFrame.MediaPlayerJFrame parentFrame;
+	private MediaPlayerJFrame parentFrame;
 	private BackgroundSkipper bgTask = null;
 	
 	private static final ImageIcon PAUSE_IMAGE = new ImageIcon(MediaPlayerJFrame.class.getResource("/Pause16.gif"));
@@ -79,7 +80,7 @@ public class PlayButton extends JButton {
 			else if (!parentFrame.getVideoIsStarted()) {
 					btnSetPauseIcon();
 					parentFrame.setVideoIsStarted(true);
-					parentFrame.setVideoVolume(MediaPlayerJFrame.getVolume());
+					parentFrame.setVideoVolume(parentFrame.getVolume());
 					parentFrame.play(this);
 
 			// Else the video is started		
