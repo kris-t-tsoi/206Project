@@ -17,7 +17,6 @@ import javax.swing.SwingConstants;
 
 import overlayFrame.addAudioTrackPanel.AudioToAddPanel;
 import sharedLabels.TimeLabel;
-import mediaMainFrame.AbstractReplaceAudioLabel;
 import mediaMainFrame.MediaPlayerJFrame;
 import net.miginfocom.swing.MigLayout;
 

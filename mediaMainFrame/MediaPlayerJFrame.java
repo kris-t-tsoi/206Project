@@ -377,8 +377,6 @@ public class MediaPlayerJFrame extends JFrame {
 		JLabel volumeIconLbl = new JLabel(new ImageIcon(
 				MediaPlayerJFrame.class.getResource("/Volume16.gif")));
 
-		// TODO make vidCurrentTime label change
-		// TODO make Jslider change with video
 		vidSlide = new VideoTimeSlider(video);
 		vidSlide.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
@@ -401,10 +399,7 @@ public class MediaPlayerJFrame extends JFrame {
 			public void mouseExited(MouseEvent e) {}
 
 			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mousePressed(MouseEvent e) {}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {}
@@ -450,9 +445,9 @@ public class MediaPlayerJFrame extends JFrame {
 		contentPane.add(volumeIconLbl, "cell 8 2,grow");
 		contentPane.add(sliderVolume, "cell 10 2,grow");
 		contentPane.add(vidCurrentTime, "cell 0 1,grow");
-		contentPane.add(dash, "cell 0 1 11 2,growx,aligny top");
-		contentPane.add(getVidTotalTime(), "cell 0 1,grow");
-		contentPane.add(vidSlide, "cell 1 1 11 1,growx,aligny top");
+		contentPane.add(dash, "cell 0 1,growx,aligny top");
+		contentPane.add(getVidTotalTime(), "cell 1 1,grow");
+		contentPane.add(vidSlide, "cell 3 1 11 3,growx,aligny top");
 		contentPane.add(makeMP3Btn, "cell 10 3 ,grow");
 		contentPane.add(overlayBtn, "cell 10 4 ,grow");
 		contentPane.add(curVidTitle, "cell 0 3 9 0,growx");

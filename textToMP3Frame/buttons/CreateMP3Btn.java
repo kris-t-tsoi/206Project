@@ -1,19 +1,13 @@
 package textToMP3Frame.buttons;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 
 import textToMP3Frame.TextToSpeechFrame;
 import doInBackground.BackgroundUse;
-import doInBackground.UseTerminalCommands;
 import doInBackground.WriteSchemeFiles;
-import mediaMainFrame.AbstractMP3Creator;
 import mediaMainFrame.MediaPlayerJFrame;
-import mediaMainFrame.ReplaceTextLabel;
 
 @SuppressWarnings("serial")
 public class CreateMP3Btn extends JButton {
