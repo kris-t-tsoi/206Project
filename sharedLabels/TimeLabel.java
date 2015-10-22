@@ -1,4 +1,4 @@
-package sharedGUIComponets;
+package sharedLabels;
 
 import javax.swing.JLabel;
 
@@ -70,7 +70,26 @@ public class TimeLabel extends JLabel {
 		int sec = (int)(duration%60);
 		int milli = (int)((duration-min-sec)*100);
 		
-		return min+":"+sec+"."+milli;
+		//make into string
+		String minString = min +"";
+		String secString = sec +"";
+		String milliString = milli +"";
+		
+		// if either min, sec or mill are <10 or >=0 then add 0 to beginning
+		if(min<10 & min>=0){
+			minString = "0"+minString;
+		}
+		
+		if(sec<10 & sec>=0){
+			secString = "0"+secString;
+		}
+		
+		
+		if(milli<10 & milli>=0){
+			milliString = "0"+milliString;
+		}
+		
+		return minString+":"+secString+"."+milliString;
 		
 	}
 	

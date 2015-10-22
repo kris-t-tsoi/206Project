@@ -1,5 +1,7 @@
 package doInBackground;
 
+import javax.swing.SwingUtilities;
+
 import mediaMainFrame.MediaPlayerJFrame;
 
 public class UpdateRunnable implements Runnable {
@@ -16,8 +18,21 @@ public class UpdateRunnable implements Runnable {
 	 */
 	@Override
 	public void run() {
-		System.out.println("run");
-		video.getVidSlide().asVidPlay(video);
+		
+		
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				video.getVidSlide().asVidPlay(video);
+				
+			}
+		});
+		
+		
+		
+		
 	}
 
 }

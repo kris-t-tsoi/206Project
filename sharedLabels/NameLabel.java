@@ -1,4 +1,4 @@
-package sharedGUIComponets;
+package sharedLabels;
 
 import javax.swing.JLabel;
 

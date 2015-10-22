@@ -39,8 +39,7 @@ public class VideoTimeSlider extends JSlider{
 		
 		//update this slider with current video position
 		setValue((int)(vidPlayer.getVideo().getPosition()*100));
-		System.out.println("position "+(int)(vidPlayer.getVideo().getPosition()*100));
-		
+
 		//update current time text
 		vidPlayer.getVidCurrentTime().currentTime(vidPlayer);
 	}

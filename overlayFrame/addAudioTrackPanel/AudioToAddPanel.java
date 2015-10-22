@@ -11,8 +11,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import fileChoosing.UserFileChoose;
-import sharedGUIComponets.NameLabel;
-import sharedGUIComponets.TimeLabel;
+import sharedLabels.NameLabel;
+import sharedLabels.TimeLabel;
 import textToMP3Frame.TextToSpeechFrame;
 import mediaMainFrame.MediaPlayerJFrame;
 import net.miginfocom.swing.MigLayout;

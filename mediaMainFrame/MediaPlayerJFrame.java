@@ -35,8 +35,8 @@ import mediaMainFrame.time.VideoCurrentTime;
 import mediaMainFrame.time.VideoTimeSlider;
 import mediaMainFrame.videoControl.PlayButton;
 import net.miginfocom.swing.MigLayout;
-import sharedGUIComponets.NameLabel;
-import sharedGUIComponets.TimeLabel;
+import sharedLabels.NameLabel;
+import sharedLabels.TimeLabel;
 import textToMP3Frame.TextToSpeechFrame;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
@@ -213,7 +213,7 @@ public class MediaPlayerJFrame extends JFrame {
 		//use to update video slider and current time label every 0.5 sec
 		// https://github.com/caprica/vlcj/blob/master/src/test/java/uk/co/caprica/vlcj/test/basic/PlayerControlsPanel.java
 		ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(new UpdateRunnable(thisFrame), 0L, 500L, TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(new UpdateRunnable(thisFrame), 0L, 200L, TimeUnit.MILLISECONDS);
 
 		contentPane = new JPanel();
 		// Give the video a border
