@@ -20,6 +20,9 @@ public class UserFileChoose extends JFileChooser {
 	public UserFileChoose(MediaPlayerJFrame parentFrame) {
 		vidFrame = parentFrame;
 	}
+	
+	//TODO error handle user type in non existing file
+	
 
 	/**
 	 * allows user to choose a video file

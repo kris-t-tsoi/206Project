@@ -18,22 +18,31 @@ import mediaMainFrame.MediaPlayerJFrame;
 import net.miginfocom.swing.MigLayout;
 
 public class AudioToAddPanel extends JPanel {
-
+	
+	//Panels and Frames
 	AudioToAddPanel thisPane;
 	final MediaPlayerJFrame mediaPlayerFrame;
 	TextToSpeechFrame create;
-	private TimeLabel durationLbl;
-	private NameLabel mp3NameLbl;
-	JLabel startLbl;
-	JLabel endLbl;
-	TimeLabel endTime;
-	JTextField startMin;
-	JTextField startSec;
-	JTextField startMili;
-	private SelectMP3Btn selectAudio;
-	private CreateMp3ForAudioPanelBtn createAudio;
+	
+	//file choosing
 	final private UserFileChoose fileChoose;
 	private String mp3Path;
+	
+	//Time Labels and textfields
+	private TimeLabel durationLbl;
+	private NameLabel mp3NameLbl;
+	private JLabel startLbl;
+	private JLabel endLbl;
+	private TimeLabel endTime;
+	private JTextField startMin;
+	private JTextField startSec;
+	private JTextField startMili;
+	
+	//Buttons
+	private SelectMP3Btn selectAudio;
+	private CreateMp3ForAudioPanelBtn createAudio;
+
+	//Constant title name for TextToSpeechFrame
 	private final String createMP3Title = "Created MP3 To Overlay";
 
 	public String getMp3Path() {

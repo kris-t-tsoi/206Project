@@ -1,5 +1,6 @@
 package textToMP3Frame;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -9,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.xml.transform.OutputKeys;
 
@@ -81,7 +83,7 @@ public class TextToSpeechFrame extends JFrame {
 
 	public void setCreatedMP3Path(String createdMP3Path) {
 		this.createdMP3Path = createdMP3Path;
-	}
+	}	
 
 	/**
 	 * Constructor for Text to Speech Frame
@@ -94,7 +96,8 @@ public class TextToSpeechFrame extends JFrame {
 		super(title);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		setBounds(900, 50, 600, 350);
+		setBounds(900, 50, 575, 250);	//TODO set minimium size
+		setMinimumSize(new Dimension(575,250));
 		setVisible(true);
 		
 		
@@ -155,6 +158,8 @@ public class TextToSpeechFrame extends JFrame {
 		});
 		
 		userText = new TextToMP3TextBox();
+		JScrollPane scrollPane = new JScrollPane(userText);
+		
 		
 		//TODO increase font size
 		JLabel titleLbl = new JLabel("Type in Text to Synthesis into MP3 Audio");
@@ -169,11 +174,11 @@ public class TextToSpeechFrame extends JFrame {
 				"", // Layout Constraint
 				"[4px,grow 0,shrink 0][98px,grow 0, shrink 0][2px,grow 0,shrink 0][346px,grow, shrink]"
 						+ "[4px,grow 0,shrink 0][196px,grow 0, shrink 0][4px,grow ,shrink ]", // Column Constraints
-				"[70px][70px,grow, shrink][70px][70px]")); // Row Constraints		
+				"[40px][50px,grow, shrink][40px][40px]")); // Row Constraints		
 		
 		
 		contentPane.add(titleLbl, "cell 1 0 5 1,grow");
-		contentPane.add(userText, "cell 1 1 5 1,grow");
+		contentPane.add(scrollPane, "cell 1 1 5 1,grow");
 		contentPane.add(speedLbl, "cell 1 2,grow");
 		contentPane.add(pitchLbl, "cell 1 3,grow");
 		contentPane.add(speedSlide, "cell 3 2 ,grow");

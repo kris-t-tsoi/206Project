@@ -1,6 +1,14 @@
 package overlayFrame;
 
+import java.io.File;
+import java.util.ArrayList;
+
 import javax.swing.JButton;
+
+import overlayFrame.addAudioTrackPanel.AudioToAddPanel;
+import mediaMainFrame.MediaPlayerJFrame;
+import doInBackground.BackgroundUse;
+import doInBackground.WriteSchemeFiles;
 
 public class OverlayVidAndAudioButton extends JButton {
 
@@ -10,4 +18,46 @@ public class OverlayVidAndAudioButton extends JButton {
 		setToolTipText("Create New Video By Overlaying Audiotracks and Video");
 	}
 	
+	public String overlayVideo(ArrayList<AudioToAddPanel> listAudio, MediaPlayerJFrame video){
+		
+		String ffmpegVideoPath = "ffmpeg -i "+video.getVideoPath()+" ";
+		String ffmpegMP3Paths = "";
+		String ffmpegMediaNumAndChannel;
+		String ffmpegAdelay;
+		String ffmpegAmix;
+		
+		for(AudioToAddPanel audio : listAudio){
+			
+			//add in paths of the audio files
+			ffmpegMP3Paths = ffmpegMP3Paths+ "-i "+audio.getMp3Path()+" ";
+			
+		}
+		
+		String cmd = ffmpegVideoPath+ffmpegMP3Paths;
+		
+		//ffmpeg -i Video/big_buck_bunny_1_minute.avi -i MP3/haehah.mp3 -filter_complex [media number:channel]adelay=delayinMilisec4,amix=inputs=2 out.mp4
+		
+		
+		/*
+		
+		String mp3Path = MediaPlayerJFrame.MP3_DIR_RELATIVE_PATH+ File.separator +"";
+
+		// MP3 created in the background
+		BackgroundUse backGrd = new BackgroundUse("festival -b "+ playScm.getAbsolutePath().toString() + ";"
+				+ "ffmpeg -y -i \"" + mp3Path + audioName + ".wav\" -f mp3 \""+ mp3Path+ audioName + ".mp3\";" 
+				+ "rm \"" + mp3Path+audioName + ".wav\"");
+		backGrd.execute();
+		
+		//TODO Progress bar
+	
+		return mp3Path+ audioName + ".mp3";
+		
+		*/
+		
+		return "";
+	}
+	
+	
+	
+
 }

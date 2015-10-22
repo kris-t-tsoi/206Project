@@ -5,11 +5,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.io.File;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -20,11 +23,12 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
+import doInBackground.UpdateRunnable;
 import fileChoosing.UserFileChoose;
 import overlayFrame.OverlayAudioToVideoFrame;
 import mediaMainFrame.time.VideoCurrentTime;
@@ -41,14 +45,18 @@ public class MediaPlayerJFrame extends JFrame {
 	private String videoPath;
 	private String mp3Path;
 	private String currentVideo;
+
+	// video duration in millisec
 	private double videoDuration;
+	
 
 	private JPanel contentPane;
 	ResizingEmbeddedMediaPlayerComponent mediaPlayerComponent;
 	EmbeddedMediaPlayer video;
-	VideoTimeSlider vidSlide;
+	private VideoTimeSlider vidSlide;
+
 	private TimeLabel vidTotalTime;
-	VideoCurrentTime vidCurrentTime;
+	private VideoCurrentTime vidCurrentTime;
 
 	private final JButton btnMute;
 	private static final String UNMUTE_TEXT = "Unmute";
@@ -67,8 +75,6 @@ public class MediaPlayerJFrame extends JFrame {
 	// FileChooser-related fields
 	final MediaPlayerJFrame thisFrame = this;
 	final private UserFileChoose fileChoose = new UserFileChoose(thisFrame);
-	final JFileChooser videoFC = new JFileChooser();
-	final JFileChooser mp3FC = new JFileChooser();
 	JMenuBar fileMenuBar;
 	JMenu fileMenu;
 	JMenuItem menuItem;
@@ -99,7 +105,10 @@ public class MediaPlayerJFrame extends JFrame {
 	private static final ImageIcon FAST_FORWARD_IMAGE = new ImageIcon(
 			MediaPlayerJFrame.class.getResource("/FastForward16.gif"));
 
-	// Getters and setters for FileChoosers
+	public EmbeddedMediaPlayer getVideo() {
+		return video;
+	}
+
 	public String getVideoPath() {
 		return videoPath;
 	}
@@ -160,6 +169,14 @@ public class MediaPlayerJFrame extends JFrame {
 		this.volume = volume;
 	}
 
+	public VideoCurrentTime getVidCurrentTime() {
+		return vidCurrentTime;
+	}
+
+	public VideoTimeSlider getVidSlide() {
+		return vidSlide;
+	}
+
 	public boolean videoIsPlaying() {
 		return video.isPlaying();
 	}
@@ -182,14 +199,21 @@ public class MediaPlayerJFrame extends JFrame {
 		if (!videoDir.exists() || !mp3Dir.exists()) {
 			// Give user warning that files are being made and where they are
 			// located
-			JOptionPane.showMessageDialog(
-				thisFrame,("Two Folders \"Video\" and \"MP3\" will be created in " 
-						+ System.getProperty("user.dir")));
+			JOptionPane
+					.showMessageDialog(
+							thisFrame,
+							("Two Folders \"Video\" and \"MP3\" will be created in " + System
+									.getProperty("user.dir")));
 
 			// Create the folders needed if they don't exist
 			videoDir.mkdir();
 			mp3Dir.mkdir();
 		}
+		
+		//use to update video slider and current time label every 0.5 sec
+		// https://github.com/caprica/vlcj/blob/master/src/test/java/uk/co/caprica/vlcj/test/basic/PlayerControlsPanel.java
+		ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleAtFixedRate(new UpdateRunnable(thisFrame), 0L, 500L, TimeUnit.MILLISECONDS);
 
 		contentPane = new JPanel();
 		// Give the video a border
@@ -294,7 +318,7 @@ public class MediaPlayerJFrame extends JFrame {
 		sliderVolume.setMinorTickSpacing(1);
 		sliderVolume.setToolTipText("Change the volume of the video");
 
-		// Labels that displays the currently selected mp3 and video
+		// Labels that displays the currently selected video
 		curVidTitle = new JLabel(CURRENT_VIDEO_TEXT);
 		currentVidName = new NameLabel();
 
@@ -348,12 +372,43 @@ public class MediaPlayerJFrame extends JFrame {
 		setJMenuBar(fileMenuBar);
 
 		// Image which is on the left of the JSlider
-		JLabel lblImageIcon = new JLabel(new ImageIcon(
+		JLabel volumeIconLbl = new JLabel(new ImageIcon(
 				MediaPlayerJFrame.class.getResource("/Volume16.gif")));
 
 		// TODO make vidCurrentTime label change
 		// TODO make Jslider change with video
 		vidSlide = new VideoTimeSlider(video);
+		vidSlide.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				// change video to slider position
+				vidSlide.userDrag(thisFrame);
+			}
+		});
+		vidSlide.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// change video to slider position
+				vidSlide.userDrag(thisFrame);				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+
+			@Override
+			public void mouseExited(MouseEvent e) {}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+		});
+
+
 
 		setVidTotalTime(new TimeLabel());
 		vidCurrentTime = new VideoCurrentTime();
@@ -390,7 +445,7 @@ public class MediaPlayerJFrame extends JFrame {
 		contentPane.add(btnPlay, "cell 2 2,grow");
 		contentPane.add(btnForward, "cell 4 2,alignx center,grow");
 		contentPane.add(btnMute, "cell 6 2,grow");
-		contentPane.add(lblImageIcon, "cell 8 2,grow");
+		contentPane.add(volumeIconLbl, "cell 8 2,grow");
 		contentPane.add(sliderVolume, "cell 10 2,grow");
 		contentPane.add(vidCurrentTime, "cell 0 1,grow");
 		contentPane.add(dash, "cell 1 1 11 2,growx,aligny top");
@@ -473,7 +528,6 @@ public class MediaPlayerJFrame extends JFrame {
 			// set total time of video
 			setVideoDuration(getVidTotalTime().findDuration(getVideoPath()));
 		}
-
 	}
 
 	/**

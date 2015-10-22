@@ -25,9 +25,24 @@ public class VideoTimeSlider extends JSlider{
 		super(0, 100,0);
 	}
 	
+	/**
+	 * Gets current position of slider
+	 * change video position to specified point
+	 * @param vidPlayer - frame in which video is being played
+	 */
+	public void userDrag(MediaPlayerJFrame vidPlayer){
+		vidPlayer.getVideo().setPosition((float)getValue()/100);
+	}
 	
-	public void userDrag(MediaPlayerJFrame videoPlayer){
+	
+	public void asVidPlay(MediaPlayerJFrame vidPlayer){
 		
+		//update this slider with current video position
+		setValue((int)(vidPlayer.getVideo().getPosition()*100));
+		System.out.println("position "+(int)(vidPlayer.getVideo().getPosition()*100));
+		
+		//update current time text
+		vidPlayer.getVidCurrentTime().currentTime(vidPlayer);
 	}
 	
 }

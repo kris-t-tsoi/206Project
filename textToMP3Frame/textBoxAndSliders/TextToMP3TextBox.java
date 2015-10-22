@@ -1,5 +1,7 @@
 package textToMP3Frame.textBoxAndSliders;
 
+import java.awt.Dimension;
+
 import javax.swing.JTextArea;
 
 import doInBackground.UseTerminalCommands;
@@ -41,5 +43,12 @@ public class TextToMP3TextBox extends JTextArea {
 			return true;
 		}
 		return false;
+	}
+	
+
+	//TODO set mindimension
+	@Override
+	public Dimension getMinimumSize() {
+		return new Dimension(0,0);
 	}
 }
