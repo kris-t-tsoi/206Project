@@ -94,11 +94,8 @@ public class MediaPlayerJFrame extends JFrame {
 	// Dynamic labels for user information
 
 	private static final String CURRENT_VIDEO_TEXT = "Currently Selected Video: ";
-	private static final String PROCESS_TEXT = "Processing...";
-	private static final String COMPLETE_TEXT = "Complete!";
 	JLabel curVidTitle;
 	NameLabel currentVidName;
-	JLabel lblProcessing = new JLabel(" ");
 
 	// Images for fast forward and rewind icons
 	private static final ImageIcon REWIND_IMAGE = new ImageIcon(
@@ -438,18 +435,28 @@ public class MediaPlayerJFrame extends JFrame {
 		 * grow in both directions (grow)
 		 */
 		contentPane.add(mediaPlayerComponent, "cell 0 0 11 1,grow");
+		
+		//control buttons
 		contentPane.add(btnBackward, "cell 0 2,alignx center,grow");
 		contentPane.add(btnPlay, "cell 2 2,grow");
 		contentPane.add(btnForward, "cell 4 2,alignx center,grow");
+		
+		//volume
 		contentPane.add(btnMute, "cell 6 2,grow");
 		contentPane.add(volumeIconLbl, "cell 8 2,grow");
 		contentPane.add(sliderVolume, "cell 10 2,grow");
+		
+		//time labels and slider
 		contentPane.add(vidCurrentTime, "cell 0 1,grow");
-		contentPane.add(dash, "cell 0 1,growx,aligny top");
-		contentPane.add(getVidTotalTime(), "cell 1 1,grow");
+		contentPane.add(dash, "cell 1 1,grow");
+		contentPane.add(getVidTotalTime(), "cell 2 1,grow");
 		contentPane.add(vidSlide, "cell 3 1 11 3,growx,aligny top");
+		
+		//make MP3 and overlay button
 		contentPane.add(makeMP3Btn, "cell 10 3 ,grow");
 		contentPane.add(overlayBtn, "cell 10 4 ,grow");
+		
+		//current video labels
 		contentPane.add(curVidTitle, "cell 0 3 9 0,growx");
 		contentPane.add(currentVidName, "cell 0 4 9 0,growx,aligny top");
 
@@ -491,15 +498,6 @@ public class MediaPlayerJFrame extends JFrame {
 		} else {
 			video.mute(true);
 		}
-	}
-
-	/**
-	 * Method to set the processing label to say complete, for use by an
-	 * AbstractMediaLabel subclass. This method is called in the done() of
-	 * AbstactMediaLabel's swingworker
-	 */
-	public void setLabelComplete() {
-		lblProcessing.setText(COMPLETE_TEXT);
 	}
 
 	/**
