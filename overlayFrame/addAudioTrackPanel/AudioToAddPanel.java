@@ -110,6 +110,8 @@ public class AudioToAddPanel extends JPanel {
 		});
 
 		
+		//TODO set restriction on textfields
+		
 		
 		setLayout(new MigLayout(
 				"", // Layout Constraint
@@ -135,7 +137,10 @@ public class AudioToAddPanel extends JPanel {
 		setVisible(true);
 
 		// TODO Play mp3 file to listen
-		// TODO allow user to set start time
+		
+		
+		
+		
 		// TODO work out mp3 end time
 
 	}

@@ -25,13 +25,11 @@ public class CreateInBackground extends SwingWorker<Void, Void>  {
 	protected Void doInBackground() throws Exception {
 
 		termCmd.terminalCommandVoid(cmd);
-		// progress = new ProgressBar(0, termCmd.getLength);
 		return null;
 	}
 
 	@Override
 	protected void process(List<Void> chunks) {
-		// TODO Auto-generated method stub
 		super.process(chunks);
 	}
 
