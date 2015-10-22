@@ -61,13 +61,18 @@ public class TimeLabel extends JLabel {
 		
 	}
 	
-	
+	/**
+	 * Convert duration in millisec into string
+	 * @param duration - of item in millisec
+	 * @return string - in MM:SS.ms format
+	 */
 	public String durationDoubleToString(double duration){
 		//convert into seconds
 		duration = duration/1000;
 		
-		int min = (int)(duration/60);
-		int sec = (int)(duration%60);
+		//et min sec and millisec
+		int min = (int)(duration/360);
+		int sec = (int)(duration%360);
 		int milli = (int)((duration-min-sec)*100);
 		
 		//make into string

@@ -18,21 +18,13 @@ public class UpdateRunnable implements Runnable {
 	 */
 	@Override
 	public void run() {
-		
-		
-		
 		SwingUtilities.invokeLater(new Runnable() {
-			
 			@Override
 			public void run() {
+				//use asVidPlay method to update video slider and current time label
 				video.getVidSlide().asVidPlay(video);
-				
 			}
 		});
-		
-		
-		
-		
 	}
 
 }

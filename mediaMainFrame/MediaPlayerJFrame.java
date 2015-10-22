@@ -1,6 +1,7 @@
 package mediaMainFrame;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -192,6 +193,7 @@ public class MediaPlayerJFrame extends JFrame {
 		super(name);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+		setMinimumSize(new Dimension(600, 200));
 
 		// Check if files exist
 		final File videoDir = VIDEO_DIR_ABSOLUTE_PATH;
@@ -412,7 +414,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 		setVidTotalTime(new TimeLabel());
 		vidCurrentTime = new VideoCurrentTime();
-		JLabel dash = new JLabel(" / ");
+		JLabel dash = new JLabel("/");
 
 		// Windowbuilder generated code below
 
@@ -448,9 +450,9 @@ public class MediaPlayerJFrame extends JFrame {
 		contentPane.add(volumeIconLbl, "cell 8 2,grow");
 		contentPane.add(sliderVolume, "cell 10 2,grow");
 		contentPane.add(vidCurrentTime, "cell 0 1,grow");
-		contentPane.add(dash, "cell 1 1 11 2,growx,aligny top");
-		contentPane.add(getVidTotalTime(), "cell 2 1,grow");
-		contentPane.add(vidSlide, "cell 3 1 11 2,growx,aligny top");
+		contentPane.add(dash, "cell 0 1 11 2,growx,aligny top");
+		contentPane.add(getVidTotalTime(), "cell 0 1,grow");
+		contentPane.add(vidSlide, "cell 1 1 11 1,growx,aligny top");
 		contentPane.add(makeMP3Btn, "cell 10 3 ,grow");
 		contentPane.add(overlayBtn, "cell 10 4 ,grow");
 		contentPane.add(curVidTitle, "cell 0 3 9 0,growx");
