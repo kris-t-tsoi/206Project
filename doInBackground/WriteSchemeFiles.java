@@ -32,7 +32,7 @@ public class WriteSchemeFiles {
 		try {
 			file = new FileWriter(playScm, false);
 			BufferedWriter buffwrite = new BufferedWriter(file);
-			writeSpeedPitch(buffwrite, speed, startPitch, endPitch, text);
+			writeSpeedPitch(buffwrite, speed, startPitch, endPitch);
 			buffwrite.write("(SayText \""+text+"\")");
 			buffwrite.close();
 		} catch (IOException e) {
@@ -48,19 +48,16 @@ public class WriteSchemeFiles {
 	 * @param speed - speed of voice
 	 * @param startPitch - starting pitch of voice
 	 * @param endPitch - ending pitch of voice
-	 * @param text - text user wishes to turn into text
-	 * @param audioName - name user wish to call mp3
 	 * @return
 	 */
-	public File createMP3(float speed, int startPitch, int endPitch, String text,String audioName){
+	public File createMP3(float speed, int startPitch, int endPitch){
 		File scm = new File(System.getProperty("user.dir")+ File.separator +".CreateMP3.scm");
 
 		FileWriter file;
 		try {
 			file = new FileWriter(scm, false);
 			BufferedWriter buffwrite = new BufferedWriter(file);
-			writeSpeedPitch(buffwrite, speed, startPitch, endPitch, text);
-			//buffwrite.write("(utt.save.wave (SayText \""+text+"\") \""+MediaPlayerJFrame.MP3_DIR_RELATIVE_PATH + File.separator+audioName+".wav\" 'riff)");
+			writeSpeedPitch(buffwrite, speed, startPitch, endPitch);
 			buffwrite.close();
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(parentFrame, "Sorry, MP3 Could Not Be Created");
@@ -69,8 +66,12 @@ public class WriteSchemeFiles {
 	return scm;
 	}
 	
-	
-	public File createTxt(String text,String audioName){
+	/**
+	 * Create a text file for text to be turned into speech
+	 * @param text
+	 * @return textfile that is created
+	 */
+	public File createTxt(String text){
 		File txtFile = new File(System.getProperty("user.dir")+ File.separator +".toSpeech.txt");
 		FileWriter file;
 		try {
@@ -92,9 +93,8 @@ public class WriteSchemeFiles {
 	 * @param speed - speed of voice
 	 * @param startPitch - starting pitch of voice
 	 * @param endPitch - ending pitch of voice
-	 * @param text - text user wishes to turn into text
 	 */
-	private void writeSpeedPitch(BufferedWriter buffwrite, float speed, int startPitch, int endPitch, String text){
+	private void writeSpeedPitch(BufferedWriter buffwrite, float speed, int startPitch, int endPitch){
 		
 		try {
 			buffwrite.write("(Parameter.set 'Duration_Stretch "+speed+")");

@@ -53,6 +53,18 @@ public class AudioToAddPanel extends JPanel {
 		this.mp3Path = mp3Path;
 	}
 
+	public JTextField getStartMin() {
+		return startMin;
+	}
+	public JTextField getStartSec() {
+		return startSec;
+	}
+	
+	
+	public JTextField getStartMili() {
+		return startMili;
+	}
+
 	public AudioToAddPanel(MediaPlayerJFrame mainFrame) {
 		thisPane = this;
 		mediaPlayerFrame = mainFrame;

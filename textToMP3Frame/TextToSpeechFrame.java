@@ -96,7 +96,7 @@ public class TextToSpeechFrame extends JFrame {
 		super(title);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		setBounds(900, 50, 575, 250);	//TODO set minimium size
+		setBounds(900, 50, 575, 250);
 		setMinimumSize(new Dimension(575,250));
 		setVisible(true);
 		
@@ -140,7 +140,7 @@ public class TextToSpeechFrame extends JFrame {
 							setCreatedMP3Path(path);
 						}
 						
-						//TODO file created in
+						//TODO since file created in background null path returned
 						
 						// Give user warning that files are being made and where they are
 						// located
@@ -160,8 +160,6 @@ public class TextToSpeechFrame extends JFrame {
 		userText = new TextToMP3TextBox();
 		JScrollPane scrollPane = new JScrollPane(userText);
 		
-		
-		//TODO increase font size
 		JLabel titleLbl = new JLabel("Type in Text to Synthesis into MP3 Audio");
 		JLabel speedLbl = new JLabel("Voice Speed");
 		JLabel pitchLbl = new JLabel("Vocal Pitch");

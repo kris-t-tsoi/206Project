@@ -50,7 +50,7 @@ public class TimeLabel extends JLabel {
 	 * @param timeString
 	 * @return time in milliSeconds
 	 */
-	private double  durationStringToDouble (String timeString){
+	public double  durationStringToDouble (String timeString){
 		//00:00.00	min:sec.mil
 		String[] timeSplit = timeString.split("[:.]");	
 		double milli  = (Double.parseDouble(timeSplit[2]));

@@ -6,11 +6,15 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 
 import overlayFrame.addAudioTrackPanel.AudioToAddPanel;
+import sharedLabels.TimeLabel;
 import mediaMainFrame.MediaPlayerJFrame;
 import doInBackground.BackgroundUse;
+import doInBackground.CreateInBackground;
 import doInBackground.WriteSchemeFiles;
 
 public class OverlayVidAndAudioButton extends JButton {
+	
+	TimeLabel time;
 
 	public OverlayVidAndAudioButton() {
 		super();
@@ -18,22 +22,33 @@ public class OverlayVidAndAudioButton extends JButton {
 		setToolTipText("Create New Video By Overlaying Audiotracks and Video");
 	}
 	
-	public String overlayVideo(ArrayList<AudioToAddPanel> listAudio, MediaPlayerJFrame video){
+	public String overlayVideo(ArrayList<AudioToAddPanel> listAudio, MediaPlayerJFrame video,String outName){
+		
+		time = new TimeLabel();
 		
 		String ffmpegVideoPath = "ffmpeg -i "+video.getVideoPath()+" ";
 		String ffmpegMP3Paths = "";
-		String ffmpegMediaNumAndChannel;
-		String ffmpegAdelay;
-		String ffmpegAmix;
+		String ffmpegMediaNumAndChannel = "";
+		//String ffmpegAdelay;
+		
+		int count = 1;
 		
 		for(AudioToAddPanel audio : listAudio){
 			
+			String delay = audio.getStartMin().getText()+":"+audio.getStartMin().getText()+"."+audio.getStartMili().getText();
+			
 			//add in paths of the audio files
 			ffmpegMP3Paths = ffmpegMP3Paths+ "-i "+audio.getMp3Path()+" ";
-			
+			ffmpegMediaNumAndChannel = ffmpegMediaNumAndChannel+"["+count+":a]adelay="+time.durationStringToDouble(delay);
+					count++;
 		}
 		
-		String cmd = ffmpegVideoPath+ffmpegMP3Paths;
+		String ffmpegAmix = ",amix=inputs="+count+" "+video.VIDEO_DIR_RELATIVE_PATH+outName+".mp4";
+		
+		String cmd = ffmpegVideoPath+ffmpegMP3Paths+"-filter_complex "+ffmpegMediaNumAndChannel+ffmpegAmix;
+		
+		CreateInBackground back = new CreateInBackground(cmd);
+		back.execute();
 		
 		//ffmpeg -i Video/big_buck_bunny_1_minute.avi -i MP3/haehah.mp3 -filter_complex [media number:channel]adelay=delayinMilisec4,amix=inputs=2 out.mp4
 		
@@ -56,6 +71,10 @@ public class OverlayVidAndAudioButton extends JButton {
 		
 		return "";
 	}
+	
+	
+	
+	
 	
 	
 	/**
