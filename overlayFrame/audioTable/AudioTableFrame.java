@@ -1,6 +1,7 @@
 package overlayFrame.audioTable;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,6 +34,7 @@ public class AudioTableFrame extends JFrame {
 	public AudioTableFrame(final MediaPlayerJFrame video) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(1600, 100, 300, 650);
+		setMinimumSize(new Dimension(300, 100));
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
