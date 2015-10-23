@@ -83,7 +83,6 @@ public class AudioToAddPanel extends JPanel {
 		mediaPlayerFrame = mainFrame;
 		setSize(700, 150);
 		fileChoose = new UserFileChoose(mediaPlayerFrame);
-		//JOptionPane.showMessageDialog(thisPane, formatErrorMessage);
 		
 		JLabel mp3TitleLbl = new JLabel("MP3 :");
 		mp3NameLbl = new NameLabel();
@@ -144,7 +143,7 @@ public class AudioToAddPanel extends JPanel {
 					public void actionPerformed(ActionEvent e) {
 						String start = startMin.getText()+";"+startSec+"."+startMili;
 						AudioData audioData = new AudioData(getMp3Path(),mp3NameLbl.getText() ,start, new TimeLabel().durationStringToDouble(start), endTime.getText());
-						//audioTrackList.add(thisPane);
+						audioTrackList.add(audioData);
 						
 						//TODO clear mp3 file, path, duration, start time and end time
 					}
@@ -153,7 +152,7 @@ public class AudioToAddPanel extends JPanel {
 
 		// TODO Play mp3 file to listen
 		
-		
+				// TODO Add audio track added to table
 		
 		//TODO set restriction on textfields
 		

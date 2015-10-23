@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,6 +22,7 @@ import javax.swing.plaf.SplitPaneUI;
 
 import overlayFrame.addAudioTrackPanel.AudioData;
 import overlayFrame.addAudioTrackPanel.AudioToAddPanel;
+import overlayFrame.audioTable.AudioTableFrame;
 import sharedLabels.TimeLabel;
 import mediaMainFrame.MediaPlayerJFrame;
 import net.miginfocom.swing.MigLayout;
@@ -32,16 +34,10 @@ public class OverlayAudioToVideoFrame extends JFrame {
 	JPanel contentPane;
 	JLabel vidName;
 	TimeLabel vidDuration;
-	JCheckBox removeVideoAudio;
-	Font titleFont = new Font("Tahoma", Font.BOLD, 20);
+	Font titleFont = new Font("Tahoma", Font.BOLD, 18);
 
-	// TODO button to show table of all added audio
-	// TODO Add audio track added to table
-	// TODO play audio
 
-	// TODO Table frame show all added audio with their name start time and end
-	// time
-
+	
 	public OverlayAudioToVideoFrame(final MediaPlayerJFrame video) {
 		super("Overlay Video");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -59,10 +55,26 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		vidTitleLbl.setFont(titleFont);
 		vidName = new JLabel(video.getCurrentVideo());
 		JLabel duraTitleLbl = new JLabel("Duration :");
+		duraTitleLbl.setFont(titleFont);
 		vidDuration = video.getVidTotalTime();
+		
+		/**
+		 * opens a frame with list of audiotracks that have been added
+		 */
+		JButton audioListBtn = new JButton("Get List of Added Audiotracks");
+		audioListBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new AudioTableFrame(video);
+			}
+		});
+		
+		
+		
+		
+		
 
-		// Remove audio checkbox
-		removeVideoAudio = new JCheckBox("Remove Video's Audio Track", false);
+		
 
 		AudioToAddPanel addAudioTrack = new AudioToAddPanel(video,audioTrackList);
 
@@ -93,18 +105,24 @@ public class OverlayAudioToVideoFrame extends JFrame {
 						"[7px,grow 0,shrink 0][257px,grow, shrink][7px,grow 0,shrink 0][258px,grow, shrink]"
 								+ "[7px,grow 0,shrink 0][257px,grow, shrink][7px,grow 0,shrink 0]", // Column
 																									// Constraints
-						"[5px][30px][30px][5px][200px,grow, shrink]")); // Row
+						"[5px][30px][5px][30px][5px][150px,grow, shrink]")); // Row
 		// Constraints
 		add(vidTitleLbl, "cell 1 1 ,grow");
 		add(vidName, "cell 1 1 5 2,grow");
-		add(duraTitleLbl, "cell 1 2 ,grow");
-		add(vidDuration, "cell 1 2 ,grow");
-		add(removeVideoAudio, "cell 4 2,grow");
+		add(duraTitleLbl, "cell 1 3 ,grow");
+		add(vidDuration, "cell 1 3 ,grow");
+		add(audioListBtn, "cell 4 3,grow");
 		add(overlayVidBtn, "cell 4 1 ,grow");
-		add(addAudioTrack, "cell 0 4 6 0 ,grow");
+		add(addAudioTrack, "cell 0 5 6 0 ,grow");
 		setVisible(true);
 	}
 
+	
+	
+	
+	
+	
+	
 	/**
 	 * This method replaces the audio of a video with the audio given by mp3Path
 	 * It first asks for a valid output file name, and if it is valid it sets

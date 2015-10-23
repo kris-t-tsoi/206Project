@@ -31,6 +31,10 @@ public class AudioTableFrame extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 
+	/**
+	 * Creates a JFrame with list of all audio tracks to be overlaid with video
+	 * @param video main Frame - where audiotrack list is stored
+	 */
 	public AudioTableFrame(final MediaPlayerJFrame video) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(1600, 100, 300, 650);
@@ -39,18 +43,13 @@ public class AudioTableFrame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 
-		// TODO set min size
-
-		// TODO Title
-
 		JLabel frameName = new JLabel("Audio to be Overlaid");
 		frameName.setFont(new Font("Audio To Be Overlaid", Font.BOLD, 20));
 		frameName.setBounds(5, 5, 200, 100);
 
 		JScrollPane scrollPane = new JScrollPane();
-		//contentPane.add(scrollPane);
 
-		// set JTable
+		// set JTable with items in audioTrackList
 		table = new JTable(new DefaultTableModel(new Object[] { "Name",
 				"Start Time", "End Time" }, 0) {
 			@Override
@@ -85,6 +84,10 @@ public class AudioTableFrame extends JFrame {
 		 * // set table model table.setModel(model); table.setBorder(new
 		 * LineBorder(new Color(0, 0, 0)));
 		 */
+		
+		/**
+		 * button deletes selected mp3 from audio track list
+		 */
 		JButton deleteAudioBtn = new JButton("Delete Audio");
 		deleteAudioBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -97,16 +100,14 @@ public class AudioTableFrame extends JFrame {
 		});
 		deleteAudioBtn.setFont(new Font("Dialog", Font.BOLD, 20));
 		deleteAudioBtn.setBounds(650, 508, 200, 150);
-		//contentPane.add(deleteAudioBtn);
 
 		contentPane
 				.setLayout(new MigLayout(
 						"", // Layout Constraint
 						"[5px,grow 0,shrink 0][90px,grow, shrink][5px,grow 0,shrink 0]", // Column
-																									// Constraints
+																							// Constraints
 						"[5px][50px][5px][200px,grow,shrink][5px][75px][5px]")); // Row
-		// Constraints
-		// add(vidTitleLbl, "cell 1 1 ,grow");
+																					// Constraints
 		add(frameName, "cell 1 1, grow");
 		add(scrollPane, "cell 1 3, grow");
 		add(deleteAudioBtn, "cell 1 5, grow");
