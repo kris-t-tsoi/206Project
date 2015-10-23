@@ -143,7 +143,7 @@ public class AudioToAddPanel extends JPanel {
 				addAudioBtn.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						String start = startMin.getText()+";"+startSec+"."+startMili;
-						AudioData audioData = new AudioData(getMp3Path(), start, new TimeLabel().durationStringToDouble(start), endTime.getText());
+						AudioData audioData = new AudioData(getMp3Path(),mp3NameLbl.getText() ,start, new TimeLabel().durationStringToDouble(start), endTime.getText());
 						//audioTrackList.add(thisPane);
 						
 						//TODO clear mp3 file, path, duration, start time and end time

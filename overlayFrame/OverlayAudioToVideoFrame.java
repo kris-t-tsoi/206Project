@@ -46,7 +46,7 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		super("Overlay Video");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		setBounds(900, 400, 800, 400);
+		setBounds(900, 400, 700, 400);
 		setMinimumSize(new Dimension(700, 300));
 		setVisible(true);		
 		

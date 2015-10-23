@@ -3,13 +3,15 @@ package overlayFrame.addAudioTrackPanel;
 public class AudioData {
 	
 	private String path;
+	private String name;
 	private String startTime;
 	private int startMiliTime;
 	private String endTime;
 	
 	
-	public AudioData(String mp3Path, String start,double mili, String end) {
+	public AudioData(String mp3Path, String fileName, String start,double mili, String end) {
 		path = mp3Path;
+		name = fileName;
 		startTime = start;
 		startMiliTime = (int) mili;
 		endTime = end;
@@ -32,6 +34,11 @@ public class AudioData {
 
 	public int getStartMiliTime() {
 		return startMiliTime;
+	}
+
+
+	public String getName() {
+		return name;
 	}
 
 
