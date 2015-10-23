@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +32,8 @@ import javax.swing.event.ChangeListener;
 import doInBackground.UpdateRunnable;
 import fileChoosing.UserFileChoose;
 import overlayFrame.OverlayAudioToVideoFrame;
+import overlayFrame.addAudioTrackPanel.AudioData;
+import overlayFrame.audioTable.AudioTableFrame;
 import mediaMainFrame.time.VideoCurrentTime;
 import mediaMainFrame.time.VideoTimeSlider;
 import mediaMainFrame.videoControl.PlayButton;
@@ -54,6 +57,7 @@ public class MediaPlayerJFrame extends JFrame {
 	ResizingEmbeddedMediaPlayerComponent mediaPlayerComponent;
 	EmbeddedMediaPlayer video;
 	private VideoTimeSlider vidSlide;
+	private ArrayList<AudioData> audioTrackList;
 
 	private TimeLabel vidTotalTime;
 	private VideoCurrentTime vidCurrentTime;
@@ -174,6 +178,10 @@ public class MediaPlayerJFrame extends JFrame {
 		return vidSlide;
 	}
 
+	public ArrayList<AudioData> getAudioTrackList() {
+		return audioTrackList;
+	}
+
 	public boolean videoIsPlaying() {
 		return video.isPlaying();
 	}
@@ -191,6 +199,9 @@ public class MediaPlayerJFrame extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		setMinimumSize(new Dimension(600, 200));
 
+		
+		//create list to store audio tracks to be overlaid
+		audioTrackList = new ArrayList<AudioData>();
 		
 		//TODO allow user to choose default directory
 		
@@ -281,8 +292,8 @@ public class MediaPlayerJFrame extends JFrame {
 		overlayBtn.setText("Overlay Video");
 		overlayBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new OverlayAudioToVideoFrame(
-						thisFrame);
+				new OverlayAudioToVideoFrame(thisFrame);
+				AudioTableFrame aud = new AudioTableFrame(thisFrame);
 			}
 		});
 

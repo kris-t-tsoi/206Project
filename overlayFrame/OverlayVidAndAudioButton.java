@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 
+import overlayFrame.addAudioTrackPanel.AudioData;
 import overlayFrame.addAudioTrackPanel.AudioToAddPanel;
 import sharedLabels.TimeLabel;
 import mediaMainFrame.MediaPlayerJFrame;
@@ -21,7 +22,7 @@ public class OverlayVidAndAudioButton extends JButton {
 		setToolTipText("Create New Video By Overlaying Audiotracks and Video");
 	}
 
-	public String overlayVideo(ArrayList<AudioToAddPanel> listAudio,
+	public String overlayVideo(ArrayList<AudioData> listAudio,
 			MediaPlayerJFrame video, String outName) {
 
 		time = new TimeLabel();
@@ -32,17 +33,15 @@ public class OverlayVidAndAudioButton extends JButton {
 
 		int count = 1;
 
-		for (AudioToAddPanel audio : listAudio) {
+		for (AudioData audio : listAudio) {
 
-			String delay = audio.getStartMin().getText() + ":"
-					+ audio.getStartSec().getText() + "."
-					+ audio.getStartMili().getText();
+			int delay = audio.getStartMiliTime();
 
 			System.out.println("delay " + delay);
 
 			// add in paths of the audio files
-			ffmpegMP3Paths = ffmpegMP3Paths + "-i " + audio.getMp3Path() + " ";
-			ffmpegMediaNumAndChannel = ffmpegMediaNumAndChannel + "[" + count+ ":a]adelay=" + time.durationStringToDouble(delay);
+			ffmpegMP3Paths = ffmpegMP3Paths + "-i " + audio.getPath() + " ";
+			ffmpegMediaNumAndChannel = ffmpegMediaNumAndChannel + "[" + count+ ":a]adelay=" + delay;
 			
 			//if it is not the last audio add a semicolon
 			if (count != listAudio.size()) {

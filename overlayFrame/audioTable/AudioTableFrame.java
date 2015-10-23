@@ -10,14 +10,16 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import mediaMainFrame.MediaPlayerJFrame;
+
 public class AudioTableFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
 	
-	public AudioTableFrame() {
+	public AudioTableFrame(MediaPlayerJFrame video) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(1200, 100, 300, 650);
+		setBounds(1000, 100, 300, 650);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

@@ -1,5 +1,6 @@
 package overlayFrame;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,10 +14,12 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JSplitPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.plaf.SplitPaneUI;
 
+import overlayFrame.addAudioTrackPanel.AudioData;
 import overlayFrame.addAudioTrackPanel.AudioToAddPanel;
 import sharedLabels.TimeLabel;
 import mediaMainFrame.MediaPlayerJFrame;
@@ -25,7 +28,7 @@ import net.miginfocom.swing.MigLayout;
 public class OverlayAudioToVideoFrame extends JFrame {
 
 	final OverlayAudioToVideoFrame thisFrame = this;
-	ArrayList<AudioToAddPanel> audioTrackList;
+	ArrayList<AudioData> audioTrackList;
 	JPanel contentPane;
 	JLabel vidName;
 	TimeLabel vidDuration;
@@ -44,15 +47,13 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		setBounds(900, 400, 800, 400);
-		setVisible(true);
+		setMinimumSize(new Dimension(700, 300));
+		setVisible(true);		
 		
-		//TODO get min sizes
-
 		contentPane = new JPanel();
 		setContentPane(contentPane);
-
-
-		audioTrackList = new ArrayList<AudioToAddPanel>();
+		
+		audioTrackList = video.getAudioTrackList();
 
 		JLabel vidTitleLbl = new JLabel("Video :");
 		vidTitleLbl.setFont(titleFont);
@@ -65,8 +66,6 @@ public class OverlayAudioToVideoFrame extends JFrame {
 
 		AudioToAddPanel addAudioTrack = new AudioToAddPanel(video,audioTrackList);
 
-		
-
 		//TODO move this out to table frame
 		// overlay video button
 		final OverlayVidAndAudioButton overlayVidBtn = new OverlayVidAndAudioButton();
@@ -78,9 +77,11 @@ public class OverlayAudioToVideoFrame extends JFrame {
 				String mp4Name = JOptionPane.showInputDialog(thisFrame,
 						"Enter a name for the mp4 file");
 
-				if ((mp4Name != null) && !mp4Name.startsWith(" ")) {
+				if (((mp4Name != null) && !mp4Name.startsWith(" "))||audioTrackList.size()==0||video.getVideoPath()==null) {
 					String path = overlayVidBtn.overlayVideo(audioTrackList,
 							video, mp4Name);
+				}else{
+					//TODO message saying missing video or audio or invlaid mp4 name
 				}
 			}
 		});
@@ -99,18 +100,9 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		add(duraTitleLbl, "cell 1 2 ,grow");
 		add(vidDuration, "cell 1 2 ,grow");
 		add(removeVideoAudio, "cell 4 2,grow");
-		//add(overlayVidBtn, "cell 4 1 ,grow");
+		add(overlayVidBtn, "cell 4 1 ,grow");
 		add(addAudioTrack, "cell 0 4 6 0 ,grow");
 		setVisible(true);
-
-		// ffmpeg -i Video/big_buck_bunny_1_minute.avi -i MP3/haehah.mp3
-		// -filter_complex [media
-		// number:channel]adelay=delayinMilisec4,amix=inputs=2 out.mp4
-
-		// adds audio to beginning
-		// ffmpeg -i Video/big_buck_bunny_1_minute.avi -i MP3/haehah.mp3
-		// -filter_complex adelay=50000,amix=inputs=2 out.mp4
-
 	}
 
 	/**

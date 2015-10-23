@@ -78,7 +78,7 @@ public class AudioToAddPanel extends JPanel {
 	 * @param mainFrame
 	 * @param audioTrackList
 	 */
-	public AudioToAddPanel(MediaPlayerJFrame mainFrame,final ArrayList<AudioToAddPanel> audioTrackList) {
+	public AudioToAddPanel(MediaPlayerJFrame mainFrame,final ArrayList<AudioData> audioTrackList) {
 		thisPane = this;
 		mediaPlayerFrame = mainFrame;
 		setSize(700, 150);
@@ -142,7 +142,9 @@ public class AudioToAddPanel extends JPanel {
 				AddAudioButton addAudioBtn = new AddAudioButton();
 				addAudioBtn.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						audioTrackList.add(thisPane);
+						String start = startMin.getText()+";"+startSec+"."+startMili;
+						AudioData audioData = new AudioData(getMp3Path(), start, new TimeLabel().durationStringToDouble(start), endTime.getText());
+						//audioTrackList.add(thisPane);
 						
 						//TODO clear mp3 file, path, duration, start time and end time
 					}
