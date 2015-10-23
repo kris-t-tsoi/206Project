@@ -29,7 +29,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import doInBackground.UpdateRunnable;
+import doInBackground.UpdateVideoFrame;
 import fileChoosing.UserFileChoose;
 import overlayFrame.OverlayAudioToVideoFrame;
 import overlayFrame.addAudioTrackPanel.AudioData;
@@ -227,7 +227,7 @@ public class MediaPlayerJFrame extends JFrame {
 		//use to update video slider and current time label every 0.5 sec
 		// https://github.com/caprica/vlcj/blob/master/src/test/java/uk/co/caprica/vlcj/test/basic/PlayerControlsPanel.java
 		ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(new UpdateRunnable(thisFrame), 0L, 200L, TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(new UpdateVideoFrame(thisFrame), 0L, 200L, TimeUnit.MILLISECONDS);
 
 		contentPane = new JPanel();
 		// Give the video a border

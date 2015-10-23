@@ -31,7 +31,7 @@ public class TimeLabel extends JLabel {
 					String minSecMilli = times[1] + ":" + times[2] + "."
 							+ times[3];
 					setText(minSecMilli);
-					return durationStringToDouble(minSecMilli);
+					return durationStringToInt(minSecMilli);
 				}
 			}
 
@@ -50,13 +50,12 @@ public class TimeLabel extends JLabel {
 	 * @param timeString
 	 * @return time in milliSeconds
 	 */
-	public double  durationStringToDouble (String timeString){
+	public int  durationStringToInt (String timeString){
 		//00:00.00	min:sec.mil
 		String[] timeSplit = timeString.split("[:.]");	
-		double milli  = (Double.parseDouble(timeSplit[2]));
-		double sec =  Double.parseDouble(timeSplit[1])*1000; 
-		double min =  Double.parseDouble(timeSplit[0])*60000; 
-		
+		int milli  = (Integer.parseInt(timeSplit[2]));
+		int sec =  Integer.parseInt(timeSplit[1])*1000; 
+		int min =  Integer.parseInt(timeSplit[0])*60000; 		
 		return (min+sec+milli);
 		
 	}

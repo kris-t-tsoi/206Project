@@ -6,6 +6,9 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import doInBackground.UpdateRunnable;
 import net.miginfocom.swing.MigLayout;
 import overlayFrame.addAudioTrackPanel.AudioData;
 import mediaMainFrame.MediaPlayerJFrame;
@@ -30,12 +34,16 @@ public class AudioTableFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
+	AudioTableFrame thisFrame;
 
 	/**
 	 * Creates a JFrame with list of all audio tracks to be overlaid with video
-	 * @param video main Frame - where audiotrack list is stored
+	 * 
+	 * @param video
+	 *            main Frame - where audiotrack list is stored
 	 */
 	public AudioTableFrame(final MediaPlayerJFrame video) {
+		thisFrame = this;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(1600, 100, 300, 650);
 		setMinimumSize(new Dimension(300, 100));
@@ -48,6 +56,13 @@ public class AudioTableFrame extends JFrame {
 		frameName.setBounds(5, 5, 200, 100);
 
 		JScrollPane scrollPane = new JScrollPane();
+
+		// use to update video slider and current time label every 0.5 sec
+		// https://github.com/caprica/vlcj/blob/master/src/test/java/uk/co/caprica/vlcj/test/basic/PlayerControlsPanel.java
+		ScheduledExecutorService executorService = Executors
+				.newSingleThreadScheduledExecutor();
+		executorService.scheduleAtFixedRate(new UpdateRunnable(thisFrame), 0L,
+				500L, TimeUnit.MILLISECONDS);
 
 		// set JTable with items in audioTrackList
 		table = new JTable(new DefaultTableModel(new Object[] { "Name",
@@ -84,7 +99,7 @@ public class AudioTableFrame extends JFrame {
 		 * // set table model table.setModel(model); table.setBorder(new
 		 * LineBorder(new Color(0, 0, 0)));
 		 */
-		
+
 		/**
 		 * button deletes selected mp3 from audio track list
 		 */
