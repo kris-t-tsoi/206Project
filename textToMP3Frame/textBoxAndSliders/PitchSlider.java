@@ -10,7 +10,7 @@ public class PitchSlider extends JSlider {
 	int[] monoPitchRange = {105,105};
 	int[] lowPitchRange = {95,85};
 	int[] neutPitchRange = {115,100};
-	int[] highPitchRange = {105,105};
+	int[] highPitchRange = {145,115};
 	
 
 	public PitchSlider() {

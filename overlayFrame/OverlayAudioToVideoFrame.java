@@ -23,6 +23,7 @@ import javax.swing.plaf.SplitPaneUI;
 import overlayFrame.addAudioTrackPanel.AudioData;
 import overlayFrame.addAudioTrackPanel.AudioToAddPanel;
 import overlayFrame.audioTable.AudioTableFrame;
+import sharedLabels.NameLabel;
 import sharedLabels.TimeLabel;
 import mediaMainFrame.MediaPlayerJFrame;
 import net.miginfocom.swing.MigLayout;
@@ -51,10 +52,12 @@ public class OverlayAudioToVideoFrame extends JFrame {
 
 		JLabel vidTitleLbl = new JLabel("Video :");
 		vidTitleLbl.setFont(titleFont);
-		vidName = new JLabel(video.getCurrentVideo());
+		vidName = new NameLabel();
+		vidName.setText(video.getCurrentVidName().getText());		
 		JLabel duraTitleLbl = new JLabel("Duration :");
 		duraTitleLbl.setFont(titleFont);
-		vidDuration = video.getVidTotalTime();
+		vidDuration = new TimeLabel();
+		vidDuration.setText(video.getVidTotalTime().getText());
 
 		/**
 		 * opens a frame with list of audiotracks that have been added

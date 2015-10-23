@@ -98,7 +98,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 	private static final String CURRENT_VIDEO_TEXT = "Currently Selected Video: ";
 	JLabel curVidTitle;
-	NameLabel currentVidName;
+	private NameLabel currentVidName;
 
 	// Images for fast forward and rewind icons
 	private static final ImageIcon REWIND_IMAGE = new ImageIcon(
@@ -182,6 +182,10 @@ public class MediaPlayerJFrame extends JFrame {
 		return audioTrackList;
 	}
 
+	public NameLabel getCurrentVidName() {
+		return currentVidName;
+	}
+
 	public boolean videoIsPlaying() {
 		return video.isPlaying();
 	}
@@ -189,6 +193,7 @@ public class MediaPlayerJFrame extends JFrame {
 	public void pauseVideo(boolean pause) {
 		video.setPause(pause);
 	}
+	
 
 	/**
 	 * Create the main media frame.
