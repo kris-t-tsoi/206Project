@@ -36,19 +36,17 @@ public class OverlayAudioToVideoFrame extends JFrame {
 	TimeLabel vidDuration;
 	Font titleFont = new Font("Tahoma", Font.BOLD, 18);
 
-
-	
 	public OverlayAudioToVideoFrame(final MediaPlayerJFrame video) {
 		super("Overlay Video");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		setBounds(900, 400, 700, 400);
 		setMinimumSize(new Dimension(700, 300));
-		setVisible(true);		
-		
+		setVisible(true);
+
 		contentPane = new JPanel();
 		setContentPane(contentPane);
-		
+
 		audioTrackList = video.getAudioTrackList();
 
 		JLabel vidTitleLbl = new JLabel("Video :");
@@ -57,7 +55,7 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		JLabel duraTitleLbl = new JLabel("Duration :");
 		duraTitleLbl.setFont(titleFont);
 		vidDuration = video.getVidTotalTime();
-		
+
 		/**
 		 * opens a frame with list of audiotracks that have been added
 		 */
@@ -68,36 +66,31 @@ public class OverlayAudioToVideoFrame extends JFrame {
 				new AudioTableFrame(video);
 			}
 		});
-		
-		
-		
-		
-		
+
+		AudioToAddPanel addAudioTrack = new AudioToAddPanel(video,
+				audioTrackList, thisFrame);
 
 		
-
-		AudioToAddPanel addAudioTrack = new AudioToAddPanel(video,audioTrackList);
-
-		//TODO move this out to table frame
 		// overlay video button
 		final OverlayVidAndAudioButton overlayVidBtn = new OverlayVidAndAudioButton();
 		overlayVidBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				//TODO allow user to choose where to say file
+
+				// TODO allow user to choose where to save file
 
 				String mp4Name = JOptionPane.showInputDialog(thisFrame,
 						"Enter a name for the mp4 file");
 
-				if (((mp4Name != null) && !mp4Name.startsWith(" "))||audioTrackList.size()==0||video.getVideoPath()==null) {
+				if (((mp4Name != null) && !mp4Name.startsWith(" "))
+						|| audioTrackList.size() == 0
+						|| video.getVideoPath() == null) {
 					String path = overlayVidBtn.overlayVideo(audioTrackList,
 							video, mp4Name);
-				}else{
-					//TODO message saying missing video or audio or invlaid mp4 name
+				} else {
+					JOptionPane.showMessageDialog(thisFrame,"No Video has Currently Been Choosen");
 				}
 			}
 		});
-
 
 		contentPane
 				.setLayout(new MigLayout(
@@ -117,12 +110,6 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		setVisible(true);
 	}
 
-	
-	
-	
-	
-	
-	
 	/**
 	 * This method replaces the audio of a video with the audio given by mp3Path
 	 * It first asks for a valid output file name, and if it is valid it sets

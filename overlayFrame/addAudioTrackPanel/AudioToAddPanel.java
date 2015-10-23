@@ -33,7 +33,7 @@ public class AudioToAddPanel extends JPanel {
 
 	// file choosing
 	final private UserFileChoose fileChoose;
-	private String mp3Path;
+	private String mp3Path = "";
 
 	// Time Labels and textfields
 	private TimeLabel durationLbl;
@@ -78,9 +78,10 @@ public class AudioToAddPanel extends JPanel {
 	 * 
 	 * @param mainFrame
 	 * @param audioTrackList
+	 *  @param parentFrame
 	 */
 	public AudioToAddPanel(MediaPlayerJFrame mainFrame,
-			final ArrayList<AudioData> audioTrackList) {
+			final ArrayList<AudioData> audioTrackList,final OverlayAudioToVideoFrame parentFrame) {
 		thisPane = this;
 		mediaPlayerFrame = mainFrame;
 		setSize(700, 175);
@@ -136,17 +137,24 @@ public class AudioToAddPanel extends JPanel {
 		AddAudioButton addAudioBtn = new AddAudioButton();
 		addAudioBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//if text box is in correct format
-				if(checkTwoNumbers(startMin.getText().trim())&&checkTwoNumbers(startSec.getText().trim())&&checkTwoNumbers(startMili.getText().trim())){
-					String start = addZero(startMin.getText().trim()) + ":" + addZero(startSec.getText().trim()) + "."
-							+ addZero(startMili.getText().trim());
+				//check mp3 path is not empty
+				if((!getMp3Path().equals(""))){
 					
-					AudioData audioData = new AudioData(getMp3Path(), mp3NameLbl
-							.getText(), start, new TimeLabel()
-							.durationStringToInt(start), endTime.getText());
-					audioTrackList.add(audioData);
+					//check if text box is in correct format
+					if(checkTwoNumbers(startMin.getText().trim())&&checkTwoNumbers(startSec.getText().trim())&&checkTwoNumbers(startMili.getText().trim())){
+						
+						String start = addZero(startMin.getText().trim()) + ":" + addZero(startSec.getText().trim()) + "."
+								+ addZero(startMili.getText().trim());
+						
+						AudioData audioData = new AudioData(getMp3Path(), mp3NameLbl
+								.getText(), start, new TimeLabel()
+								.durationStringToInt(start), endTime.getText());
+						audioTrackList.add(audioData);
 
-					// TODO clear mp3 file, path, duration, start time and end time	
+						// TODO clear mp3 file, path, duration, start time and end time	
+					}
+				}else{
+					JOptionPane.showMessageDialog(parentFrame, "Please Select a MP3 File to Add");
 				}
 				
 				
