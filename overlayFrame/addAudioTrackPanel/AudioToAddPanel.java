@@ -136,22 +136,24 @@ public class AudioToAddPanel extends JPanel {
 		AddAudioButton addAudioBtn = new AddAudioButton();
 		addAudioBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String start = startMin.getText() + ":" + startSec.getText() + "."
-						+ startMili.getText();
-				
-				AudioData audioData = new AudioData(getMp3Path(), mp3NameLbl
-						.getText(), start, new TimeLabel()
-						.durationStringToInt(start), endTime.getText());
-				audioTrackList.add(audioData);
+				//if text box is in correct format
+				if(checkTwoNumbers(startMin.getText().trim())&&checkTwoNumbers(startSec.getText().trim())&&checkTwoNumbers(startMili.getText().trim())){
+					String start = addZero(startMin.getText().trim()) + ":" + addZero(startSec.getText().trim()) + "."
+							+ addZero(startMili.getText().trim());
+					
+					AudioData audioData = new AudioData(getMp3Path(), mp3NameLbl
+							.getText(), start, new TimeLabel()
+							.durationStringToInt(start), endTime.getText());
+					audioTrackList.add(audioData);
 
-				// TODO clear mp3 file, path, duration, start time and end time
+					// TODO clear mp3 file, path, duration, start time and end time	
+				}
+				
+				
 			}
 		});
 
 		// TODO Play mp3 file to listen
-
-		// TODO Add audio track added to table
-
 
 		setLayout(new MigLayout(
 				"", // Layout Constraint
@@ -186,6 +188,19 @@ public class AudioToAddPanel extends JPanel {
 	// TODO work out mp3 end time
 	private void addForEndtime() {
 
+	}
+	
+	/**
+	 * if only a single digit is in text box
+	 * a zero is added infront
+	 * @param text - from textbox
+	 * @return 2 char string
+	 */
+	private String addZero(String text){
+		if(text.length()==1){
+			return "0"+text;
+		}
+		return text;
 	}
 	
 

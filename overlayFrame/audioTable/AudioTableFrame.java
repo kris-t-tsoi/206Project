@@ -56,6 +56,9 @@ public class AudioTableFrame extends JFrame {
 		frameName.setBounds(5, 5, 200, 100);
 
 		JScrollPane scrollPane = new JScrollPane();
+		
+		
+		//TODO refresh table
 
 		// use to update video slider and current time label every 0.5 sec
 		// https://github.com/caprica/vlcj/blob/master/src/test/java/uk/co/caprica/vlcj/test/basic/PlayerControlsPanel.java

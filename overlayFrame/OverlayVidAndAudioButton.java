@@ -18,7 +18,7 @@ public class OverlayVidAndAudioButton extends JButton {
 
 	public OverlayVidAndAudioButton() {
 		super();
-		setText("Ovelay Video with Added Audiotracks");
+		setText("Overlay Video with Added Audiotracks");
 		setToolTipText("Create New Video By Overlaying Audiotracks and Video");
 	}
 
@@ -38,8 +38,6 @@ public class OverlayVidAndAudioButton extends JButton {
 
 			int delay = audio.getStartMiliTime();
 
-			System.out.println("delay " + delay);
-
 			// add in paths of the audio files
 			ffmpegMP3Paths = ffmpegMP3Paths + "-i " + audio.getPath() + " ";
 			ffmpegDelay = ffmpegDelay + "[" + count+ ":a]adelay=" + delay+"[a"+count+"]";
@@ -58,14 +56,8 @@ public class OverlayVidAndAudioButton extends JButton {
 				+ video.VIDEO_DIR_RELATIVE_PATH + File.separator + outName
 				+ ".mp4";
 
-		System.out.println("ffmpeg " + ffmpegVideoPath);
-		System.out.println("ffmpeg " + ffmpegMP3Paths);
-		System.out.println("ffmpeg " + ffmpegDelay);
-		System.out.println("ffmpeg " + ffmpegAmix);
-
 		String cmd = ffmpegVideoPath + ffmpegMP3Paths + "-filter_complex \""
 				+ ffmpegDelay +","+ffmpegMediaNumAndChannel+ ffmpegAmix;
-		System.out.println(cmd);
 
 		CreateInBackground back = new CreateInBackground(cmd);
 		back.execute();
