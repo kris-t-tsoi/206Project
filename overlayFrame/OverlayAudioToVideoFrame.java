@@ -1,5 +1,6 @@
 package overlayFrame;
 
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -29,7 +30,14 @@ public class OverlayAudioToVideoFrame extends JFrame {
 	JLabel vidName;
 	TimeLabel vidDuration;
 	JCheckBox removeVideoAudio;
-	JScrollPane scrollPanel;
+	Font titleFont = new Font("Tahoma", Font.BOLD, 20);
+
+	// TODO button to show table of all added audio
+	// TODO Add audio track added to table
+	// TODO play audio
+
+	// TODO Table frame show all added audio with their name start time and end
+	// time
 
 	public OverlayAudioToVideoFrame(final MediaPlayerJFrame video) {
 		super("Overlay Video");
@@ -37,16 +45,17 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		setBounds(900, 400, 800, 400);
 		setVisible(true);
+		
+		//TODO get min sizes
 
 		contentPane = new JPanel();
 		setContentPane(contentPane);
 
-		// scrollPanel.add(addAudioTrack); //TODO get pane to fit in properly
-		// scrollPanel.setVisible(true);
+
 		audioTrackList = new ArrayList<AudioToAddPanel>();
 
-		// TODO increase font size
 		JLabel vidTitleLbl = new JLabel("Video :");
+		vidTitleLbl.setFont(titleFont);
 		vidName = new JLabel(video.getCurrentVideo());
 		JLabel duraTitleLbl = new JLabel("Duration :");
 		vidDuration = video.getVidTotalTime();
@@ -54,39 +63,28 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		// Remove audio checkbox
 		removeVideoAudio = new JCheckBox("Remove Video's Audio Track", false);
 
-		AudioToAddPanel addAudioTrack = new AudioToAddPanel(video);
-		audioTrackList.add(addAudioTrack);
+		AudioToAddPanel addAudioTrack = new AudioToAddPanel(video,audioTrackList);
 
-		// Add new audiotrack button
-		/*
-		 * AddAudioButton addAudioBtn = new AddAudioButton();
-		 * addAudioBtn.addActionListener(new ActionListener() { public void
-		 * actionPerformed(ActionEvent e) { AudioToAddPanel addAudioTrack = new
-		 * AudioToAddPanel(video); audioTrackList.add(addAudioTrack);
-		 * //scrollPanel.add(addAudioTrack); //TODO get pane to fit in properly
-		 * //scrollPanel.setVisible(true); //contentPane.add(addAudioTrack);
-		 * //contentPane.setVisible(true); setVisible(true);
-		 * 
-		 * } });
-		 */
+		
 
+		//TODO move this out to table frame
 		// overlay video button
 		final OverlayVidAndAudioButton overlayVidBtn = new OverlayVidAndAudioButton();
 		overlayVidBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO Overlay video
+				
+				//TODO allow user to choose where to say file
 
 				String mp4Name = JOptionPane.showInputDialog(thisFrame,
 						"Enter a name for the mp4 file");
 
 				if ((mp4Name != null) && !mp4Name.startsWith(" ")) {
-					String path = overlayVidBtn.overlayVideo(audioTrackList, video, mp4Name);
+					String path = overlayVidBtn.overlayVideo(audioTrackList,
+							video, mp4Name);
 				}
 			}
 		});
 
-		// Scroll pane for adding multiple audio
-		scrollPanel = new JScrollPane();
 
 		contentPane
 				.setLayout(new MigLayout(
@@ -94,17 +92,15 @@ public class OverlayAudioToVideoFrame extends JFrame {
 						"[7px,grow 0,shrink 0][257px,grow, shrink][7px,grow 0,shrink 0][258px,grow, shrink]"
 								+ "[7px,grow 0,shrink 0][257px,grow, shrink][7px,grow 0,shrink 0]", // Column
 																									// Constraints
-						"[5px][30px][30px][30px][5px][200px,grow, shrink]")); // Row
+						"[5px][30px][30px][5px][200px,grow, shrink]")); // Row
 		// Constraints
 		add(vidTitleLbl, "cell 1 1 ,grow");
 		add(vidName, "cell 1 1 5 2,grow");
 		add(duraTitleLbl, "cell 1 2 ,grow");
 		add(vidDuration, "cell 1 2 ,grow");
 		add(removeVideoAudio, "cell 4 2,grow");
-		// add(addAudioBtn, "cell 1 3 ,grow");
-		add(overlayVidBtn, "cell 4 3 ,grow");
-		add(addAudioTrack, "cell 0 5 6 0 ,grow");
-		// add(scrollPanel, "cell 0 4 6 0 ,grow");
+		//add(overlayVidBtn, "cell 4 1 ,grow");
+		add(addAudioTrack, "cell 0 4 6 0 ,grow");
 		setVisible(true);
 
 		// ffmpeg -i Video/big_buck_bunny_1_minute.avi -i MP3/haehah.mp3

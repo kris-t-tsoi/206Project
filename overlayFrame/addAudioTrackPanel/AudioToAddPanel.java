@@ -3,13 +3,19 @@ package overlayFrame.addAudioTrackPanel;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.util.ArrayList;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import overlayFrame.AddAudioButton;
+import overlayFrame.OverlayAudioToVideoFrame;
 import fileChoosing.UserFileChoose;
 import sharedLabels.NameLabel;
 import sharedLabels.TimeLabel;
@@ -23,6 +29,7 @@ public class AudioToAddPanel extends JPanel {
 	AudioToAddPanel thisPane;
 	final MediaPlayerJFrame mediaPlayerFrame;
 	TextToSpeechFrame create;
+	String formatErrorMessage = "Please have format [MM:SS.mm] using Numbers";
 	
 	//file choosing
 	final private UserFileChoose fileChoose;
@@ -65,19 +72,40 @@ public class AudioToAddPanel extends JPanel {
 		return startMili;
 	}
 
-	public AudioToAddPanel(MediaPlayerJFrame mainFrame) {
+	
+	/**
+	 * Constructs add audio panel
+	 * @param mainFrame
+	 * @param audioTrackList
+	 */
+	public AudioToAddPanel(MediaPlayerJFrame mainFrame,final ArrayList<AudioToAddPanel> audioTrackList) {
 		thisPane = this;
 		mediaPlayerFrame = mainFrame;
 		setSize(700, 150);
 		fileChoose = new UserFileChoose(mediaPlayerFrame);
+		//JOptionPane.showMessageDialog(thisPane, formatErrorMessage);
 		
 		JLabel mp3TitleLbl = new JLabel("MP3 :");
 		mp3NameLbl = new NameLabel();
 		JLabel duraTitleLbl = new JLabel("Duration :");
 		durationLbl = new TimeLabel();
 
-		startLbl = new JLabel("Start [MM:SS.ms]:");
+		startLbl = new JLabel("Start [MM:SS.mm]:");
 		startMin = new JTextField("00");
+		startMin.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e) {				
+				//check if it is 2 characters long and is numbers
+				if(checkTwoNumbers(startMin.getText().trim())){
+					// TODO update end time
+				}
+			}
+			@Override
+			public void focusGained(FocusEvent e) {}
+		});
+		
+		
 		JLabel semiCol = new JLabel(":");
 		startSec = new JTextField("00");
 		JLabel dot = new JLabel(".");
@@ -108,6 +136,18 @@ public class AudioToAddPanel extends JPanel {
 				// mp3NameLbl.setText(mp3NameLbl.getFileName(mp3Path));
 			}
 		});
+		
+		
+		// Add new audiotrack button
+				AddAudioButton addAudioBtn = new AddAudioButton();
+				addAudioBtn.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						audioTrackList.add(thisPane);
+						
+						//TODO clear mp3 file, path, duration, start time and end time
+					}
+				});
+		
 
 		// TODO Play mp3 file to listen
 		
@@ -141,11 +181,36 @@ public class AudioToAddPanel extends JPanel {
 
 		
 		
-		
-		
-		
-		
 
+	}
+	
+	
+	private void initaliseVariables(){
+		
+	}
+	
+	
+	/**
+	 * Checks 	- if the text in text box is either a length of 1 or 2
+	 * 			- if the characters are numbers
+	 * @param text
+	 * @return
+	 */
+	private boolean checkTwoNumbers(String text){		
+		//check text is length 1 or 2
+		if(text.length() > 2|| text.length()<0){
+			JOptionPane.showMessageDialog(thisPane, formatErrorMessage);
+			return false;
+		}else{
+			try{
+				//Check if all characters are numbers
+				Integer.parseInt(text);
+			}catch(NumberFormatException e1){
+				JOptionPane.showMessageDialog(thisPane, formatErrorMessage);
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**

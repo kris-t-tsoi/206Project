@@ -17,7 +17,7 @@ public class OverlayVidAndAudioButton extends JButton {
 
 	public OverlayVidAndAudioButton() {
 		super();
-		setText("Overlay and Create Video");
+		setText("Ovelay Video with Added Audiotracks");
 		setToolTipText("Create New Video By Overlaying Audiotracks and Video");
 	}
 

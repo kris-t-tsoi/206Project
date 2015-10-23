@@ -191,6 +191,11 @@ public class MediaPlayerJFrame extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		setMinimumSize(new Dimension(600, 200));
 
+		
+		//TODO allow user to choose default directory
+		
+		
+		
 		// Check if files exist
 		final File videoDir = VIDEO_DIR_ABSOLUTE_PATH;
 		final File mp3Dir = new File(MP3_DIR_RELATIVE_PATH);
