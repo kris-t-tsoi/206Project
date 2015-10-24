@@ -51,7 +51,7 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		super("Overlay Video");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		setBounds(900, 400, 700, 400);
+		setBounds(900, 300, 700, 400);
 		setMinimumSize(new Dimension(700, 300));
 		setVisible(true);
 		isOpen = true;
@@ -92,13 +92,13 @@ public class OverlayAudioToVideoFrame extends JFrame {
 				if (video.getVideoPath() == null) {
 					JOptionPane.showMessageDialog(thisFrame,
 							"No Video has Currently Been Choosen");
-				} else if (audioTrackList.size() == 0) {	//chec audiotracks have been added
+				} else if (audioTrackList.size() == 0) {	//check audiotracks have been added
 					JOptionPane.showMessageDialog(thisFrame,
 							"No Audiotracks have been Added");
 				} else {
 					fileChose = new UserFileChoose(video);
 					String name = fileChose.saveVideo();
-					if (!name.equals("")) {	//chcck user wants to create a video
+					if (!name.equals("")) {	//check user wants to create a video
 						overlayVidBtn.overlayVideo(audioTrackList, video, name);
 					}
 				}
