@@ -40,6 +40,14 @@ public class VideoTimeSlider extends JSlider {
 		
 		int slidePercent =(int) (vidPlayer.getVideo().getPosition() * 100);
 
+		//if reach the end allow video to replay again
+		if(vidPlayer.getVideo().getPosition()>0.99){
+			vidPlayer.getVideo().stop();
+			vidPlayer.setVideoIsStarted(false);
+			vidPlayer.getBtnPlay().btnSetPlayIcon();
+			slidePercent=0;
+		}
+		
 		// update this slider with current video position
 		setValue(slidePercent);
 

@@ -69,6 +69,7 @@ public class MediaPlayerJFrame extends JFrame {
 	JSlider sliderVolume;
 
 	private boolean videoIsStarted;
+	private final PlayButton btnPlay;
 
 	// Default volume of the video
 	private static final int DEFAULT_VOLUME = 50;
@@ -190,6 +191,10 @@ public class MediaPlayerJFrame extends JFrame {
 		return video.isPlaying();
 	}
 
+	public PlayButton getBtnPlay() {
+		return btnPlay;
+	}
+
 	public void pauseVideo(boolean pause) {
 		video.setPause(pause);
 	}
@@ -233,7 +238,7 @@ public class MediaPlayerJFrame extends JFrame {
 		 * Button to play the video. It also acts as a pause/unpause button, and
 		 * is used to stop skipping.
 		 */
-		final PlayButton btnPlay = new PlayButton(this);
+		btnPlay = new PlayButton(this);
 		btnPlay.setIcon(PlayButton.PLAY_IMAGE);
 		btnPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
