@@ -56,8 +56,10 @@ Run Source
 ------------------------------------------------------------------------------------
 Limitations
 	-When the video ends or is skipped back before the start the video must be re-selected
-	-Overwrites files if the name the user types for a file is already in use (design decision - the output 	file names are easily visible and the user must type the exact same name to overwrite)
+	-Overwrites files if the name the user types for a file is already in use (design decision - the output 		file names are easily visible and the user must type the exact same name to overwrite)
 	-There is no logger, so all error messages are displayed in console
+	-If any file are moved after it has been added to the audioTrackList or if video file is moved and is used 	
+	in the overlay,program will no be able to create the mp4
 
 ------------------------------------------------------------------------------------
 Bugs

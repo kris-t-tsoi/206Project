@@ -79,7 +79,7 @@ public class MediaPlayerJFrame extends JFrame {
 	private static final String ERROR_MESSAGE = "Sorry, an error has occured. please try again.";
 
 	//Font
-	Font titleFont = new Font("Tahoma", Font.ITALIC, 18);
+	public static final Font TITLE_FONT = new Font("Tahoma", Font.ITALIC, 15);
 
 	// FileChooser-related fields
 	final MediaPlayerJFrame thisFrame = this;
@@ -348,7 +348,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 		// Labels that displays the currently selected video
 		curVidTitle = new JLabel(CURRENT_VIDEO_TEXT);
-		curVidTitle.setFont(titleFont);
+		curVidTitle.setFont(TITLE_FONT);
 		currentVidName = new NameLabel();
 
 		/*

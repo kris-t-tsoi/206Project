@@ -1,21 +1,12 @@
 package mediaMainFrame.time;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
-
 import javax.swing.JSlider;
-import javax.swing.event.ChangeListener;
-import javax.swing.plaf.basic.BasicTabbedPaneUI.MouseHandler;
 
 import mediaMainFrame.MediaPlayerJFrame;
-import mediaMainFrame.videoControl.PlayButton;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
+@SuppressWarnings("serial")
 public class VideoTimeSlider extends JSlider {
-
-	private mediaMainFrame.MediaPlayerJFrame parentFrame;
 
 	/**
 	 * Creates the video time slider with value from 0-100
