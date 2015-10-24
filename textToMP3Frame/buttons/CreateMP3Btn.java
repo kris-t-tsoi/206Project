@@ -31,8 +31,6 @@ public class CreateMP3Btn extends JButton {
 		//create text file
 		File textFile = write.createTxt(text);
 		
-		//String mp3Path = MediaPlayerJFrame.MP3_DIR_RELATIVE_PATH+ File.separator +"";
-		
 		// MP3 created in the background
 		CreateInBackground backGrd = new CreateInBackground("text2wave -o \""+audioName+".wav\" "
 				+textFile.getAbsolutePath().toString()+" -eval "+playScm.getAbsolutePath().toString()+ ";"

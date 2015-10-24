@@ -59,9 +59,6 @@ public class OverlayVidAndAudioButton extends JButton {
 
 		CreateInBackground back = new CreateInBackground(cmd);
 		back.execute();
-
-		// ffmpeg -i Video/big_buck_bunny_1_minute.avi  -i MP3/pleasework.mp3 -i MP3/yery.mp3 -filter_complex "[1:a]adelay=200[a1];[2:a]adelay=10000[a2],[a1][a2]amix=inputs=3" Video/lll.mp4
-
 	
 	}
 

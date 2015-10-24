@@ -19,7 +19,7 @@ public class UserFileChoose extends JFileChooser {
 	private final String fileNotExist = "File Does Not Exist, Please Pick Another";
 
 	public UserFileChoose(MediaPlayerJFrame parentFrame) {
-		vidFrame = parentFrame;		
+		vidFrame = parentFrame;
 	}
 
 	// TODO error handle user type in non existing file
@@ -120,6 +120,13 @@ public class UserFileChoose extends JFileChooser {
 
 	// TODO
 	public String saveVideo() {
+		// video media filters
+		FileFilter mp4 = new FileTypeFilter(".mp4", "MP4 Files");
+		addChoosableFileFilter(mp4);
+		setFileFilter(mp4);
+
+		// remove all files filter
+		setAcceptAllFileFilterUsed(false);
 
 		setCurrentDirectory(new File(vidFrame.getDefPathDirect()));
 		// TODO change to overlay frame
@@ -147,7 +154,15 @@ public class UserFileChoose extends JFileChooser {
 
 	// TODO
 	public String saveMP3() {
+		// mp3 media filters
+		FileFilter mp3 = new FileTypeFilter(".mp3", "MP3 Files");
+		addChoosableFileFilter(mp3);
+		setFileFilter(mp3);
 
+		// remove all files filter
+		setAcceptAllFileFilterUsed(false);
+		
+		
 		setCurrentDirectory(new File(vidFrame.getDefPathDirect()));
 		// TODO change to text to speech frame
 		int returnVal = showSaveDialog(vidFrame);

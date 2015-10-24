@@ -90,17 +90,15 @@ public class MediaPlayerJFrame extends JFrame {
 	private String defPathDirect;
 
 	/*
-	// Directory location constants
-	public static final String VIDEO_DIR_RELATIVE_PATH = "Video";
-	public static final File VIDEO_DIR_ABSOLUTE_PATH = new File(
-			System.getProperty("user.dir") + File.separator
-					+ VIDEO_DIR_RELATIVE_PATH);
-
-	public static final String MP3_DIR_RELATIVE_PATH = "MP3";
-	private static final File MP3_DIR_ABSOLUTE_PATH = new File(
-			System.getProperty("user.dir") + File.separator
-					+ MP3_DIR_RELATIVE_PATH);
-*/
+	 * // Directory location constants public static final String
+	 * VIDEO_DIR_RELATIVE_PATH = "Video"; public static final File
+	 * VIDEO_DIR_ABSOLUTE_PATH = new File( System.getProperty("user.dir") +
+	 * File.separator + VIDEO_DIR_RELATIVE_PATH);
+	 * 
+	 * public static final String MP3_DIR_RELATIVE_PATH = "MP3"; private static
+	 * final File MP3_DIR_ABSOLUTE_PATH = new File(
+	 * System.getProperty("user.dir") + File.separator + MP3_DIR_RELATIVE_PATH);
+	 */
 	// Dynamic labels for user information
 
 	private static final String CURRENT_VIDEO_TEXT = "Currently Selected Video: ";
@@ -160,10 +158,11 @@ public class MediaPlayerJFrame extends JFrame {
 	public void setVidTotalTime(TimeLabel vidTotalTime) {
 		this.vidTotalTime = vidTotalTime;
 	}
-/*	public static File getMp3DirAbsolutePath() {
-		return MP3_DIR_ABSOLUTE_PATH;
-	}
-*/
+
+	/*
+	 * public static File getMp3DirAbsolutePath() { return
+	 * MP3_DIR_ABSOLUTE_PATH; }
+	 */
 	public String getErrorMessage() {
 		return ERROR_MESSAGE;
 	}
@@ -295,6 +294,14 @@ public class MediaPlayerJFrame extends JFrame {
 		overlayBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new OverlayAudioToVideoFrame(thisFrame);
+			}
+		});
+
+		// Button to open list of audiotracks that have been added
+		JButton tableBtn = new JButton();
+		tableBtn.setText("List of Audiotracks That Have Been Added");
+		tableBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				new AudioTableFrame(thisFrame);
 			}
 		});
@@ -448,7 +455,7 @@ public class MediaPlayerJFrame extends JFrame {
 								+ "[60px,grow 0,shrink 0][4px,grow 0,shrink 0][100px,grow 0,shrink 0][4px,grow 0,shrink 0]"
 								+ "[10px,grow 0,shrink 0][2px,grow 0,shrink 0][421px,grow,shrink]", // Column
 																									// Constraints
-						"[406px,grow, shrink][20px][20px][17px][17px][8px]")); // Row
+						"[406px,grow, shrink][20px][20px][17px][17px][17px][8px]")); // Row
 																				// Constraints
 
 		/*
@@ -476,9 +483,10 @@ public class MediaPlayerJFrame extends JFrame {
 		contentPane.add(getVidTotalTime(), "cell 2 1,grow");
 		contentPane.add(vidSlide, "cell 3 1 11 3,growx,aligny top");
 
-		// make MP3 and overlay button
+		// make MP3, overlay and list of audiotrack buttons
 		contentPane.add(makeMP3Btn, "cell 10 3 ,grow");
 		contentPane.add(overlayBtn, "cell 10 4 ,grow");
+		contentPane.add(tableBtn, "cell 10 5 ,grow");
 
 		// current video labels
 		contentPane.add(curVidTitle, "cell 0 3 9 0,growx");
