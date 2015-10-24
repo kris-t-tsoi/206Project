@@ -30,10 +30,6 @@ public class TextToMP3TextBox extends JTextArea {
 	 * 
 	 */
 	public boolean checkTxtLength() {
-
-		// if it is blank
-		if ((getText() != null) && !getText().startsWith(" ")) {
-
 			// Removes all spaces and punctuation apart from ' for conjunctions
 			String[] punct = getText().split("[^a-zA-Z0-9']");
 			int words = 0;
@@ -45,7 +41,6 @@ public class TextToMP3TextBox extends JTextArea {
 			if (words <= MAX_NUMBER_OF_WORDS) {
 				return true;
 			}
-		}
 		return false;
 	}
 

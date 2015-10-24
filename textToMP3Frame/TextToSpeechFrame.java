@@ -108,18 +108,11 @@ public class TextToSpeechFrame extends JFrame {
 		playText.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// get values from sliders and text box
-				getFestivalValues();
-
 				// If the text is under the allowed limit, speak the text
-				if (userText.checkTxtLength()) {
+				if (checkTextbox()) {
 					playText.sayWithFestival(getSpeed(), getStartPitch(),
 							getEndPitch(), getText());
-					// TODO get pid so can stop
-				} else {
-					JOptionPane.showMessageDialog(thisFrame,
-							ERROR_WORD_LIMIT_MESSAGE);
-				}
+				} 
 			}
 		});
 
@@ -127,9 +120,7 @@ public class TextToSpeechFrame extends JFrame {
 		createMP3.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				getFestivalValues();
-				if (userText.checkTxtLength()) {
+				if (checkTextbox()) {
 
 					fileChose = new UserFileChoose(video);
 					String name = fileChose.saveMP3();
@@ -139,10 +130,7 @@ public class TextToSpeechFrame extends JFrame {
 								getEndPitch(), getText(), name);
 					}
 
-				} else {
-					JOptionPane.showMessageDialog(thisFrame,
-							ERROR_WORD_LIMIT_MESSAGE);
-				}
+				} 
 			}
 		});
 
@@ -186,6 +174,33 @@ public class TextToSpeechFrame extends JFrame {
 		setStartPitch(pitchRange[0]);
 		setEndPitch(pitchRange[1]);
 		setText(userText.getText());
+	}
+	
+	
+	/**
+	 * Check if text box is not empty and is within text limit
+	 * @return	-	true if valid text
+	 */
+	private boolean checkTextbox(){
+		
+		// get values from sliders and text box
+		getFestivalValues();
+		
+		//(getText() != null) && !getText().startsWith(" ")
+		if((userText.getText() == null) && userText.getText().trim().equals("")){
+			JOptionPane.showMessageDialog(thisFrame,
+					"Textbox Can Not Be Empty");
+			return false;
+		}
+
+		// If the text is under the allowed limit, speak the text
+		if (!userText.checkTxtLength()) {
+			JOptionPane.showMessageDialog(thisFrame,
+					ERROR_WORD_LIMIT_MESSAGE);
+			return false;
+		}
+		
+		return true;
 	}
 
 }

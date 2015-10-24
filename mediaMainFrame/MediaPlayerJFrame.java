@@ -225,28 +225,6 @@ public class MediaPlayerJFrame extends JFrame {
 		defaultDirect.setDefaultDirectoy(true);
 		fileChoose = new UserFileChoose(thisFrame);
 
-		
-		/*
-		// TODO delete after doing all user add file
-		// Check if files exist
-		final File videoDir = VIDEO_DIR_ABSOLUTE_PATH;
-		final File mp3Dir = new File(MP3_DIR_RELATIVE_PATH);
-		if (!videoDir.exists() || !mp3Dir.exists()) {
-			// Give user warning that files are being made and where they are
-			// located
-			JOptionPane
-					.showMessageDialog(
-							thisFrame,
-							("Two Folders \"Video\" and \"MP3\" will be created in " + System
-									.getProperty("user.dir")));
-
-			// Create the folders needed if they don't exist
-			videoDir.mkdir();
-			mp3Dir.mkdir();
-		}
-*/
-		
-		
 		// use to update video slider and current time label every 0.5 sec
 		// https://github.com/caprica/vlcj/blob/master/src/test/java/uk/co/caprica/vlcj/test/basic/PlayerControlsPanel.java
 		ScheduledExecutorService executorService = Executors
