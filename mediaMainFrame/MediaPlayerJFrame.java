@@ -80,8 +80,8 @@ public class MediaPlayerJFrame extends JFrame {
 
 	// FileChooser-related fields
 	final MediaPlayerJFrame thisFrame = this;
-	final private UserFileChoose fileChoose = new UserFileChoose(thisFrame);
-	JFileChooser defaultDirect;
+	final private UserFileChoose fileChoose;
+	UserFileChoose defaultDirect;
 	JMenuBar fileMenuBar;
 	JMenu fileMenu;
 	JMenuItem menuItem;
@@ -89,6 +89,7 @@ public class MediaPlayerJFrame extends JFrame {
 	// default directory
 	private String defPathDirect;
 
+	/*
 	// Directory location constants
 	public static final String VIDEO_DIR_RELATIVE_PATH = "Video";
 	public static final File VIDEO_DIR_ABSOLUTE_PATH = new File(
@@ -99,7 +100,7 @@ public class MediaPlayerJFrame extends JFrame {
 	private static final File MP3_DIR_ABSOLUTE_PATH = new File(
 			System.getProperty("user.dir") + File.separator
 					+ MP3_DIR_RELATIVE_PATH);
-
+*/
 	// Dynamic labels for user information
 
 	private static final String CURRENT_VIDEO_TEXT = "Currently Selected Video: ";
@@ -159,12 +160,11 @@ public class MediaPlayerJFrame extends JFrame {
 	public void setVidTotalTime(TimeLabel vidTotalTime) {
 		this.vidTotalTime = vidTotalTime;
 	}
-
-	public static File getMp3DirAbsolutePath() {
+/*	public static File getMp3DirAbsolutePath() {
 		return MP3_DIR_ABSOLUTE_PATH;
 	}
-
-	public static String getErrorMessage() {
+*/
+	public String getErrorMessage() {
 		return ERROR_MESSAGE;
 	}
 
@@ -221,8 +221,12 @@ public class MediaPlayerJFrame extends JFrame {
 		audioTrackList = new ArrayList<AudioData>();
 
 		// get default working directory
-		setDefaultDirectoy(true);
+		defaultDirect = new UserFileChoose(thisFrame);
+		defaultDirect.setDefaultDirectoy(true);
+		fileChoose = new UserFileChoose(thisFrame);
 
+		
+		/*
 		// TODO delete after doing all user add file
 		// Check if files exist
 		final File videoDir = VIDEO_DIR_ABSOLUTE_PATH;
@@ -240,7 +244,9 @@ public class MediaPlayerJFrame extends JFrame {
 			videoDir.mkdir();
 			mp3Dir.mkdir();
 		}
-
+*/
+		
+		
 		// use to update video slider and current time label every 0.5 sec
 		// https://github.com/caprica/vlcj/blob/master/src/test/java/uk/co/caprica/vlcj/test/basic/PlayerControlsPanel.java
 		ScheduledExecutorService executorService = Executors
@@ -301,7 +307,7 @@ public class MediaPlayerJFrame extends JFrame {
 		makeMP3Btn.setText("Text to Speech");
 		makeMP3Btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new TextToSpeechFrame("Text to MP3", contentPane);
+				new TextToSpeechFrame(thisFrame);
 			}
 		});
 
@@ -311,7 +317,7 @@ public class MediaPlayerJFrame extends JFrame {
 		overlayBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new OverlayAudioToVideoFrame(thisFrame);
-				AudioTableFrame aud = new AudioTableFrame(thisFrame);
+				new AudioTableFrame(thisFrame);
 			}
 		});
 
@@ -377,11 +383,10 @@ public class MediaPlayerJFrame extends JFrame {
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				setDefaultDirectoy(false);
+				defaultDirect.setDefaultDirectoy(false);
 			}
 		}));
 		fileMenu.add(menuItem);
-
 		fileMenuBar.add(fileMenu);
 
 		fileMenu = new JMenu("Text To MP3");
@@ -389,7 +394,7 @@ public class MediaPlayerJFrame extends JFrame {
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new TextToSpeechFrame("Text to MP3", contentPane);
+				new TextToSpeechFrame(thisFrame);
 			}
 		}));
 		fileMenu.add(menuItem);
@@ -575,40 +580,6 @@ public class MediaPlayerJFrame extends JFrame {
 		mediaPlayerComponent.getMediaPlayer().stop();
 		setVideoIsStarted(false);
 		btnPlay.btnSetPlayIcon();
-	}
-
-	/**
-	 * Allow user to choose the default working directory
-	 * 
-	 * @param startUp
-	 */
-	private void setDefaultDirectoy(boolean startUp) {
-		defaultDirect = new JFileChooser();
-		defaultDirect.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-		// If user has previously selected and wants to change current working
-		// directory
-		if (startUp == false) {
-			defaultDirect.setCurrentDirectory(new File(getDefPathDirect()));
-		} else {
-			JOptionPane.showMessageDialog(thisFrame,
-					"Please Set Default Work Directory");
-		}
-
-		int returnDirect = defaultDirect.showOpenDialog(thisFrame);
-		if (returnDirect == JFileChooser.APPROVE_OPTION) {
-			setDefPathDirect(defaultDirect.getSelectedFile().getAbsolutePath());
-		} else {// If starting up and user does not choose then set user
-				// directory as default
-			if (startUp == true) {
-				setDefPathDirect(System.getProperty("user.dir"));
-				JOptionPane.showMessageDialog(thisFrame,
-						"No Workspace was Choosen, " + getDefPathDirect()
-								+ " has been set as the default directory");
-
-			}
-		}
-
 	}
 
 }

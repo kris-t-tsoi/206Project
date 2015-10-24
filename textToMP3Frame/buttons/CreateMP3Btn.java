@@ -22,7 +22,7 @@ public class CreateMP3Btn extends JButton {
 		setToolTipText("Create MP3 File From Text");
 	}
 
-	public String createAudio(float speed, int startPitch, int endPitch,
+	public void createAudio(float speed, int startPitch, int endPitch,
 			String text, String audioName) {
 		// create scm file
 		WriteSchemeFiles write = new WriteSchemeFiles(parentFrame);
@@ -31,18 +31,17 @@ public class CreateMP3Btn extends JButton {
 		//create text file
 		File textFile = write.createTxt(text);
 		
-		String mp3Path = MediaPlayerJFrame.MP3_DIR_RELATIVE_PATH+ File.separator +"";
+		//String mp3Path = MediaPlayerJFrame.MP3_DIR_RELATIVE_PATH+ File.separator +"";
 		
 		// MP3 created in the background
-		CreateInBackground backGrd = new CreateInBackground("text2wave -o \""+mp3Path +audioName+".wav\" "
+		CreateInBackground backGrd = new CreateInBackground("text2wave -o \""+audioName+".wav\" "
 				+textFile.getAbsolutePath().toString()+" -eval "+playScm.getAbsolutePath().toString()+ ";"
-				+ "ffmpeg -y -i \"" + mp3Path + audioName + ".wav\" -f mp3 \""+ mp3Path+ audioName + ".mp3\";" 
-				+ "rm \"" + mp3Path+audioName + ".wav\"");
+				+ "ffmpeg -y -i \"" + audioName + ".wav\" -f mp3 \""+ audioName + ".mp3\";" 
+				+ "rm \"" +audioName + ".wav\"");
 	
 		backGrd.execute();
 
-		return mp3Path+ audioName + ".mp3";
-		
 	}
+	
 
 }

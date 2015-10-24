@@ -14,16 +14,18 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.xml.transform.OutputKeys;
 
+import fileChoosing.UserFileChoose;
 import textToMP3Frame.buttons.CreateMP3Btn;
 import textToMP3Frame.buttons.PlayTextBtn;
 import textToMP3Frame.textBoxAndSliders.PitchSlider;
 import textToMP3Frame.textBoxAndSliders.TextToMP3TextBox;
 import textToMP3Frame.textBoxAndSliders.VoiceSpeedSlider;
+import mediaMainFrame.MediaPlayerJFrame;
 import net.miginfocom.swing.MigLayout;
 
 public class TextToSpeechFrame extends JFrame {
-	
-	//GUI Components
+
+	// GUI Components
 	final TextToSpeechFrame thisFrame = this;
 	JPanel contentPane;
 	PlayTextBtn playText;
@@ -32,18 +34,18 @@ public class TextToSpeechFrame extends JFrame {
 	VoiceSpeedSlider speedSlide;
 	PitchSlider pitchSlide;
 	private String createdMP3Path;
-	
+	UserFileChoose fileChose;
+
 	// Constants for the textfield - Max number of words which can be
 	// played/saved, and error message
 	public static final String ERROR_WORD_LIMIT_MESSAGE = "Sorry, you have exceeded the maximum word count of 50.";
-	
-	
-	//Audio Values
+
+	// Audio Values
 	private float speed;
 	private int startPitch;
 	private int endPitch;
 	private String text;
-	
+
 	public float getSpeed() {
 		return speed;
 	}
@@ -76,105 +78,93 @@ public class TextToSpeechFrame extends JFrame {
 		this.text = text;
 	}
 
-	
 	public String getCreatedMP3Path() {
 		return createdMP3Path;
 	}
 
 	public void setCreatedMP3Path(String createdMP3Path) {
 		this.createdMP3Path = createdMP3Path;
-	}	
+	}
 
 	/**
-	 * Constructor for Text to Speech Frame
-	 * Used for - playing text to audio
-	 * 			- creating MP3 
+	 * Constructor for Text to Speech Frame Used for - playing text to audio -
+	 * creating MP3
+	 * 
 	 * @param title
 	 */
-	public TextToSpeechFrame(final String title, JPanel pane) {
-		
-		super(title);
+	public TextToSpeechFrame(final MediaPlayerJFrame video) {
+
+		super("Create MP3");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		setBounds(900, 50, 575, 250);
-		setMinimumSize(new Dimension(575,250));
+		setMinimumSize(new Dimension(575, 250));
 		setVisible(true);
-		
-		
-		contentPane = new JPanel();		
+
+		contentPane = new JPanel();
 		setContentPane(contentPane);
-		
+
 		playText = new PlayTextBtn(thisFrame);
-		playText.addActionListener(new ActionListener() {			
+		playText.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//get values from sliders and text box
+				// get values from sliders and text box
 				getFestivalValues();
-				
+
 				// If the text is under the allowed limit, speak the text
 				if (userText.checkTxtLength()) {
-					playText.sayWithFestival(getSpeed(),getStartPitch(),getEndPitch(),getText());
-					//TODO get pid so can stop
-				} else {
-					JOptionPane.showMessageDialog(thisFrame, ERROR_WORD_LIMIT_MESSAGE);
-				}
-			}
-		});
-		
-		
-		createMP3 = new CreateMP3Btn(thisFrame);
-		createMP3.addActionListener(new ActionListener() {			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				getFestivalValues();
-				if (userText.checkTxtLength()) {
-					//TODO change naming frame
-					String mp3Name = JOptionPane.showInputDialog(thisFrame,
-							"Enter a name for the mp3 file");
-					
-					if ((mp3Name != null) && !mp3Name.startsWith(" ")) {
-						String path = createMP3.createAudio(getSpeed(),getStartPitch(),getEndPitch(),getText(), mp3Name);
-						
-						//if this came from AudioToAddPanel then return and set the created mp3's path
-						if(title.equals("Created MP3 To Overlay")){
-							setCreatedMP3Path(path);
-						}
-						
-						//TODO since file created in background null path returned
-						
-						// Give user warning that files are being made and where they are
-						// located
-						JOptionPane.showMessageDialog(
-							thisFrame,(mp3Name+".mp3 was created in " 
-									+ getCreatedMP3Path()));
-						
-						dispose();
-					}
+					playText.sayWithFestival(getSpeed(), getStartPitch(),
+							getEndPitch(), getText());
+					// TODO get pid so can stop
 				} else {
 					JOptionPane.showMessageDialog(thisFrame,
 							ERROR_WORD_LIMIT_MESSAGE);
 				}
 			}
 		});
-		
+
+		createMP3 = new CreateMP3Btn(thisFrame);
+		createMP3.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				getFestivalValues();
+				if (userText.checkTxtLength()) {
+
+					fileChose = new UserFileChoose(video);
+					String name = fileChose.saveMP3();
+					if (!name.equals("")) { // check user wants to create a mp3
+
+						createMP3.createAudio(getSpeed(), getStartPitch(),
+								getEndPitch(), getText(), name);
+					}
+
+				} else {
+					JOptionPane.showMessageDialog(thisFrame,
+							ERROR_WORD_LIMIT_MESSAGE);
+				}
+			}
+		});
+
 		userText = new TextToMP3TextBox();
 		JScrollPane scrollPane = new JScrollPane(userText);
-		
+
 		JLabel titleLbl = new JLabel("Type in Text to Synthesis into MP3 Audio");
 		JLabel speedLbl = new JLabel("Voice Speed");
 		JLabel pitchLbl = new JLabel("Vocal Pitch");
-		
+
 		speedSlide = new VoiceSpeedSlider();
 		pitchSlide = new PitchSlider();
-		
 
-		contentPane.setLayout(new MigLayout(
-				"", // Layout Constraint
-				"[4px,grow 0,shrink 0][98px,grow 0, shrink 0][2px,grow 0,shrink 0][346px,grow, shrink]"
-						+ "[4px,grow 0,shrink 0][196px,grow 0, shrink 0][4px,grow ,shrink ]", // Column Constraints
-				"[40px][50px,grow, shrink][40px][40px]")); // Row Constraints		
-		
-		
+		contentPane
+				.setLayout(new MigLayout(
+						"", // Layout Constraint
+						"[4px,grow 0,shrink 0][98px,grow 0, shrink 0][2px,grow 0,shrink 0][346px,grow, shrink]"
+								+ "[4px,grow 0,shrink 0][196px,grow 0, shrink 0][4px,grow ,shrink ]", // Column
+																										// Constraints
+						"[40px][50px,grow, shrink][40px][40px]")); // Row
+																	// Constraints
+
 		contentPane.add(titleLbl, "cell 1 0 5 1,grow");
 		contentPane.add(scrollPane, "cell 1 1 5 1,grow");
 		contentPane.add(speedLbl, "cell 1 2,grow");
@@ -184,19 +174,18 @@ public class TextToSpeechFrame extends JFrame {
 		contentPane.add(playText, "cell 5 2,grow");
 		contentPane.add(createMP3, "cell 5 3,grow");
 		setVisible(true);
-		
+
 	}
-	
-		
+
 	/**
 	 * get the current slider and textbox values
 	 */
-	private void getFestivalValues(){
-		setSpeed((float) (speedSlide.getValue())/10);
+	private void getFestivalValues() {
+		setSpeed((float) (speedSlide.getValue()) / 10);
 		int[] pitchRange = pitchSlide.findRange(pitchSlide.getValue());
 		setStartPitch(pitchRange[0]);
 		setEndPitch(pitchRange[1]);
 		setText(userText.getText());
 	}
-	
+
 }

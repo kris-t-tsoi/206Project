@@ -4,6 +4,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -20,6 +23,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.plaf.SplitPaneUI;
 
+import fileChoosing.UserFileChoose;
 import overlayFrame.addAudioTrackPanel.AudioData;
 import overlayFrame.addAudioTrackPanel.AudioToAddPanel;
 import overlayFrame.audioTable.AudioTableFrame;
@@ -36,6 +40,12 @@ public class OverlayAudioToVideoFrame extends JFrame {
 	JLabel vidName;
 	TimeLabel vidDuration;
 	Font titleFont = new Font("Tahoma", Font.BOLD, 18);
+	UserFileChoose fileChose;
+	private boolean isOpen;
+
+	public boolean isOpen() {
+		return isOpen;
+	}
 
 	public OverlayAudioToVideoFrame(final MediaPlayerJFrame video) {
 		super("Overlay Video");
@@ -44,6 +54,7 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		setBounds(900, 400, 700, 400);
 		setMinimumSize(new Dimension(700, 300));
 		setVisible(true);
+		isOpen = true;
 
 		contentPane = new JPanel();
 		setContentPane(contentPane);
@@ -53,7 +64,7 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		JLabel vidTitleLbl = new JLabel("Video :");
 		vidTitleLbl.setFont(titleFont);
 		vidName = new NameLabel();
-		vidName.setText(video.getCurrentVidName().getText());		
+		vidName.setText(video.getCurrentVidName().getText());
 		JLabel duraTitleLbl = new JLabel("Duration :");
 		duraTitleLbl.setFont(titleFont);
 		vidDuration = new TimeLabel();
@@ -73,25 +84,25 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		AudioToAddPanel addAudioTrack = new AudioToAddPanel(video,
 				audioTrackList, thisFrame);
 
-		
 		// overlay video button
 		final OverlayVidAndAudioButton overlayVidBtn = new OverlayVidAndAudioButton();
 		overlayVidBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				// TODO allow user to choose where to save file
-
-				String mp4Name = JOptionPane.showInputDialog(thisFrame,
-						"Enter a name for the mp4 file");
-
-				if (((mp4Name != null) && !mp4Name.startsWith(" "))
-						|| audioTrackList.size() == 0
-						|| video.getVideoPath() == null) {
-					String path = overlayVidBtn.overlayVideo(audioTrackList,
-							video, mp4Name);
+				//check there is a video that has been selected
+				if (video.getVideoPath() == null) {
+					JOptionPane.showMessageDialog(thisFrame,
+							"No Video has Currently Been Choosen");
+				} else if (audioTrackList.size() == 0) {	//chec audiotracks have been added
+					JOptionPane.showMessageDialog(thisFrame,
+							"No Audiotracks have been Added");
 				} else {
-					JOptionPane.showMessageDialog(thisFrame,"No Video has Currently Been Choosen");
+					fileChose = new UserFileChoose(video);
+					String name = fileChose.saveVideo();
+					if (!name.equals("")) {	//chcck user wants to create a video
+						overlayVidBtn.overlayVideo(audioTrackList, video, name);
+					}
 				}
+
 			}
 		});
 
@@ -111,6 +122,18 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		add(overlayVidBtn, "cell 4 1 ,grow");
 		add(addAudioTrack, "cell 0 5 6 0 ,grow");
 		setVisible(true);
+
+	}
+
+	/**
+	 * When frame is closed then variable isOpen becomes false
+	 */
+	private void closing() {
+		thisFrame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				isOpen = false;
+			};
+		});
 	}
 
 	/**
@@ -135,4 +158,5 @@ public class OverlayAudioToVideoFrame extends JFrame {
 	 * JOptionPane.showMessageDialog(this,
 	 * "Please select a video and/or and mp3 file."); } }
 	 */
+
 }

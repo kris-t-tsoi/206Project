@@ -16,23 +16,22 @@ import mediaMainFrame.videoControl.PlayButton;
 public class UserFileChoose extends JFileChooser {
 
 	MediaPlayerJFrame vidFrame;
-	
+	private final String fileNotExist = "File Does Not Exist, Please Pick Another";
+
 	public UserFileChoose(MediaPlayerJFrame parentFrame) {
-		vidFrame = parentFrame;
+		vidFrame = parentFrame;		
 	}
-	
-	//TODO error handle user type in non existing file
-	
+
+	// TODO error handle user type in non existing file
 
 	/**
-	 * allows user to choose a video file
-	 * video files allowed are .avi and .mp4
+	 * allows user to choose a video file video files allowed are .avi and .mp4
+	 * 
 	 * @param parentFrame
 	 * @param playBtn
 	 * @return
 	 */
-	public String chooseVideoPath(JFrame parentFrame,
-			PlayButton playBtn) {
+	public String chooseVideoPath(JFrame parentFrame, PlayButton playBtn) {
 
 		// video media filters
 		FileFilter avi = new FileTypeFilter(".avi", "AVI Files");
@@ -48,20 +47,28 @@ public class UserFileChoose extends JFileChooser {
 		setAcceptAllFileFilterUsed(false);
 
 		// start file search in current file
-		setCurrentDirectory(vidFrame.VIDEO_DIR_ABSOLUTE_PATH);
+		setCurrentDirectory(new File(vidFrame.getDefPathDirect()));
 		int returnVal = showOpenDialog(parentFrame);
 
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			// if user is already playing a video, then remove it
-			if (vidFrame.getVideoPath() != null) {
-				vidFrame.removeVideo(playBtn);
-			}
-			return getSelectedFile().getAbsolutePath();
+		boolean validFile = false;
 
-		} else if (returnVal == JFileChooser.CANCEL_OPTION) {
-		} else if (returnVal == JFileChooser.ERROR_OPTION) {
-			JOptionPane.showMessageDialog(parentFrame,
-					vidFrame.getErrorMessage());
+		while (validFile == false) {
+
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				// check file exists
+				if (getSelectedFile().exists()) {
+					// if user is already playing a video, then remove it
+					if (vidFrame.getVideoPath() != null) {
+						vidFrame.removeVideo(playBtn);
+					}
+					return getSelectedFile().getAbsolutePath();
+
+				}
+			} else if (returnVal == JFileChooser.CANCEL_OPTION) {
+			} else if (returnVal == JFileChooser.ERROR_OPTION) {
+				JOptionPane.showMessageDialog(parentFrame,
+						vidFrame.getErrorMessage());
+			}
 		}
 
 		return "";
@@ -69,32 +76,134 @@ public class UserFileChoose extends JFileChooser {
 
 	/**
 	 * Allows user to choose an .mp3 file
+	 * 
 	 * @param parentFrame
 	 * @return
 	 */
 	public String chooseMP3Path(JPanel parent) {
 		// mp3 media filters
-		FileFilter mp3 = new FileTypeFilter(".mp3", "MP3 Files");		
+		FileFilter mp3 = new FileTypeFilter(".mp3", "MP3 Files");
 		addChoosableFileFilter(mp3);
 
 		// remove all files filter
 		setAcceptAllFileFilterUsed(false);
-		
+
 		// Start file search in current directory, and show mp3's
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(
 				"MP3 File", "mp3");
 		setFileFilter(filter);
-		setCurrentDirectory(vidFrame.getMp3DirAbsolutePath());
+		setCurrentDirectory(new File(vidFrame.getDefPathDirect()));
 
-		int returnVal = showOpenDialog(parent);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			return getSelectedFile().getAbsolutePath();
-		} else if (returnVal == JFileChooser.ERROR_OPTION) {
-			JOptionPane.showMessageDialog(parent,
-					vidFrame.getErrorMessage());
+		boolean validFile = false;
+
+		while (validFile == false) {
+			int returnVal = showOpenDialog(parent);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				// check file exists
+				if (getSelectedFile().exists()) {
+					return getSelectedFile().getAbsolutePath();
+				} else {
+					JOptionPane.showMessageDialog(vidFrame, fileNotExist);
+				}
+
+			} else if (returnVal == JFileChooser.ERROR_OPTION) {
+				JOptionPane.showMessageDialog(parent,
+						vidFrame.getErrorMessage());
+				break;
+			} else {
+				break;
+			}
+
+		}
+		return "";
+	}
+
+	// TODO
+	public String saveVideo() {
+
+		setCurrentDirectory(new File(vidFrame.getDefPathDirect()));
+		// TODO change to overlay frame
+		int returnVal = showSaveDialog(vidFrame);
+
+		boolean validName = false;
+		while (validName == false) {
+
+			if (returnVal == APPROVE_OPTION) {
+				if (!getSelectedFile().getName().trim().equals("")) {
+					return getSelectedFile().getAbsolutePath() + ".mp4";
+				}
+			} else if (returnVal == JFileChooser.ERROR_OPTION) {
+				JOptionPane.showMessageDialog(vidFrame, // TODO change to
+														// overlay frame
+						vidFrame.getErrorMessage());
+				break;
+			} else {
+				break;
+			}
 		}
 
 		return "";
+	}
+
+	// TODO
+	public String saveMP3() {
+
+		setCurrentDirectory(new File(vidFrame.getDefPathDirect()));
+		// TODO change to text to speech frame
+		int returnVal = showSaveDialog(vidFrame);
+
+		boolean validName = false;
+		while (validName == false) {
+
+			if (returnVal == APPROVE_OPTION) {
+				if (!getSelectedFile().getName().trim().equals("")) {
+					return getSelectedFile().getAbsolutePath();
+				}
+			} else if (returnVal == JFileChooser.ERROR_OPTION) {
+				JOptionPane.showMessageDialog(vidFrame, // TODO change to
+														// speech frame
+						vidFrame.getErrorMessage());
+				break;
+			} else {
+				break;
+			}
+		}
+
+		return "";
+	}
+
+	/**
+	 * Allow user to choose the default working directory
+	 * 
+	 * @param startUp
+	 */
+	public void setDefaultDirectoy(boolean startUp) {
+		setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+		// If user has previously selected and wants to change current working
+		// directory
+		if (startUp == false) {
+			setCurrentDirectory(new File(vidFrame.getDefPathDirect()));
+		} else {
+			JOptionPane.showMessageDialog(vidFrame,
+					"Please Set Default Work Directory");
+		}
+
+		int returnDirect = showOpenDialog(vidFrame);
+		if (returnDirect == JFileChooser.APPROVE_OPTION) {
+			vidFrame.setDefPathDirect(getSelectedFile().getAbsolutePath());
+		} else {// If starting up and user does not choose then set user
+				// directory as default
+			if (startUp == true) {
+				vidFrame.setDefPathDirect(System.getProperty("user.dir"));
+				JOptionPane.showMessageDialog(
+						vidFrame,
+						"No Workspace was Choosen, "
+								+ vidFrame.getDefPathDirect()
+								+ " has been set as the default directory");
+
+			}
+		}
 	}
 
 	/**

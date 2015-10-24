@@ -22,7 +22,7 @@ public class OverlayVidAndAudioButton extends JButton {
 		setToolTipText("Create New Video By Overlaying Audiotracks and Video");
 	}
 
-	public String overlayVideo(ArrayList<AudioData> listAudio,
+	public void overlayVideo(ArrayList<AudioData> listAudio,
 			MediaPlayerJFrame video, String outName) {
 
 		time = new TimeLabel();
@@ -52,9 +52,7 @@ public class OverlayVidAndAudioButton extends JButton {
 		}
 
 		@SuppressWarnings("static-access")
-		String ffmpegAmix = "amix=inputs=" + count + "\" "
-				+ video.VIDEO_DIR_RELATIVE_PATH + File.separator + outName
-				+ ".mp4";
+		String ffmpegAmix = "amix=inputs=" + count + "\" " + outName;
 
 		String cmd = ffmpegVideoPath + ffmpegMP3Paths + "-filter_complex \""
 				+ ffmpegDelay +","+ffmpegMediaNumAndChannel+ ffmpegAmix;
@@ -64,8 +62,7 @@ public class OverlayVidAndAudioButton extends JButton {
 
 		// ffmpeg -i Video/big_buck_bunny_1_minute.avi  -i MP3/pleasework.mp3 -i MP3/yery.mp3 -filter_complex "[1:a]adelay=200[a1];[2:a]adelay=10000[a2],[a1][a2]amix=inputs=3" Video/lll.mp4
 
-		//TODO return path file ?
-		return "";
+	
 	}
 
 	/**

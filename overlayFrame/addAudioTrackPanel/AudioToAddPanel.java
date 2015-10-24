@@ -80,7 +80,7 @@ public class AudioToAddPanel extends JPanel {
 	 * @param audioTrackList
 	 *  @param parentFrame
 	 */
-	public AudioToAddPanel(MediaPlayerJFrame mainFrame,
+	public AudioToAddPanel(final MediaPlayerJFrame mainFrame,
 			final ArrayList<AudioData> audioTrackList,final OverlayAudioToVideoFrame parentFrame) {
 		thisPane = this;
 		mediaPlayerFrame = mainFrame;
@@ -123,13 +123,8 @@ public class AudioToAddPanel extends JPanel {
 		createAudio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				create = new TextToSpeechFrame(createMP3Title, thisPane);
-
-				// /TODO doesnt quite work
-				// while (create.isActive()){
-				// mp3Path = create.getCreatedMP3Path();
-				// }
-				// mp3NameLbl.setText(mp3NameLbl.getFileName(mp3Path));
+				create = new TextToSpeechFrame(mainFrame);
+				
 			}
 		});
 
