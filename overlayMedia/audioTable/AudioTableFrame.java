@@ -122,7 +122,7 @@ public class AudioTableFrame extends JFrame {
 	private void setupTable(ArrayList<AudioData> arrayList) {
 		// set JTable with items in audioTrackList
 		table = new JTable(new DefaultTableModel(new Object[] { "Name",
-				"Start Time", "End Time" }, 0) {
+				"Start Time"}, 0) {
 			@Override
 			public Class getColumnClass(int columnIndex) {
 				return Integer.class;
@@ -136,7 +136,7 @@ public class AudioTableFrame extends JFrame {
 		// get all added mp3s
 		for (AudioData audData : arrayList) {
 			model.addRow(new Object[] { audData.getName(),
-					audData.getStartTime(), audData.getEndTime() });
+					audData.getStartTime()});
 		}
 		// only allow selection of one row
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

@@ -26,7 +26,6 @@ import net.miginfocom.swing.MigLayout;
 public class AudioToAddPanel extends JPanel {
 
 	// Panels and Frames
-	AudioToAddPanel thisPane;
 	final MediaPlayerJFrame mediaPlayerFrame;
 	TextToSpeechFrame create;
 
@@ -38,8 +37,6 @@ public class AudioToAddPanel extends JPanel {
 	private TimeLabel durationLbl;
 	private NameLabel mp3NameLbl;
 	private JLabel startLbl;
-	private JLabel endLbl;
-	private TimeLabel endTime;
 	private JTextField startMin;
 	private JTextField startSec;
 	private JTextField startMili;
@@ -80,7 +77,6 @@ public class AudioToAddPanel extends JPanel {
 	 * @param parentFrame
 	 */
 	public AudioToAddPanel(final MediaPlayerJFrame mainFrame) {
-		thisPane = this;
 		mediaPlayerFrame = mainFrame;
 		setSize(700, 175);
 		fileChoose = new UserFileChoose(mediaPlayerFrame);
@@ -98,8 +94,6 @@ public class AudioToAddPanel extends JPanel {
 		startMili = new JTextField();
 		JLabel semiCol = new JLabel(":");
 		JLabel dot = new JLabel(".");
-		endLbl = new JLabel("End: ");
-		endTime = new TimeLabel();
 
 		// reset variables to initial values
 		resetVariables();
@@ -112,7 +106,7 @@ public class AudioToAddPanel extends JPanel {
 		selectAudio = new SelectMP3Btn();
 		selectAudio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mp3Path = fileChoose.chooseMP3Path(thisPane);
+				mp3Path = fileChoose.chooseMP3Path(mediaPlayerFrame);
 				if (!mp3Path.equals("")) { //if user choose an mp3
 					mp3NameLbl.setText(mp3NameLbl.getFileName(mp3Path));
 					getMP3Information(mp3Path);
@@ -154,7 +148,6 @@ public class AudioToAddPanel extends JPanel {
 		add(startSec, "cell 1 2 ,grow");
 		add(dot, "cell 1 2 ,grow");
 		add(startMili, "cell 1 2 ,grow");
-		add(endLbl, "cell 3 2 ,grow");
 		add(addAudioBtn, "cell 1 4 5 1 ,grow");
 		setVisible(true);
 
@@ -165,23 +158,20 @@ public class AudioToAddPanel extends JPanel {
 		addAudioBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// check mp3 path is not empty
-				if (getMp3Path() != null || (!getMp3Path().equals(""))) {
+				if (getMp3Path() != null && (!getMp3Path().equals(""))) {
 
 					// check if text box is in correct format
 					if (checkTwoNumbers(startMin.getText().trim())
 							&& checkTwoNumbers(startSec.getText().trim())
 							&& checkTwoNumbers(startMili.getText().trim())) {
 
-						String start = addZero(startMin.getText().trim()) + ":"
-								+ addZero(startSec.getText().trim()) + "."
-								+ addZero(startMili.getText().trim());
+						String start = startTime();
 
 						AudioData audioData = new AudioData(getMp3Path(),
 								mp3NameLbl.getText(), start, new TimeLabel()
-										.durationStringToInt(start), endTime
-										.getText());
+										.durationStringToInt(start));
 						audioTrackList.add(audioData);
-
+						
 						try {
 							Thread.sleep(500);
 						} catch (InterruptedException e1) {
@@ -212,12 +202,16 @@ public class AudioToAddPanel extends JPanel {
 		startSec.setText(defaultText);
 		startMili.setText(defaultText);
 		durationLbl.setText("");
-		endTime.setText("");
 	}
 
-	// TODO work out mp3 end time
-	private void addForEndtime() {
-
+	/**
+	 * get string format of start time textbox
+	 * @return MM:SS.mm format of start time
+	 */
+	private String startTime(){
+		return (addZero(startMin.getText().trim()) + ":"
+				+ addZero(startSec.getText().trim()) + "."
+				+ addZero(startMili.getText().trim()));
 	}
 
 	/**
@@ -246,20 +240,20 @@ public class AudioToAddPanel extends JPanel {
 			@Override
 			public void focusLost(FocusEvent e) {
 				// check if it is 2 characters long and is numbers
-				if (checkTwoNumbers(text.getText().trim())) {
-					// if true then update end time label
-					// TODO update end time
-				} else { // set text back to default
+				if (!checkTwoNumbers(text.getText().trim())) {
+					// set text back to default
 					text.setText(defaultText);
 				}
 			}
 
 			@Override
-			public void focusGained(FocusEvent e) {
-			}
+			public void focusGained(FocusEvent e) {}
 		});
 	}
 
+	
+	
+	
 	/**
 	 * Checks - if the text in text box is either a length of 1 or 2 - if the
 	 * characters are numbers
@@ -270,14 +264,14 @@ public class AudioToAddPanel extends JPanel {
 	private boolean checkTwoNumbers(String text) {
 		// check text is length 1 or 2
 		if (text.length() > 2 || text.length() < 0) {
-			JOptionPane.showMessageDialog(thisPane, formatErrorMessage);
+			JOptionPane.showMessageDialog(mediaPlayerFrame, formatErrorMessage);
 			return false;
 		} else {
 			try {
 				// Check if all characters are numbers
 				Integer.parseInt(text);
 			} catch (NumberFormatException e1) {
-				JOptionPane.showMessageDialog(thisPane, formatErrorMessage);
+				JOptionPane.showMessageDialog(mediaPlayerFrame, formatErrorMessage);
 				return false;
 			}
 		}

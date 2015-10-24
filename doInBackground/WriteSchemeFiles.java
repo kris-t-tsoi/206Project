@@ -11,6 +11,10 @@ import javax.swing.JOptionPane;
 public class WriteSchemeFiles {
 	private JFrame parentFrame;
 	
+	/**
+	 * Class creates scm files for festival voice
+	 * @param frame
+	 */
 	public WriteSchemeFiles(JFrame frame) {
 		parentFrame = frame;
 	}
@@ -38,7 +42,6 @@ public class WriteSchemeFiles {
 			e.printStackTrace();
 		}
 	return playScm;
-		//TODO get pid so can stop
 	}
 	
 	/**

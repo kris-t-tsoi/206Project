@@ -17,14 +17,14 @@ public class ProgressFrame extends JFrame {
 	JLabel percentProgress;
 	JProgressBar processBar;
 
+	/**
+	 * Creates a popup frame with process bar
+	 */
 	public ProgressFrame() {
 		super("Working In Background");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(700, 350, 500, 400);
-		setVisible(true);
-
-		setResizable(false);
-	
+		setResizable(false);	
 		
 		processBar = new JProgressBar(JProgressBar.HORIZONTAL);
 		processBar.setIndeterminate(true);
@@ -38,16 +38,14 @@ public class ProgressFrame extends JFrame {
 
 		contentPane
 				.setLayout(new MigLayout(
-						"", // Layout Constraint
-						"[5px,grow 0,shrink 0][120px,grow, shrink][5px,grow 0,shrink 0]", // Column
-																								// Constraints
+						"", 
+						"[5px,grow 0,shrink 0][120px,grow, shrink][5px,grow 0,shrink 0]",
 						"[5px][100px][10px][100px][5px]")); // Row Constraints
 
 		contentPane.add(nameLbl, "cell 1 1, alignx center,grow");
 		contentPane.add(processBar, "cell 1 3, alignx center,grow");
 		
 		setVisible(true);
-
 	}
 
 }

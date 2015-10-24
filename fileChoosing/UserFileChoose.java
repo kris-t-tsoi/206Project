@@ -83,7 +83,7 @@ public class UserFileChoose extends JFileChooser {
 	 * @return - path of selected mp3
 	 * 			- "" (nothing) is returned if user does not wish to select
 	 */
-	public String chooseMP3Path(JPanel parent) {
+	public String chooseMP3Path(JFrame parentFrame) {
 		// mp3 media filters
 		FileFilter mp3 = new FileTypeFilter(".mp3", "MP3 Files");
 		addChoosableFileFilter(mp3);
@@ -100,7 +100,7 @@ public class UserFileChoose extends JFileChooser {
 		boolean validFile = false;
 
 		while (validFile == false) {
-			int returnVal = showOpenDialog(parent);
+			int returnVal = showOpenDialog(parentFrame);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				// check file exists
 				if (getSelectedFile().exists()) {
@@ -110,7 +110,7 @@ public class UserFileChoose extends JFileChooser {
 				}
 
 			} else if (returnVal == JFileChooser.ERROR_OPTION) {
-				JOptionPane.showMessageDialog(parent,
+				JOptionPane.showMessageDialog(parentFrame,
 						vidFrame.getErrorMessage());
 				break;
 			} else {
