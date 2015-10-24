@@ -1,12 +1,10 @@
-package overlayFrame;
+package overlayMedia;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 
-import overlayFrame.addAudioTrackPanel.AudioData;
-import overlayFrame.addAudioTrackPanel.AudioToAddPanel;
+import overlayMedia.addAudioTrackPanel.AudioData;
 import sharedLabels.TimeLabel;
 import mediaMainFrame.MediaPlayerJFrame;
 import doInBackground.CreateInBackground;
@@ -22,10 +20,20 @@ public class OverlayVidAndAudioButton extends JButton {
 		setToolTipText("Create New Video By Overlaying Audiotracks and Video");
 	}
 
+	/**
+	 * Overlays selected video
+	 * @param listAudio - list of audiotracks to overlay
+	 * @param video frame - get current video
+	 * @param outName - name of mp4 file that will be created
+	 */
 	public void overlayVideo(ArrayList<AudioData> listAudio,
 			MediaPlayerJFrame video, String outName) {
 
 		time = new TimeLabel();
+		
+		//follow format: 
+		//ffmpeg -i video_path -i mp3_path [1:a]adelay=500[a1];,[a1]amix=inputs=2 output_name
+		
 
 		String ffmpegVideoPath = "ffmpeg -i " + video.getVideoPath() + " ";
 		String ffmpegMP3Paths = "";
@@ -51,32 +59,15 @@ public class OverlayVidAndAudioButton extends JButton {
 			count++;
 		}
 
-		@SuppressWarnings("static-access")
 		String ffmpegAmix = "amix=inputs=" + count + "\" " + outName;
 
 		String cmd = ffmpegVideoPath + ffmpegMP3Paths + "-filter_complex \""
 				+ ffmpegDelay +","+ffmpegMediaNumAndChannel+ ffmpegAmix;
 
+		//exceute in background
 		CreateInBackground back = new CreateInBackground(cmd);
 		back.execute();
 	
 	}
-
-	/**
-	 * Function to replace an input video's audio with a given mp3 file, and
-	 * create a new output file
-	 * 
-	 * @param localMp3Path
-	 * @param localVideoPath
-	 * @param outputFile
-	 */
-	/*
-	 * public void replaceAudio(String localMp3Path, String localVideoPath,
-	 * String outputFile) { // Replace the video's audio with the synthesized
-	 * text BackgroundAudioReplacer replacer = new BackgroundAudioReplacer(
-	 * "ffmpeg -y -i \"" + localVideoPath + "\" -i \"" + localMp3Path +
-	 * "\" -map 0:v -map 1:a \"" + MediaPlayerJFrame.VIDEO_DIR_RELATIVE_PATH +
-	 * File.separator + outputFile + ".mp4\""); replacer.execute(); }
-	 */
 
 }

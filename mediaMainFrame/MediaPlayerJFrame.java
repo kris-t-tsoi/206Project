@@ -2,12 +2,12 @@ package mediaMainFrame;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -29,16 +28,13 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.plaf.FileChooserUI;
 
 import doInBackground.UpdateVideoFrame;
 import fileChoosing.UserFileChoose;
-import overlayFrame.OverlayAudioToVideoFrame;
-import overlayFrame.OverlayVidAndAudioButton;
-import overlayFrame.addAudioTrackPanel.AudioData;
-import overlayFrame.addAudioTrackPanel.AudioToAddPanel;
-import overlayFrame.audioTable.AudioTableFrame;
+import overlayMedia.OverlayVidAndAudioButton;
+import overlayMedia.addAudioTrackPanel.AudioData;
+import overlayMedia.addAudioTrackPanel.AudioToAddPanel;
+import overlayMedia.audioTable.AudioTableFrame;
 import mediaMainFrame.time.VideoCurrentTime;
 import mediaMainFrame.time.VideoTimeSlider;
 import mediaMainFrame.videoControl.PlayButton;
@@ -78,8 +74,11 @@ public class MediaPlayerJFrame extends JFrame {
 	private static final int DEFAULT_VOLUME = 50;
 	private int volume;
 
-	// Error Message
+	//Constant Message
 	private static final String ERROR_MESSAGE = "Sorry, an error has occured. please try again.";
+
+	//Font
+	Font titleFont = new Font("Tahoma", Font.ITALIC, 18);
 
 	// FileChooser-related fields
 	final MediaPlayerJFrame thisFrame = this;
@@ -92,18 +91,7 @@ public class MediaPlayerJFrame extends JFrame {
 	// default directory
 	private String defPathDirect;
 
-	/*
-	 * // Directory location constants public static final String
-	 * VIDEO_DIR_RELATIVE_PATH = "Video"; public static final File
-	 * VIDEO_DIR_ABSOLUTE_PATH = new File( System.getProperty("user.dir") +
-	 * File.separator + VIDEO_DIR_RELATIVE_PATH);
-	 * 
-	 * public static final String MP3_DIR_RELATIVE_PATH = "MP3"; private static
-	 * final File MP3_DIR_ABSOLUTE_PATH = new File(
-	 * System.getProperty("user.dir") + File.separator + MP3_DIR_RELATIVE_PATH);
-	 */
 	// Dynamic labels for user information
-
 	private static final String CURRENT_VIDEO_TEXT = "Currently Selected Video: ";
 	JLabel curVidTitle;
 	private NameLabel currentVidName;
@@ -313,8 +301,6 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 		
-		
-		
 		// overlay video button
 				final OverlayVidAndAudioButton overlayVidBtn = new OverlayVidAndAudioButton();
 				overlayVidBtn.addActionListener(new ActionListener() {
@@ -357,6 +343,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 		// Labels that displays the currently selected video
 		curVidTitle = new JLabel(CURRENT_VIDEO_TEXT);
+		curVidTitle.setFont(titleFont);
 		currentVidName = new NameLabel();
 
 		/*
@@ -409,8 +396,7 @@ public class MediaPlayerJFrame extends JFrame {
 		JLabel dash = new JLabel("/");
 		
 		//audioPanel
-		addAudioTrack = new AudioToAddPanel(thisFrame,
-				audioTrackList);
+		addAudioTrack = new AudioToAddPanel(thisFrame);
 
 		// set up layout
 		contentPane

@@ -1,4 +1,4 @@
-package overlayFrame.addAudioTrackPanel;
+package overlayMedia.addAudioTrackPanel;
 
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
@@ -7,6 +7,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -14,8 +15,6 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import overlayFrame.AddAudioButton;
-import overlayFrame.OverlayAudioToVideoFrame;
 import fileChoosing.UserFileChoose;
 import sharedLabels.NameLabel;
 import sharedLabels.TimeLabel;
@@ -23,6 +22,7 @@ import textToMP3Frame.TextToSpeechFrame;
 import mediaMainFrame.MediaPlayerJFrame;
 import net.miginfocom.swing.MigLayout;
 
+@SuppressWarnings("serial")
 public class AudioToAddPanel extends JPanel {
 
 	// Panels and Frames
@@ -79,8 +79,7 @@ public class AudioToAddPanel extends JPanel {
 	 * @param audioTrackList
 	 * @param parentFrame
 	 */
-	public AudioToAddPanel(final MediaPlayerJFrame mainFrame,
-			final ArrayList<AudioData> audioTrackList) {
+	public AudioToAddPanel(final MediaPlayerJFrame mainFrame) {
 		thisPane = this;
 		mediaPlayerFrame = mainFrame;
 		setSize(700, 175);
@@ -132,7 +131,37 @@ public class AudioToAddPanel extends JPanel {
 		});
 
 		// Add new audiotrack button
-		AddAudioButton addAudioBtn = new AddAudioButton();
+		JButton addAudioBtn = new JButton("Add Audio Track");
+		setUpAddAudioBtn(addAudioBtn, mainFrame.getAudioTrackList());
+		
+		setLayout(new MigLayout(
+				"", // Layout Constraint
+				"[3px,grow 0,shrink 0][300px,grow,shrink][3px,grow 0,shrink 0][250px,grow,shrink]"
+						+ "[3px,grow 0,shrink 0][150px,grow,shrink][3px,grow 0,shrink 0]", // Column
+																							// Constraints
+				"[5px][40px][40px][5px][40px]")); // Row Constraints
+
+		add(new JSeparator(SwingConstants.HORIZONTAL), "cell 0 0 6 0 ,grow");
+		add(mp3TitleLbl, "cell 1 1 ,grow");
+		add(mp3NameLbl, "cell 1 1 ,grow");
+		add(duraTitleLbl, "cell 3 1 ,grow");
+		add(durationLbl, "cell 3 1 ,grow");
+		add(selectAudio, "cell 5 1 ,grow");
+		add(createAudio, "cell 5 2 ,grow");
+		add(startLbl, "cell 1 2 ,grow");
+		add(startMin, "cell 1 2 ,grow");
+		add(semiCol, "cell 1 2 ,grow");
+		add(startSec, "cell 1 2 ,grow");
+		add(dot, "cell 1 2 ,grow");
+		add(startMili, "cell 1 2 ,grow");
+		add(endLbl, "cell 3 2 ,grow");
+		add(addAudioBtn, "cell 1 4 5 1 ,grow");
+		setVisible(true);
+
+	}
+
+	private void setUpAddAudioBtn(JButton addAudioBtn, final ArrayList<AudioData> audioTrackList) {
+		addAudioBtn.setToolTipText("Add Another Audio Track to the Video");
 		addAudioBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// check mp3 path is not empty
@@ -170,33 +199,7 @@ public class AudioToAddPanel extends JPanel {
 
 			}
 		});
-
-		// TODO Play mp3 file to listen
-
-		setLayout(new MigLayout(
-				"", // Layout Constraint
-				"[3px,grow 0,shrink 0][300px,grow,shrink][3px,grow 0,shrink 0][250px,grow,shrink]"
-						+ "[3px,grow 0,shrink 0][150px,grow,shrink][3px,grow 0,shrink 0]", // Column
-																							// Constraints
-				"[5px][40px][40px][5px][40px]")); // Row Constraints
-
-		add(new JSeparator(SwingConstants.HORIZONTAL), "cell 0 0 6 0 ,grow");
-		add(mp3TitleLbl, "cell 1 1 ,grow");
-		add(mp3NameLbl, "cell 1 1 ,grow");
-		add(duraTitleLbl, "cell 3 1 ,grow");
-		add(durationLbl, "cell 3 1 ,grow");
-		add(selectAudio, "cell 5 1 ,grow");
-		add(createAudio, "cell 5 2 ,grow");
-		add(startLbl, "cell 1 2 ,grow");
-		add(startMin, "cell 1 2 ,grow");
-		add(semiCol, "cell 1 2 ,grow");
-		add(startSec, "cell 1 2 ,grow");
-		add(dot, "cell 1 2 ,grow");
-		add(startMili, "cell 1 2 ,grow");
-		add(endLbl, "cell 3 2 ,grow");
-		add(addAudioBtn, "cell 1 4 5 1 ,grow");
-		setVisible(true);
-
+		
 	}
 
 	/**

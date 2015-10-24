@@ -1,4 +1,4 @@
-package overlayFrame.audioTable;
+package overlayMedia.audioTable;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -17,7 +17,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import net.miginfocom.swing.MigLayout;
-import overlayFrame.addAudioTrackPanel.AudioData;
+import overlayMedia.addAudioTrackPanel.AudioData;
 import mediaMainFrame.MediaPlayerJFrame;
 
 @SuppressWarnings("serial")

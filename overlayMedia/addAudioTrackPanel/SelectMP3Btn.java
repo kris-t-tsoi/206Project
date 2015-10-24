@@ -1,4 +1,4 @@
-package overlayFrame.addAudioTrackPanel;
+package overlayMedia.addAudioTrackPanel;
 
 import javax.swing.JButton;
 

@@ -2,17 +2,15 @@ package doInBackground.progress;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.Timer;
 
 import net.miginfocom.swing.MigLayout;
 
+@SuppressWarnings("serial")
 public class ProgressFrame extends JFrame {
 
 	JPanel contentPane;
@@ -22,7 +20,7 @@ public class ProgressFrame extends JFrame {
 	public ProgressFrame() {
 		super("Working In Background");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(850, 350, 250, 150);
+		setBounds(700, 350, 500, 400);
 		setVisible(true);
 
 		setResizable(false);
@@ -35,6 +33,8 @@ public class ProgressFrame extends JFrame {
 		setContentPane(contentPane);
 		
 		JLabel nameLbl = new JLabel("Working In Background");
+		nameLbl.setFont(new Font("Tahoma", Font.BOLD,30));
+		nameLbl.setForeground(Color.MAGENTA);
 
 		contentPane
 				.setLayout(new MigLayout(

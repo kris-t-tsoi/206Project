@@ -15,6 +15,10 @@ public class CreateMP3Btn extends JButton {
 
 	private TextToSpeechFrame parentFrame;
 
+	/**
+	 * class where mp3 files are created
+	 * @param frame
+	 */
 	public CreateMP3Btn(TextToSpeechFrame frame) {
 		super();
 		parentFrame = frame;
@@ -22,6 +26,14 @@ public class CreateMP3Btn extends JButton {
 		setToolTipText("Create MP3 File From Text");
 	}
 
+	/**
+	 * Create mp3 from text
+	 * @param speed - of voice
+	 * @param startPitch
+	 * @param endPitch
+	 * @param text - to turn into audio
+	 * @param audioName -m3 name
+	 */
 	public void createAudio(float speed, int startPitch, int endPitch,
 			String text, String audioName) {
 		// create scm file
