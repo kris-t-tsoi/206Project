@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -28,6 +29,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.plaf.FileChooserUI;
 
 import doInBackground.UpdateVideoFrame;
 import fileChoosing.UserFileChoose;
@@ -51,7 +54,6 @@ public class MediaPlayerJFrame extends JFrame {
 
 	// video duration in millisec
 	private double videoDuration;
-	
 
 	private JPanel contentPane;
 	ResizingEmbeddedMediaPlayerComponent mediaPlayerComponent;
@@ -79,9 +81,13 @@ public class MediaPlayerJFrame extends JFrame {
 	// FileChooser-related fields
 	final MediaPlayerJFrame thisFrame = this;
 	final private UserFileChoose fileChoose = new UserFileChoose(thisFrame);
+	JFileChooser defaultDirect;
 	JMenuBar fileMenuBar;
 	JMenu fileMenu;
 	JMenuItem menuItem;
+
+	// default directory
+	private String defPathDirect;
 
 	// Directory location constants
 	public static final String VIDEO_DIR_RELATIVE_PATH = "Video";
@@ -186,6 +192,14 @@ public class MediaPlayerJFrame extends JFrame {
 		return currentVidName;
 	}
 
+	public String getDefPathDirect() {
+		return defPathDirect;
+	}
+
+	public void setDefPathDirect(String defPathDirect) {
+		this.defPathDirect = defPathDirect;
+	}
+
 	public boolean videoIsPlaying() {
 		return video.isPlaying();
 	}
@@ -193,7 +207,6 @@ public class MediaPlayerJFrame extends JFrame {
 	public void pauseVideo(boolean pause) {
 		video.setPause(pause);
 	}
-	
 
 	/**
 	 * Create the main media frame.
@@ -204,14 +217,13 @@ public class MediaPlayerJFrame extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		setMinimumSize(new Dimension(600, 200));
 
-		
-		//create list to store audio tracks to be overlaid
+		// create list to store audio tracks to be overlaid
 		audioTrackList = new ArrayList<AudioData>();
-		
-		//TODO allow user to choose default directory
-		
-		
-		
+
+		// get default working directory
+		setDefaultDirectoy(true);
+
+		// TODO delete after doing all user add file
 		// Check if files exist
 		final File videoDir = VIDEO_DIR_ABSOLUTE_PATH;
 		final File mp3Dir = new File(MP3_DIR_RELATIVE_PATH);
@@ -228,11 +240,13 @@ public class MediaPlayerJFrame extends JFrame {
 			videoDir.mkdir();
 			mp3Dir.mkdir();
 		}
-		
-		//use to update video slider and current time label every 0.5 sec
+
+		// use to update video slider and current time label every 0.5 sec
 		// https://github.com/caprica/vlcj/blob/master/src/test/java/uk/co/caprica/vlcj/test/basic/PlayerControlsPanel.java
-		ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(new UpdateVideoFrame(thisFrame), 0L, 200L, TimeUnit.MILLISECONDS);
+		ScheduledExecutorService executorService = Executors
+				.newSingleThreadScheduledExecutor();
+		executorService.scheduleAtFixedRate(new UpdateVideoFrame(thisFrame),
+				0L, 200L, TimeUnit.MILLISECONDS);
 
 		contentPane = new JPanel();
 		// Give the video a border
@@ -287,8 +301,7 @@ public class MediaPlayerJFrame extends JFrame {
 		makeMP3Btn.setText("Text to Speech");
 		makeMP3Btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new TextToSpeechFrame("Text to MP3",
-						contentPane);
+				new TextToSpeechFrame("Text to MP3", contentPane);
 			}
 		});
 
@@ -358,6 +371,17 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		}));
 		fileMenu.add(menuItem);
+
+		// This label allows user to change the default working directory
+		menuItem = new JMenuItem("Change Default Working Directory");
+		menuItem.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				setDefaultDirectoy(false);
+			}
+		}));
+		fileMenu.add(menuItem);
+
 		fileMenuBar.add(fileMenu);
 
 		fileMenu = new JMenu("Text To MP3");
@@ -365,8 +389,7 @@ public class MediaPlayerJFrame extends JFrame {
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new TextToSpeechFrame("Text to MP3",
-						contentPane);
+				new TextToSpeechFrame("Text to MP3", contentPane);
 			}
 		}));
 		fileMenu.add(menuItem);
@@ -377,8 +400,7 @@ public class MediaPlayerJFrame extends JFrame {
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new OverlayAudioToVideoFrame(
-						thisFrame);
+				new OverlayAudioToVideoFrame(thisFrame);
 			}
 		}));
 		fileMenu.add(menuItem);
@@ -399,27 +421,29 @@ public class MediaPlayerJFrame extends JFrame {
 				vidSlide.userDrag(thisFrame);
 			}
 		});
-		vidSlide.addMouseListener(new MouseListener(){
+		vidSlide.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// change video to slider position
-				vidSlide.userDrag(thisFrame);				
+				vidSlide.userDrag(thisFrame);
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {
+			}
 
 			@Override
-			public void mouseExited(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {
+			}
 
 			@Override
-			public void mousePressed(MouseEvent e) {}
+			public void mousePressed(MouseEvent e) {
+			}
 
 			@Override
-			public void mouseReleased(MouseEvent e) {}
+			public void mouseReleased(MouseEvent e) {
+			}
 		});
-
-
 
 		setVidTotalTime(new TimeLabel());
 		vidCurrentTime = new VideoCurrentTime();
@@ -452,28 +476,28 @@ public class MediaPlayerJFrame extends JFrame {
 		 * grow in both directions (grow)
 		 */
 		contentPane.add(mediaPlayerComponent, "cell 0 0 11 1,grow");
-		
-		//control buttons
+
+		// control buttons
 		contentPane.add(btnBackward, "cell 0 2,alignx center,grow");
 		contentPane.add(btnPlay, "cell 2 2,grow");
 		contentPane.add(btnForward, "cell 4 2,alignx center,grow");
-		
-		//volume
+
+		// volume
 		contentPane.add(btnMute, "cell 6 2,grow");
 		contentPane.add(volumeIconLbl, "cell 8 2,grow");
 		contentPane.add(sliderVolume, "cell 10 2,grow");
-		
-		//time labels and slider
+
+		// time labels and slider
 		contentPane.add(vidCurrentTime, "cell 0 1,grow");
 		contentPane.add(dash, "cell 1 1,grow");
 		contentPane.add(getVidTotalTime(), "cell 2 1,grow");
 		contentPane.add(vidSlide, "cell 3 1 11 3,growx,aligny top");
-		
-		//make MP3 and overlay button
+
+		// make MP3 and overlay button
 		contentPane.add(makeMP3Btn, "cell 10 3 ,grow");
 		contentPane.add(overlayBtn, "cell 10 4 ,grow");
-		
-		//current video labels
+
+		// current video labels
 		contentPane.add(curVidTitle, "cell 0 3 9 0,growx");
 		contentPane.add(currentVidName, "cell 0 4 9 0,growx,aligny top");
 
@@ -551,6 +575,40 @@ public class MediaPlayerJFrame extends JFrame {
 		mediaPlayerComponent.getMediaPlayer().stop();
 		setVideoIsStarted(false);
 		btnPlay.btnSetPlayIcon();
+	}
+
+	/**
+	 * Allow user to choose the default working directory
+	 * 
+	 * @param startUp
+	 */
+	private void setDefaultDirectoy(boolean startUp) {
+		defaultDirect = new JFileChooser();
+		defaultDirect.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+		// If user has previously selected and wants to change current working
+		// directory
+		if (startUp == false) {
+			defaultDirect.setCurrentDirectory(new File(getDefPathDirect()));
+		} else {
+			JOptionPane.showMessageDialog(thisFrame,
+					"Please Set Default Work Directory");
+		}
+
+		int returnDirect = defaultDirect.showOpenDialog(thisFrame);
+		if (returnDirect == JFileChooser.APPROVE_OPTION) {
+			setDefPathDirect(defaultDirect.getSelectedFile().getAbsolutePath());
+		} else {// If starting up and user does not choose then set user
+				// directory as default
+			if (startUp == true) {
+				setDefPathDirect(System.getProperty("user.dir"));
+				JOptionPane.showMessageDialog(thisFrame,
+						"No Workspace was Choosen, " + getDefPathDirect()
+								+ " has been set as the default directory");
+
+			}
+		}
+
 	}
 
 }
