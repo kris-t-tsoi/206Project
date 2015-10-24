@@ -9,27 +9,29 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import overlayFrame.addAudioTrackPanel.AudioToAddPanel;
 import mediaMainFrame.MediaPlayerJFrame;
 import mediaMainFrame.videoControl.PlayButton;
 
+@SuppressWarnings("serial")
 public class UserFileChoose extends JFileChooser {
 
 	MediaPlayerJFrame vidFrame;
 	private final String fileNotExist = "File Does Not Exist, Please Pick Another";
 
+	/**
+	 * open or save media files
+	 * @param parentFrame - media mainframe
+	 */
 	public UserFileChoose(MediaPlayerJFrame parentFrame) {
 		vidFrame = parentFrame;
 	}
 
-	// TODO error handle user type in non existing file
-
 	/**
 	 * allows user to choose a video file video files allowed are .avi and .mp4
-	 * 
-	 * @param parentFrame
-	 * @param playBtn
-	 * @return
+	 * @param parent - panel which called this method
+	 * @param playBtn - play button of main media player frame
+	 * @return - path of selected mp4
+	 * 			- "" (nothing) is returned if user does not wish to select
 	 */
 	public String chooseVideoPath(JFrame parentFrame, PlayButton playBtn) {
 
@@ -77,8 +79,9 @@ public class UserFileChoose extends JFileChooser {
 	/**
 	 * Allows user to choose an .mp3 file
 	 * 
-	 * @param parentFrame
-	 * @return
+	 * @param parent - panel which called this method
+	 * @return - path of selected mp3
+	 * 			- "" (nothing) is returned if user does not wish to select
 	 */
 	public String chooseMP3Path(JPanel parent) {
 		// mp3 media filters
@@ -118,7 +121,11 @@ public class UserFileChoose extends JFileChooser {
 		return "";
 	}
 
-	// TODO
+	/**
+	 * Choose location to save created mp4
+	 * @return -path of created mp4
+	 * 			- "" (nothing) is returned if user does not wish to create
+	 */
 	public String saveVideo() {
 		// video media filters
 		FileFilter mp4 = new FileTypeFilter(".mp4", "MP4 Files");
@@ -129,7 +136,6 @@ public class UserFileChoose extends JFileChooser {
 		setAcceptAllFileFilterUsed(false);
 
 		setCurrentDirectory(new File(vidFrame.getDefPathDirect()));
-		// TODO change to overlay frame
 		int returnVal = showSaveDialog(vidFrame);
 
 		boolean validName = false;
@@ -140,8 +146,7 @@ public class UserFileChoose extends JFileChooser {
 					return getSelectedFile().getAbsolutePath() + ".mp4";
 				}
 			} else if (returnVal == JFileChooser.ERROR_OPTION) {
-				JOptionPane.showMessageDialog(vidFrame, // TODO change to
-														// overlay frame
+				JOptionPane.showMessageDialog(vidFrame, 
 						vidFrame.getErrorMessage());
 				break;
 			} else {
@@ -152,7 +157,11 @@ public class UserFileChoose extends JFileChooser {
 		return "";
 	}
 
-	// TODO
+	/**
+	 *Choose location to save created mp3
+	 * @return -path of created mp3
+	 * 			- "" (nothing) is returned if user does not wish to create
+	 */
 	public String saveMP3() {
 		// mp3 media filters
 		FileFilter mp3 = new FileTypeFilter(".mp3", "MP3 Files");
@@ -164,7 +173,6 @@ public class UserFileChoose extends JFileChooser {
 		
 		
 		setCurrentDirectory(new File(vidFrame.getDefPathDirect()));
-		// TODO change to text to speech frame
 		int returnVal = showSaveDialog(vidFrame);
 
 		boolean validName = false;
@@ -175,8 +183,7 @@ public class UserFileChoose extends JFileChooser {
 					return getSelectedFile().getAbsolutePath();
 				}
 			} else if (returnVal == JFileChooser.ERROR_OPTION) {
-				JOptionPane.showMessageDialog(vidFrame, // TODO change to
-														// speech frame
+				JOptionPane.showMessageDialog(vidFrame, 
 						vidFrame.getErrorMessage());
 				break;
 			} else {

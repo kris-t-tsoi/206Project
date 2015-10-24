@@ -21,6 +21,7 @@ import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.SplitPaneUI;
 
 import fileChoosing.UserFileChoose;
@@ -51,9 +52,9 @@ public class OverlayAudioToVideoFrame extends JFrame {
 		super("Overlay Video");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		setBounds(900, 300, 700, 400);
+		setBounds(900, 300, 700, 300);
 		setMinimumSize(new Dimension(700, 300));
-		setVisible(true);
+
 		isOpen = true;
 
 		contentPane = new JPanel();
@@ -80,25 +81,50 @@ public class OverlayAudioToVideoFrame extends JFrame {
 				new AudioTableFrame(video);
 			}
 		});
+		
+		 new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					
+					try {
+						Thread.sleep(500);
+						
+						SwingUtilities.invokeLater(new Runnable() {
+							
+							@Override
+							public void run() {
+								vidName.setText(video.getCurrentVidName().getText());
+								vidDuration.setText(video.getVidTotalTime().getText());
+							}
+						});
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					
+				}
+			}).start();
 
 		AudioToAddPanel addAudioTrack = new AudioToAddPanel(video,
-				audioTrackList, thisFrame);
+				audioTrackList);
 
 		// overlay video button
 		final OverlayVidAndAudioButton overlayVidBtn = new OverlayVidAndAudioButton();
 		overlayVidBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//check there is a video that has been selected
+				// check there is a video that has been selected
 				if (video.getVideoPath() == null) {
 					JOptionPane.showMessageDialog(thisFrame,
 							"No Video has Currently Been Choosen");
-				} else if (audioTrackList.size() == 0) {	//check audiotracks have been added
+				} else if (audioTrackList.size() == 0) { // check audiotracks
+															// have been added
 					JOptionPane.showMessageDialog(thisFrame,
 							"No Audiotracks have been Added");
 				} else {
 					fileChose = new UserFileChoose(video);
 					String name = fileChose.saveVideo();
-					if (!name.equals("")) {	//check user wants to create a video
+					if (!name.equals("")) { // check user wants to create a
+											// video
 						overlayVidBtn.overlayVideo(audioTrackList, video, name);
 					}
 				}
@@ -125,17 +151,7 @@ public class OverlayAudioToVideoFrame extends JFrame {
 
 	}
 
-	/**
-	 * When frame is closed then variable isOpen becomes false
-	 */
-	private void closing() {
-		thisFrame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				isOpen = false;
-			};
-		});
-	}
-
+	
 	/**
 	 * This method replaces the audio of a video with the audio given by mp3Path
 	 * It first asks for a valid output file name, and if it is valid it sets

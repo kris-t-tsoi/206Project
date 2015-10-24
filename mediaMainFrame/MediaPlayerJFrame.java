@@ -35,7 +35,9 @@ import javax.swing.plaf.FileChooserUI;
 import doInBackground.UpdateVideoFrame;
 import fileChoosing.UserFileChoose;
 import overlayFrame.OverlayAudioToVideoFrame;
+import overlayFrame.OverlayVidAndAudioButton;
 import overlayFrame.addAudioTrackPanel.AudioData;
+import overlayFrame.addAudioTrackPanel.AudioToAddPanel;
 import overlayFrame.audioTable.AudioTableFrame;
 import mediaMainFrame.time.VideoCurrentTime;
 import mediaMainFrame.time.VideoTimeSlider;
@@ -59,6 +61,7 @@ public class MediaPlayerJFrame extends JFrame {
 	ResizingEmbeddedMediaPlayerComponent mediaPlayerComponent;
 	EmbeddedMediaPlayer video;
 	private VideoTimeSlider vidSlide;
+	AudioToAddPanel addAudioTrack;
 	private ArrayList<AudioData> audioTrackList;
 
 	private TimeLabel vidTotalTime;
@@ -159,10 +162,6 @@ public class MediaPlayerJFrame extends JFrame {
 		this.vidTotalTime = vidTotalTime;
 	}
 
-	/*
-	 * public static File getMp3DirAbsolutePath() { return
-	 * MP3_DIR_ABSOLUTE_PATH; }
-	 */
 	public String getErrorMessage() {
 		return ERROR_MESSAGE;
 	}
@@ -214,7 +213,10 @@ public class MediaPlayerJFrame extends JFrame {
 		super(name);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		setMinimumSize(new Dimension(600, 200));
+		setMinimumSize(new Dimension(800, 600));
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
 
 		// create list to store audio tracks to be overlaid
 		audioTrackList = new ArrayList<AudioData>();
@@ -222,6 +224,8 @@ public class MediaPlayerJFrame extends JFrame {
 		// get default working directory
 		defaultDirect = new UserFileChoose(thisFrame);
 		defaultDirect.setDefaultDirectoy(true);
+		
+		//initalise user file chooser
 		fileChoose = new UserFileChoose(thisFrame);
 
 		// use to update video slider and current time label every 0.5 sec
@@ -230,11 +234,6 @@ public class MediaPlayerJFrame extends JFrame {
 				.newSingleThreadScheduledExecutor();
 		executorService.scheduleAtFixedRate(new UpdateVideoFrame(thisFrame),
 				0L, 200L, TimeUnit.MILLISECONDS);
-
-		contentPane = new JPanel();
-		// Give the video a border
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
 
 		// Create a second JPanel which will contain the video
 		JPanel mediaPanel = new JPanel(new BorderLayout());
@@ -288,15 +287,6 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 
-		// Button to overlay video with MP3
-		JButton overlayBtn = new JButton();
-		overlayBtn.setText("Overlay Video");
-		overlayBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new OverlayAudioToVideoFrame(thisFrame);
-			}
-		});
-
 		// Button to open list of audiotracks that have been added
 		JButton tableBtn = new JButton();
 		tableBtn.setText("List of Audiotracks That Have Been Added");
@@ -322,6 +312,32 @@ public class MediaPlayerJFrame extends JFrame {
 				video.mute();
 			}
 		});
+		
+		
+		
+		// overlay video button
+				final OverlayVidAndAudioButton overlayVidBtn = new OverlayVidAndAudioButton();
+				overlayVidBtn.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						// check there is a video that has been selected
+						if (getVideoPath() == null) {
+							JOptionPane.showMessageDialog(thisFrame,
+									"No Video has Currently Been Choosen");
+						} else if (audioTrackList.size() == 0) { // check audiotracks
+																	// have been added
+							JOptionPane.showMessageDialog(thisFrame,
+									"No Audiotracks have been Added");
+						} else {
+							String name = fileChoose.saveVideo();
+							if (!name.equals("")) { // check user wants to create a
+													// video
+								overlayVidBtn.overlayVideo(audioTrackList, thisFrame, name);
+							}
+						}
+
+					}
+				});
+		
 
 		// Create a JSlider with 0 and 100 as the volume limits. 50 is the
 		// default (it is set to 50 in the constructor).
@@ -348,55 +364,7 @@ public class MediaPlayerJFrame extends JFrame {
 		 * Text, and Video
 		 */
 		fileMenuBar = new JMenuBar();
-
-		// File tab: Choose Video File, Choose MP3 File
-		fileMenu = new JMenu("File");
-
-		// This label opens a FileChooser to select a video
-		menuItem = new JMenuItem("Choose Video File");
-		menuItem.addActionListener((new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// Let the user select a video with a fileChooser
-				selectVideo(btnPlay);
-			}
-		}));
-		fileMenu.add(menuItem);
-
-		// This label allows user to change the default working directory
-		menuItem = new JMenuItem("Change Default Working Directory");
-		menuItem.addActionListener((new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				defaultDirect.setDefaultDirectoy(false);
-			}
-		}));
-		fileMenu.add(menuItem);
-		fileMenuBar.add(fileMenu);
-
-		fileMenu = new JMenu("Text To MP3");
-		menuItem = new JMenuItem("Listen and Create MP3");
-		menuItem.addActionListener((new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				new TextToSpeechFrame(thisFrame);
-			}
-		}));
-		fileMenu.add(menuItem);
-		fileMenuBar.add(fileMenu);
-
-		fileMenu = new JMenu("Current Video");
-		menuItem = new JMenuItem("Overlay Video");
-		menuItem.addActionListener((new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				new OverlayAudioToVideoFrame(thisFrame);
-			}
-		}));
-		fileMenu.add(menuItem);
-		fileMenuBar.add(fileMenu);
-
-		// set Menubar to frame
+		fileBarInital(fileMenuBar, btnPlay);
 		setJMenuBar(fileMenuBar);
 
 		// Image which is on the left of the JSlider
@@ -435,36 +403,25 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 
+		//Time Labels
 		setVidTotalTime(new TimeLabel());
 		vidCurrentTime = new VideoCurrentTime();
 		JLabel dash = new JLabel("/");
+		
+		//audioPanel
+		addAudioTrack = new AudioToAddPanel(thisFrame,
+				audioTrackList);
 
-		// Windowbuilder generated code below
-
-		/*
-		 * MigLayout is essentially a gridlayout but with custom sized grids:
-		 * the grids do not have to be square but can be rectangular. First the
-		 * column sizes are created and then the rows. Each column also can have
-		 * a grow and shrink priority - in this case, only the last column and
-		 * first row can expand.
-		 */
+		// set up layout
 		contentPane
-				.setLayout(new MigLayout(
-						"", // Layout Constraint
+				.setLayout(new MigLayout(//(Layout constraints,column constraints,row constraints)
+						"",
 						"[60px,grow 0,shrink 0][4px,grow 0,shrink 0][60px,grow 0,shrink 0][4px,grow 0,shrink 0]"
 								+ "[60px,grow 0,shrink 0][4px,grow 0,shrink 0][100px,grow 0,shrink 0][4px,grow 0,shrink 0]"
-								+ "[10px,grow 0,shrink 0][2px,grow 0,shrink 0][421px,grow,shrink]", // Column
-																									// Constraints
-						"[406px,grow, shrink][20px][20px][17px][17px][17px][8px]")); // Row
-																				// Constraints
+								+ "[10px,grow 0,shrink 0][2px,grow 0,shrink 0][421px,grow,shrink]",
+						"[500px,grow, shrink][20px][20px][17px][17px][17px][240px,grow, shrink][8px]"));
 
-		/*
-		 * Then every component is added to a specific grid location, with two
-		 * extra optional numbers: the width and height that the component
-		 * should cover (in terms of rows and columns). Finally, a component can
-		 * grow in and align to a specific direction (e.g. growy, aligny top) or
-		 * grow in both directions (grow)
-		 */
+		// Media player
 		contentPane.add(mediaPlayerComponent, "cell 0 0 11 1,grow");
 
 		// control buttons
@@ -485,15 +442,20 @@ public class MediaPlayerJFrame extends JFrame {
 
 		// make MP3, overlay and list of audiotrack buttons
 		contentPane.add(makeMP3Btn, "cell 10 3 ,grow");
-		contentPane.add(overlayBtn, "cell 10 4 ,grow");
-		contentPane.add(tableBtn, "cell 10 5 ,grow");
+		contentPane.add(tableBtn, "cell 10 4 ,grow");
+		contentPane.add(overlayVidBtn, "cell 10 5 ,grow");
 
 		// current video labels
 		contentPane.add(curVidTitle, "cell 0 3 9 0,growx");
 		contentPane.add(currentVidName, "cell 0 4 9 0,growx,aligny top");
+		
+		//Add audio
+		add(addAudioTrack, "cell 0 6 11 0 ,grow");
+		
 
 		setVisible(true);
 	}
+	
 
 	/**
 	 * Method to allow release of the mediaPlayerComponent from the main class
@@ -566,6 +528,78 @@ public class MediaPlayerJFrame extends JFrame {
 		mediaPlayerComponent.getMediaPlayer().stop();
 		setVideoIsStarted(false);
 		btnPlay.btnSetPlayIcon();
+	}
+
+	/**
+	 * Set up file bar components
+	 * 
+	 * @param menuBar
+	 * @param btnPlay
+	 */
+	private void fileBarInital(JMenuBar menuBar, final PlayButton btnPlay) {
+		// File tab: Choose Video File, Choose default working directory
+		fileMenu = new JMenu("File");
+
+		// This label opens a FileChooser to select a video
+		menuItem = new JMenuItem("Choose Video File");
+		menuItem.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				selectVideo(btnPlay);
+			}
+		}));
+		fileMenu.add(menuItem);
+
+		// This label allows user to change the default working directory
+		menuItem = new JMenuItem("Change Default Working Directory");
+		menuItem.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				defaultDirect.setDefaultDirectoy(false);
+			}
+		}));
+		fileMenu.add(menuItem);
+		fileMenuBar.add(fileMenu);
+
+		// Audio tab: text to speech
+		fileMenu = new JMenu("Text & Audio");
+
+		// create mp3 from text
+		menuItem = new JMenuItem("Listen and Create MP3");
+		menuItem.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new TextToSpeechFrame(thisFrame);
+			}
+		}));
+		fileMenu.add(menuItem);
+
+		// List of audio that has already been added
+		menuItem = new JMenuItem("List of Audiotracks Added");
+		menuItem.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new AudioTableFrame(thisFrame);
+			}
+		}));
+		fileMenu.add(menuItem);
+		fileMenuBar.add(fileMenu);
+
+		// Help tab: help tab
+		fileMenu = new JMenu("Help");// TODO
+
+		// create mp3 from text
+		menuItem = new JMenuItem("Main Page");
+		menuItem.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO
+			}
+		}));
+
+		fileMenu.add(menuItem);
+		fileMenuBar.add(fileMenu);
+
 	}
 
 }

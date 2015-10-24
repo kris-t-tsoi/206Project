@@ -53,9 +53,9 @@ public class Main {
 		}
 
 		frame = new MediaPlayerJFrame("Vidivox");
-		frame.setBounds(100, 100, 600, 400);
+		frame.setBounds(100, 50, 600, 400);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(800, 611);
+		frame.setSize(1100, 850);
 		frame.addWindowListener(new WindowAdapter() {
 			;
 			@Override

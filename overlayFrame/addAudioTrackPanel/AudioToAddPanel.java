@@ -29,7 +29,6 @@ public class AudioToAddPanel extends JPanel {
 	AudioToAddPanel thisPane;
 	final MediaPlayerJFrame mediaPlayerFrame;
 	TextToSpeechFrame create;
-	String formatErrorMessage = "Please have format [MM:SS.mm] using Numbers";
 
 	// file choosing
 	final private UserFileChoose fileChoose;
@@ -50,8 +49,8 @@ public class AudioToAddPanel extends JPanel {
 	private CreateMp3ForAudioPanelBtn createAudio;
 
 	// Constant strings
-	private final String createMP3Title = "Created MP3 To Overlay";
 	private final String defaultText = "00";
+	private final String formatErrorMessage = "Please have format [MM:SS.mm] using Numbers";
 
 	public String getMp3Path() {
 		return mp3Path;
@@ -81,8 +80,7 @@ public class AudioToAddPanel extends JPanel {
 	 * @param parentFrame
 	 */
 	public AudioToAddPanel(final MediaPlayerJFrame mainFrame,
-			final ArrayList<AudioData> audioTrackList,
-			final OverlayAudioToVideoFrame parentFrame) {
+			final ArrayList<AudioData> audioTrackList) {
 		thisPane = this;
 		mediaPlayerFrame = mainFrame;
 		setSize(700, 175);
@@ -116,8 +114,10 @@ public class AudioToAddPanel extends JPanel {
 		selectAudio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				mp3Path = fileChoose.chooseMP3Path(thisPane);
-				mp3NameLbl.setText(mp3NameLbl.getFileName(mp3Path));
-				getMP3Information(mp3Path);
+				if (!mp3Path.equals("")) { //if user choose an mp3
+					mp3NameLbl.setText(mp3NameLbl.getFileName(mp3Path));
+					getMP3Information(mp3Path);
+				}
 			}
 		});
 
@@ -164,7 +164,7 @@ public class AudioToAddPanel extends JPanel {
 
 					}
 				} else {
-					JOptionPane.showMessageDialog(parentFrame,
+					JOptionPane.showMessageDialog(mediaPlayerFrame,
 							"Please Select a MP3 File to Add");
 				}
 

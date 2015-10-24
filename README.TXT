@@ -1,0 +1,71 @@
+Author: Kristy Tsoi (ytso868)
+
+Contents in this README.TXT file
+
+External Programs Required
+Run Executable File
+Run Source
+Limitations
+Bugs
+------------------------------------------------------------------------------------
+External Programs Required (should already be on remote linux):
+
+Three programs are required to run this application (should already be installed on remote linux)
+Please ensure PC is connected to WiFi
+-  VLC
+    http://www.videolan.org/vlc/download-ubuntu.html 
+- FFMPEG
+    Open terminal and copy the following commands
+       	sudo add-apt-repository ppa:mc3man/trusty-media
+	sudo apt-get update
+	sudo apt-get dist-upgrade
+	sudo apt-get install ffmpeg
+- Festival
+	Open terminal and copy the following command
+	sudo apt-get install festival
+
+------------------------------------------------------------------------------------
+Run Executable File
+
+To run the executable jar from command line:
+	Change to directory where jar is located
+		$ cd (path to directory)    
+	Run command on command line
+		$ java -jar 206A3_sgor395_ytso868.jar  
+
+To run the executable jar directly using mouse :
+	Right click on runnable jar and select "properties"
+	Click permissions
+	Tick "Execute:" box to allow the program to run
+	Click close button
+	Click jar file to run it
+------------------------------------------------------------------------------------
+Run Source
+
+	Unzip 206A3_sgor395_ytso868.zip
+	Right click > import > Existing Projects into Workspace > Next
+	Select Root Directory > Browse > choose the unzipped 206A3_sgor395_ytso868.zip file > Finish
+	If there is a build path error then: 
+		Right click project
+ 		go to Build Path > Configure Build Path
+		Click on the libraries tab, then add JAR
+		Then click on the project > AdditionalLibraries
+		Select all of the JAR files > Press OK
+		Press OK  
+
+------------------------------------------------------------------------------------
+Limitations
+	-When the video ends or is skipped back before the start the video must be re-selected
+	-Overwrites files if the name the user types for a file is already in use (design decision - the output 	file names are easily visible and the user must type the exact same name to overwrite)
+	-There is no logger, so all error messages are displayed in console
+
+------------------------------------------------------------------------------------
+Bugs
+	-There may be a bug where the video does not have sound when it is loaded (could be virtualbox-	
+	specific). It is usually resolved by reloading the video or pressing the mute button twice.
+
+------------------------------------------------------------------------------------
+Images used are taken from http://www.oracle.com/technetwork/java/repository-140393.html
+
+
+
