@@ -4,7 +4,6 @@ import java.io.File;
 
 import javax.swing.JButton;
 
-import mediaMainFrame.videoControl.PlayButton;
 import doInBackground.FestivalSpeakBackgroundUse;
 import doInBackground.WriteSchemeFiles;
 import textToMP3Frame.TextToSpeechFrame;
@@ -40,6 +39,9 @@ public class PlayTextBtn extends JButton {
 		backGrd.execute();
 	}
 	
+	/**
+	 * cancels the festival speech
+	 */
 	public void stopFestival(){
 		backGrd.cancel();
 	}

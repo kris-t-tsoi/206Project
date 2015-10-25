@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 import javax.swing.SwingWorker;
 
 import textToMP3Frame.buttons.PlayTextBtn;
-import mediaMainFrame.videoControl.PlayButton;
 
 /**
  * Does terminal commands in background No progress bar only used by PlayTextBtn
@@ -43,8 +42,6 @@ public class FestivalSpeakBackgroundUse extends SwingWorker<Void, Void> {
 	@Override
 	protected Void doInBackground() throws Exception {
 		
-		//playButton.setText(playButton.cancel);
-
 		probuild = new ProcessBuilder("bash", "-c", cmd);
 		probuild.redirectErrorStream(true);
 
@@ -100,20 +97,14 @@ public class FestivalSpeakBackgroundUse extends SwingWorker<Void, Void> {
 			}
 
 		} catch (IOException | InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
-		// destroy process
+		// destroy process and set process as done
 		pb.destroy();
 		done();
 
 	}
 
-	@Override
-	protected void done() {
-		super.done();
-		//playButton.setText(playButton.play);
-	}
-
+	
 }

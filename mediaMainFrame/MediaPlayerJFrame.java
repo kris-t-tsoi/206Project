@@ -85,7 +85,7 @@ public class MediaPlayerJFrame extends JFrame {
 	private static final String ERROR_MESSAGE = "Sorry, an error has occured. please try again.";
 
 	// Font
-	public static final Font TITLE_FONT = new Font("Tahoma", Font.ITALIC, 15);
+	public final Font TITLE_FONT = new Font("Tahoma", Font.ITALIC, 15);
 
 	// FileChooser-related fields
 	final MediaPlayerJFrame thisFrame = this;

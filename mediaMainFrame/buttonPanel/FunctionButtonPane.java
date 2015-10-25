@@ -16,6 +16,7 @@ import sharedLabels.NameLabel;
 import net.miginfocom.swing.MigLayout;
 import mediaMainFrame.MediaPlayerJFrame;
 
+@SuppressWarnings("serial")
 public class FunctionButtonPane extends JPanel {
 
 	MediaPlayerJFrame mediaPlayerFrame;
