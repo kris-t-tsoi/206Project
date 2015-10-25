@@ -34,7 +34,8 @@ public class AudioTableFrame extends JFrame {
 	JButton deleteAudioBtn;
 
 	/**
-	 * Creates a JFrame with list of all audio tracks to be overlaid with videoFrame
+	 * Creates a JFrame with list of all audio tracks to be overlaid with
+	 * videoFrame
 	 * 
 	 * @param videoFrame
 	 *            main Frame - where audiotrack list is stored
@@ -51,7 +52,7 @@ public class AudioTableFrame extends JFrame {
 		setContentPane(contentPane);
 		scrollPane = new JScrollPane();
 
-		//title label
+		// title label
 		JLabel frameName = new JLabel("Audio to Be Overlaid");
 		frameName.setFont(new Font("Audio To Be Overlaid", Font.BOLD, 20));
 
@@ -61,12 +62,12 @@ public class AudioTableFrame extends JFrame {
 		// setup delete and refresh button
 		setUpDeleteBtn();
 
-		//set layout of contentPane
+		// set layout of contentPane
 		contentPane
 				.setLayout(new MigLayout(
 						"",
 						"[5px,grow 0,shrink 0][90px,grow, shrink][5px,grow 0,shrink 0]",
-						"[5px][50px][5px][200px,grow,shrink][3px][50px][5px]")); 
+						"[5px][50px][5px][200px,grow,shrink][3px][50px][5px]"));
 		add(frameName, "cell 1 1, grow");
 		add(scrollPane, "cell 1 3, grow");
 		add(deleteAudioBtn, "cell 1 5, grow");
@@ -78,13 +79,29 @@ public class AudioTableFrame extends JFrame {
 		deleteAudioBtn = new JButton("Delete Audio");
 		deleteAudioBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
 				// check if a row is selected or not
 				if (table.getSelectedRow() != -1) {
-					((DefaultTableModel) table.getModel()).removeRow(table.getSelectedRow());
+					int index = 0;
 					
-					//TODO Remove from arraylist
-					//TODO check if actually delete from list
+					// remove selected audio from audiotrack list
+					for (AudioData audData : videoFrame.getAudioTrackList()) {
+						if (table.getModel()	//if name and start time is the same then delete
+								.getValueAt(table.getSelectedRow(), 0)
+								.equals(audData.getName())
+								&& table.getModel()
+										.getValueAt(table.getSelectedRow(), 1)
+										.equals(audData.getStartTime())) {
+							break;
+						}
+						index++;
+					}
+					//delete from table
+					videoFrame.getAudioTrackList().remove(index);
+					((DefaultTableModel) table.getModel()).removeRow(table
+							.getSelectedRow());
 				}
+
 			}
 		});
 		deleteAudioBtn.setFont(new Font("Dialog", Font.BOLD, 20));
@@ -98,23 +115,24 @@ public class AudioTableFrame extends JFrame {
 	 */
 	private void setupTable() {
 		table = new JTable(new DefaultTableModel(new Object[] { "Name",
-				"Start Time"}, 0));
-		
+				"Start Time" }, 0));
+
 		table.setFont(new Font("Dialog", Font.PLAIN, 15));
 		scrollPane.setViewportView(table);
 		tableModel = (DefaultTableModel) table.getModel();
-		
+
 		// only allow selection of one row
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	}
 
 	/**
 	 * Allows audio name to be added into the table
+	 * 
 	 * @param name
 	 * @param startTime
 	 */
-	public void addToTable(String name, String startTime){
-		tableModel.addRow(new Object[] { name,startTime});
+	public void addToTable(String name, String startTime) {
+		tableModel.addRow(new Object[] { name, startTime });
 	}
-	
+
 }
