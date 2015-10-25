@@ -23,7 +23,7 @@ public class CreateInBackground extends SwingWorker<Void, Void>  {
 
 	@Override
 	protected Void doInBackground() throws Exception {
-
+		//Execute command
 		termCmd.terminalCommandVoid(cmd);
 		return null;
 	}

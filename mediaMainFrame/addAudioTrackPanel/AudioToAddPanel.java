@@ -16,6 +16,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import doInBackground.DoInBackground;
+import doInBackground.UseTerminalCommands;
 import fileChoosing.UserFileChoose;
 import sharedLabels.NameLabel;
 import sharedLabels.TimeLabel;
@@ -43,6 +45,8 @@ public class AudioToAddPanel extends JPanel {
 	// Buttons
 	private SelectMP3Btn selectAudio;
 	private JButton createAudio;
+	private JButton playAudio;
+	private JButton addAudioBtn;
 
 	// Constant strings
 	private final String defaultText = "00";
@@ -132,9 +136,24 @@ public class AudioToAddPanel extends JPanel {
 
 			}
 		});
+		
+		
+		playAudio = new JButton("Play Selected MP3");
+		playAudio.setToolTipText("Play MP3 Audio File That Has Been Selected");
+		playAudio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//if there is no mp3 choosen
+				if(getMp3Path().equals("")){
+					JOptionPane.showMessageDialog(mediaPlayerFrame, "Please Chose a MP3 File to Listen To");
+				}else{
+				DoInBackground back = new DoInBackground("vlc "+getMp3Path());
+				back.execute();
+				}
+			}
+		});
 
 		// Add new audiotrack button
-		JButton addAudioBtn = new JButton("Add Audio Track");
+		addAudioBtn = new JButton("Add Audio Track");
 		setUpAddAudioBtn(addAudioBtn, mainFrame.getAudioTrackList(),mainFrame.audTableFrame.table);
 		
 		setLayout(new MigLayout(
@@ -149,8 +168,10 @@ public class AudioToAddPanel extends JPanel {
 		add(mp3NameLbl, "cell 1 1 ,grow");
 		add(duraTitleLbl, "cell 3 1 ,grow");
 		add(durationLbl, "cell 3 1 ,grow");
-		add(selectAudio, "cell 5 1 ,grow");
-		add(createAudio, "cell 5 2 ,grow");
+		add(playAudio, "cell 3 2 ,grow");
+		add(selectAudio, "cell 3 2 ,grow");
+		add(createAudio, "cell 5 1 ,grow");
+		add(playAudio, "cell 5 2 ,grow");
 		add(startLbl, "cell 1 2 ,grow");
 		add(startMin, "cell 1 2 ,grow");
 		add(semiCol, "cell 1 2 ,grow");
@@ -245,7 +266,6 @@ public class AudioToAddPanel extends JPanel {
 		
 		//add focus listener
 		text.addFocusListener(new FocusListener() {
-
 			@Override
 			public void focusLost(FocusEvent e) {
 				// check if it is 2 characters long and is numbers
@@ -254,13 +274,10 @@ public class AudioToAddPanel extends JPanel {
 					text.setText(defaultText);
 				}
 			}
-
 			@Override
 			public void focusGained(FocusEvent e) {}
 		});
 	}
-
-	
 	
 	
 	/**
