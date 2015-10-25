@@ -1,9 +1,5 @@
 package mediaMainFrame.time;
 
-import javax.swing.JLabel;
-import javax.swing.JSlider;
-import javax.xml.datatype.Duration;
-
 import mediaMainFrame.MediaPlayerJFrame;
 import sharedLabels.TimeLabel;
 

@@ -4,15 +4,11 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.sound.midi.VoiceStatus;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
-import javax.xml.transform.OutputKeys;
 
 import fileChoosing.UserFileChoose;
 import textToMP3Frame.buttons.CreateMP3Btn;
@@ -23,6 +19,7 @@ import textToMP3Frame.textBoxAndSliders.VoiceSpeedSlider;
 import mediaMainFrame.MediaPlayerJFrame;
 import net.miginfocom.swing.MigLayout;
 
+@SuppressWarnings("serial")
 public class TextToSpeechFrame extends JFrame {
 
 	// GUI Components
@@ -33,7 +30,6 @@ public class TextToSpeechFrame extends JFrame {
 	TextToMP3TextBox userText;
 	VoiceSpeedSlider speedSlide;
 	PitchSlider pitchSlide;
-	private String createdMP3Path;
 	UserFileChoose fileChose;
 
 	// Constants for the textfield - Max number of words which can be
@@ -78,13 +74,7 @@ public class TextToSpeechFrame extends JFrame {
 		this.text = text;
 	}
 
-	public String getCreatedMP3Path() {
-		return createdMP3Path;
-	}
 
-	public void setCreatedMP3Path(String createdMP3Path) {
-		this.createdMP3Path = createdMP3Path;
-	}
 
 	/**
 	 * Constructor for Text to Speech Frame Used for - playing text to audio -
@@ -94,8 +84,8 @@ public class TextToSpeechFrame extends JFrame {
 	 */
 	public TextToSpeechFrame(final MediaPlayerJFrame video) {
 
-		super("Create MP3");
-		setBounds(500, 250, 575, 250);
+		super("Create Audio From Text");
+		setBounds(500, 250, 580, 255);
 		setMinimumSize(new Dimension(575, 250));
 
 		contentPane = new JPanel();
@@ -183,7 +173,7 @@ public class TextToSpeechFrame extends JFrame {
 		getFestivalValues();
 		
 		//(getText() != null) && !getText().startsWith(" ")
-		if((userText.getText() == null) && userText.getText().trim().equals("")){
+		if(userText.getText().trim().isEmpty()){
 			JOptionPane.showMessageDialog(thisFrame,
 					"Textbox Can Not Be Empty");
 			return false;

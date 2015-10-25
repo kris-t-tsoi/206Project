@@ -1,7 +1,5 @@
 package mediaMainFrame.addAudioTrackPanel;
 
-import java.awt.Button;
-import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -20,7 +18,6 @@ import javax.swing.SwingConstants;
 import fileChoosing.UserFileChoose;
 import sharedLabels.NameLabel;
 import sharedLabels.TimeLabel;
-import textToMP3Frame.TextToSpeechFrame;
 import mediaMainFrame.MediaPlayerJFrame;
 import net.miginfocom.swing.MigLayout;
 
@@ -83,13 +80,19 @@ public class AudioToAddPanel extends JPanel {
 		setSize(700, 175);
 		fileChoose = new UserFileChoose(mediaPlayerFrame);
 
-		// MP3 Labels initialize
+		// Name and Path of MP3 setup
 		JLabel mp3TitleLbl = new JLabel("MP3 :");
 		mp3TitleLbl.setFont(mediaPlayerFrame.TITLE_FONT);
 		mp3NameLbl = new NameLabel();
+		mp3NameLbl.setText("");
+		setMp3Path("");
+		
+		//duration of MP3 setup
 		JLabel duraTitleLbl = new JLabel("Duration :");
 		duraTitleLbl.setFont(mediaPlayerFrame.TITLE_FONT);
 		durationLbl = new TimeLabel();
+
+		durationLbl.setText("");
 
 		// Time Labels initialize
 		startLbl = new JLabel("Start [MM:SS.mm]:");
@@ -100,9 +103,10 @@ public class AudioToAddPanel extends JPanel {
 		JLabel semiCol = new JLabel(":");
 		JLabel dot = new JLabel(".");
 
-		// reset variables to initial values
+		//reset time textfields to initial value 00
 		resetVariables();
 
+		//add focus listenter to textfields
 		textFocusListen(startMin);
 		textFocusListen(startSec);
 		textFocusListen(startMili);
@@ -203,15 +207,12 @@ public class AudioToAddPanel extends JPanel {
 	}
 
 	/**
-	 * clears mp3 name label, time textfields and time labels
+	 * clears time textfields and time labels
 	 */
 	private void resetVariables() {
-		mp3NameLbl.setText("");
-		setMp3Path("");
 		startMin.setText(defaultText);
 		startSec.setText(defaultText);
 		startMili.setText(defaultText);
-		durationLbl.setText("");
 	}
 
 	/**
@@ -279,7 +280,11 @@ public class AudioToAddPanel extends JPanel {
 		} else {
 			try {
 				// Check if all characters are numbers
-				Integer.parseInt(text);
+				int number = Integer.parseInt(text);
+				if(number<0){//negative time can not be given
+					JOptionPane.showMessageDialog(mediaPlayerFrame, "Can Not Be Negative");
+					return false;
+				}
 			} catch (NumberFormatException e1) {
 				JOptionPane.showMessageDialog(mediaPlayerFrame, formatErrorMessage);
 				return false;

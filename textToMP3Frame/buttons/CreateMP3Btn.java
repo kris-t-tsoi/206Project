@@ -5,10 +5,8 @@ import java.io.File;
 import javax.swing.JButton;
 
 import textToMP3Frame.TextToSpeechFrame;
-import doInBackground.BackgroundUse;
 import doInBackground.CreateInBackground;
 import doInBackground.WriteSchemeFiles;
-import mediaMainFrame.MediaPlayerJFrame;
 
 @SuppressWarnings("serial")
 public class CreateMP3Btn extends JButton {

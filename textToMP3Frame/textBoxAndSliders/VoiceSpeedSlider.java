@@ -5,6 +5,7 @@ import java.util.Hashtable;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 
+@SuppressWarnings("serial")
 public class VoiceSpeedSlider extends JSlider {
 
 	public VoiceSpeedSlider(){
@@ -15,6 +16,7 @@ public class VoiceSpeedSlider extends JSlider {
 		
 
 		//Create the label table
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		Hashtable<Integer, JLabel> labelTable = new Hashtable();
 		labelTable.put( new Integer( 1 ), new JLabel("Fast\n(0.1)") );
 		labelTable.put( new Integer( 10 ), new JLabel("Normal\n(1.0)") );

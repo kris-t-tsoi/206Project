@@ -4,8 +4,6 @@ import java.awt.Dimension;
 
 import javax.swing.JTextArea;
 
-import doInBackground.UseTerminalCommands;
-
 @SuppressWarnings("serial")
 public class TextToMP3TextBox extends JTextArea {
 	public static final int MAX_NUMBER_OF_WORDS = 50;
@@ -47,6 +45,6 @@ public class TextToMP3TextBox extends JTextArea {
 	// TODO set mindimension
 	@Override
 	public Dimension getMinimumSize() {
-		return new Dimension(0, 0);
+		return new Dimension(100, 50);
 	}
 }
