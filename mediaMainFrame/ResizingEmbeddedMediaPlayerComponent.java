@@ -19,6 +19,7 @@ public class ResizingEmbeddedMediaPlayerComponent extends EmbeddedMediaPlayerCom
 	
 	@Override
 	public void finished(MediaPlayer m) {
-		//TODO stuff here
+		//when reach the end stop the video
+		m.stop();
 	}
 }

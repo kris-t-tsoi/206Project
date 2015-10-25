@@ -137,6 +137,7 @@ public class UserFileChoose extends JFileChooser {
 		setAcceptAllFileFilterUsed(false);
 
 		setCurrentDirectory(new File(vidFrame.getDefPathDirect()));
+		setSelectedFile(new File(""));
 		int returnVal = showSaveDialog(vidFrame);
 
 		boolean validName = false;
@@ -171,9 +172,9 @@ public class UserFileChoose extends JFileChooser {
 
 		// remove all files filter
 		setAcceptAllFileFilterUsed(false);
-		
-		
+
 		setCurrentDirectory(new File(vidFrame.getDefPathDirect()));
+		setSelectedFile(new File(""));
 		int returnVal = showSaveDialog(vidFrame);
 
 		boolean validName = false;

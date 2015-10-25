@@ -32,9 +32,9 @@ public class ProgressFrame extends JFrame {
 		contentPane = new JPanel();
 		setContentPane(contentPane);
 		
-		JLabel nameLbl = new JLabel("Working In Background");
+		JLabel nameLbl = new JLabel("Processing ... ");
 		nameLbl.setFont(new Font("Tahoma", Font.BOLD,30));
-		nameLbl.setForeground(Color.MAGENTA);
+		nameLbl.setForeground(Color.BLUE);
 
 		contentPane
 				.setLayout(new MigLayout(

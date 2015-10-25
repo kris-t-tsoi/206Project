@@ -32,16 +32,15 @@ public class VideoTimeSlider extends JSlider {
 		int slidePercent =(int) (vidPlayer.getVideo().getPosition() * 100);
 
 		//if reach the end allow videoFrame to replay again
-//		if(vidPlayer.getVideo().getPosition()>0.99){
-//			vidPlayer.getVideo().stop();
-//			vidPlayer.setVideoIsStarted(false);
-//			vidPlayer.getBtnPlay().btnSetPlayIcon();
-//			slidePercent=0;
-//		}
+		if(vidPlayer.getVideo().getPosition()>0.99){
+			vidPlayer.setVideoIsStarted(false);
+			vidPlayer.getBtnPlay().btnSetPlayIcon();
+		}else{
 		
 		// update this slider with current videoFrame position
 		setValue(slidePercent);
-
+		}
+		
 		//if the videoFrame has started
 		if (!vidPlayer.getVideoIsStarted()||slidePercent==100||slidePercent==0) {
 			vidPlayer.getVidCurrentTime().setText("00:00.00");
