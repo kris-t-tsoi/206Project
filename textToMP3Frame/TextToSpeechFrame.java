@@ -97,14 +97,18 @@ public class TextToSpeechFrame extends JFrame {
 		playText.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				if(playText.getText().equals(playText.cancel)){
+				//playText.getText().equals(playText.cancel)
+				if(isPlaying==true){
 					playText.stopFestival();
+					isPlaying=false;
+					playText.setText(playText.play);
 				}else{
 					// If the text is under the allowed limit, speak the text
 					if (checkTextbox()) {
 						playText.sayWithFestival(getSpeed(), getStartPitch(),
 								getEndPitch(), getText());
+						isPlaying=true;
+						playText.setText(playText.cancel);
 					} 
 				}
 				

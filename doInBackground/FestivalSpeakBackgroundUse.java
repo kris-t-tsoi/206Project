@@ -43,7 +43,7 @@ public class FestivalSpeakBackgroundUse extends SwingWorker<Void, Void> {
 	@Override
 	protected Void doInBackground() throws Exception {
 		
-		playButton.setText(playButton.cancel);
+		//playButton.setText(playButton.cancel);
 
 		probuild = new ProcessBuilder("bash", "-c", cmd);
 		probuild.redirectErrorStream(true);
@@ -113,7 +113,7 @@ public class FestivalSpeakBackgroundUse extends SwingWorker<Void, Void> {
 	@Override
 	protected void done() {
 		super.done();
-		playButton.setText(playButton.play);
+		//playButton.setText(playButton.play);
 	}
 
 }
