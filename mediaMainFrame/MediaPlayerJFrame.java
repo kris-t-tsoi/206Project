@@ -103,6 +103,8 @@ public class MediaPlayerJFrame extends JFrame {
 	// Images for fast forward and rewind icons
 	private static final ImageIcon REWIND_IMAGE = new ImageIcon(
 			MediaPlayerJFrame.class.getResource("/Rewind16.gif"));
+	private static final ImageIcon STOP_IMAGE = new ImageIcon(
+			MediaPlayerJFrame.class.getResource("/Stop16.gif"));
 	private static final ImageIcon FAST_FORWARD_IMAGE = new ImageIcon(
 			MediaPlayerJFrame.class.getResource("/FastForward16.gif"));
 
@@ -276,7 +278,18 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 
-
+		// Button to stop video
+		JButton btnStop = new JButton();
+		btnStop.setIcon(STOP_IMAGE);
+		btnStop.setToolTipText("Stop Video");
+		btnStop.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				video.stop();
+				stop();
+			}
+		});
+		
+		
 		// Button to mute audio
 		btnMute = new JButton("Mute");
 		btnMute.setToolTipText("Mute the audio");
@@ -370,16 +383,17 @@ public class MediaPlayerJFrame extends JFrame {
 						"[60px,grow 0,shrink 0][4px,grow 0,shrink 0][60px,grow 0,shrink 0][4px,grow 0,shrink 0]"
 								+ "[60px,grow 0,shrink 0][4px,grow 0,shrink 0][60px,grow 0,shrink 0][4px,grow 0,shrink 0]"
 								+ "[100px,grow 0,shrink 0][4px,grow 0,shrink 0][10px,grow 0,shrink 0][2px,grow 0,shrink 0][50px,grow,shrink]",
-						"[500px,grow, shrink][20px][20px][20px][180px,grow, shrink]"));
+						"[500px,grow, shrink][20px][20px][5px][180px,grow, shrink]"));
 
 		// Media player
 		contentPane.add(mediaPlayerComponent, "cell 0 0 14 0,grow");//TODO Layout
 
 		// control buttons
 		contentPane.add(btnBackward, "cell 0 2,alignx center,grow");
-		contentPane.add(btnPlay, "cell 2 2,grow");
+		contentPane.add(btnPlay, "cell 2 2,alignx center,grow");
+		contentPane.add(btnStop, "cell 4 2,alignx center,grow");
 		contentPane.add(btnForward, "cell 6 2,alignx center,grow");
-
+		
 		// volume
 		contentPane.add(btnMute, "cell 8 2,grow");
 		contentPane.add(volumeIconLbl, "cell 9 2,grow");
@@ -421,6 +435,15 @@ public class MediaPlayerJFrame extends JFrame {
 	 */
 	public void skip(int value) {
 		video.skip(value);
+	}
+	
+	/**
+	 * Method sets videoIsStarted to false
+	 * set play image on play/pause button
+	 */
+	public void stop(){
+		setVideoIsStarted(false);
+		getBtnPlay().btnSetPlayIcon();
 	}
 
 	/**

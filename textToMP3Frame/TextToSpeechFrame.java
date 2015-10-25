@@ -95,9 +95,7 @@ public class TextToSpeechFrame extends JFrame {
 	public TextToSpeechFrame(final MediaPlayerJFrame video) {
 
 		super("Create MP3");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		setBounds(900, 50, 575, 250);
+		setBounds(500, 250, 575, 250);
 		setMinimumSize(new Dimension(575, 250));
 
 		contentPane = new JPanel();

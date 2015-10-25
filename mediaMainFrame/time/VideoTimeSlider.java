@@ -33,8 +33,7 @@ public class VideoTimeSlider extends JSlider {
 
 		//if reach the end allow videoFrame to replay again
 		if(vidPlayer.getVideo().getPosition()>0.99){
-			vidPlayer.setVideoIsStarted(false);
-			vidPlayer.getBtnPlay().btnSetPlayIcon();
+			vidPlayer.stop();
 		}else{
 		
 		// update this slider with current videoFrame position
