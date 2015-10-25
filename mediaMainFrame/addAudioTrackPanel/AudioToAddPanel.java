@@ -1,5 +1,6 @@
 package mediaMainFrame.addAudioTrackPanel;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -74,7 +75,6 @@ public class AudioToAddPanel extends JPanel {
 	 * @param audioTrackList
 	 * @param parentFrame
 	 */
-	@SuppressWarnings("static-access")
 	public AudioToAddPanel(final MediaPlayerJFrame mainFrame) {
 		mediaPlayerFrame = mainFrame;
 		setSize(700, 175);
@@ -104,7 +104,7 @@ public class AudioToAddPanel extends JPanel {
 		JLabel dot = new JLabel(".");
 
 		//reset time textfields to initial value 00
-		resetVariables();
+		resetText();
 
 		//add focus listenter to textfields
 		textFocusListen(startMin);
@@ -186,14 +186,8 @@ public class AudioToAddPanel extends JPanel {
 						//add to table frame
 						mediaPlayerFrame.audTableFrame.addToTable(mp3NameLbl.getText(), start);
 						
-						try {
-							Thread.sleep(500);
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
-						}
-
-						// clear variables
-						resetVariables();
+						//reset textfields
+						resetText();
 
 					}
 				} else {
@@ -207,9 +201,9 @@ public class AudioToAddPanel extends JPanel {
 	}
 
 	/**
-	 * clears time textfields and time labels
+	 * clears time textfields
 	 */
-	private void resetVariables() {
+	private void resetText() {
 		startMin.setText(defaultText);
 		startSec.setText(defaultText);
 		startMili.setText(defaultText);
@@ -240,12 +234,16 @@ public class AudioToAddPanel extends JPanel {
 	}
 
 	/**
+	 * set min size of text fields
 	 * make focus listener for input textfield
-	 * 
 	 * @param text
 	 *            - JTextField
 	 */
 	private void textFocusListen(final JTextField text) {
+		//set min size
+		text.setMinimumSize(new Dimension(30, 40));
+		
+		//add focus listener
 		text.addFocusListener(new FocusListener() {
 
 			@Override
