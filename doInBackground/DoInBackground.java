@@ -19,4 +19,12 @@ public class DoInBackground extends SwingWorker<Void, Void> {
 		return null;
 	}
 
+	/**
+	 * cancel the process
+	 */
+	public void cancel(){
+		term.cancel();
+		done();
+	}
+	
 }

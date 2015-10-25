@@ -1,6 +1,8 @@
 package mediaMainFrame.addAudioTrackPanel;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -45,12 +47,18 @@ public class AudioToAddPanel extends JPanel {
 	// Buttons
 	private SelectMP3Btn selectAudio;
 	private JButton createAudio;
-	private JButton playAudio;
+	private JButton playAudioBtn;
 	private JButton addAudioBtn;
-
+	
+	//playing mp3
+	boolean isPlaying;
+	DoInBackground back;
+	
 	// Constant strings
 	private final String defaultText = "00";
 	private final String formatErrorMessage = "Please have format [MM:SS.mm] using Numbers";
+	private final String playMP3 = "Play Selected MP3";
+	private final String cancelMP3 = "Stop";
 
 	public String getMp3Path() {
 		return mp3Path;
@@ -90,8 +98,8 @@ public class AudioToAddPanel extends JPanel {
 		mp3NameLbl = new NameLabel();
 		mp3NameLbl.setText("");
 		setMp3Path("");
-		
-		//duration of MP3 setup
+
+		// duration of MP3 setup
 		JLabel duraTitleLbl = new JLabel("Duration :");
 		duraTitleLbl.setFont(mediaPlayerFrame.TITLE_FONT);
 		durationLbl = new TimeLabel();
@@ -107,10 +115,10 @@ public class AudioToAddPanel extends JPanel {
 		JLabel semiCol = new JLabel(":");
 		JLabel dot = new JLabel(".");
 
-		//reset time textfields to initial value 00
+		// reset time textfields to initial value 00
 		resetText();
 
-		//add focus listenter to textfields
+		// add focus listenter to textfields
 		textFocusListen(startMin);
 		textFocusListen(startSec);
 		textFocusListen(startMili);
@@ -120,7 +128,7 @@ public class AudioToAddPanel extends JPanel {
 		selectAudio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				mp3Path = fileChoose.chooseMP3Path(mediaPlayerFrame);
-				if (!mp3Path.equals("")) { //if user choose an mp3
+				if (!mp3Path.equals("")) { // if user choose an mp3
 					mp3NameLbl.setText(mp3NameLbl.getFileName(mp3Path));
 					getMP3Information(mp3Path);
 				}
@@ -136,26 +144,39 @@ public class AudioToAddPanel extends JPanel {
 
 			}
 		});
-		
-		
-		playAudio = new JButton("Play Selected MP3");
-		playAudio.setToolTipText("Play MP3 Audio File That Has Been Selected");
-		playAudio.addActionListener(new ActionListener() {
+
+		//there is no current audio playing
+		isPlaying = false;
+				
+		// Plays selected audio
+		playAudioBtn = new JButton(playMP3);
+		playAudioBtn.setToolTipText("Play MP3 Audio File That Has Been Selected");
+		playAudioBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//if there is no mp3 choosen
-				if(getMp3Path().equals("")){
-					JOptionPane.showMessageDialog(mediaPlayerFrame, "Please Chose a MP3 File to Listen To");
-				}else{
-				DoInBackground back = new DoInBackground("vlc "+getMp3Path());
-				back.execute();
+				// if there is no mp3 choosen
+				if (getMp3Path().equals("")) {
+					JOptionPane.showMessageDialog(mediaPlayerFrame,
+							"Please Chose a MP3 File to Listen To");
+				} else {
+					if(isPlaying==true){ //if playing stop
+						back.cancel();
+						isPlaying=false;
+						playAudioBtn.setText(playMP3);
+					}else{ //if not playing then start 
+						back = new DoInBackground("ffplay -nodisp -autoexit -af volume=1" + " \"" +getMp3Path()+"\"");
+						back.execute();
+						isPlaying = true;
+						playAudioBtn.setText(cancelMP3);
+						} 
+					}
 				}
-			}
 		});
 
 		// Add new audiotrack button
 		addAudioBtn = new JButton("Add Audio Track");
-		setUpAddAudioBtn(addAudioBtn, mainFrame.getAudioTrackList(),mainFrame.audTableFrame.table);
-		
+		setUpAddAudioBtn(mainFrame.getAudioTrackList(),
+				mainFrame.audTableFrame.table);
+
 		setLayout(new MigLayout(
 				"", // Layout Constraint
 				"[3px,grow 0,shrink 0][300px,grow,shrink][3px,grow 0,shrink 0][250px,grow,shrink]"
@@ -168,10 +189,9 @@ public class AudioToAddPanel extends JPanel {
 		add(mp3NameLbl, "cell 1 1 ,grow");
 		add(duraTitleLbl, "cell 3 1 ,grow");
 		add(durationLbl, "cell 3 1 ,grow");
-		add(playAudio, "cell 3 2 ,grow");
-		add(selectAudio, "cell 3 2 ,grow");
-		add(createAudio, "cell 5 1 ,grow");
-		add(playAudio, "cell 5 2 ,grow");
+		add(selectAudio, "cell 5 1 ,grow");
+		add(createAudio, "cell 3 2 ,grow");
+		add(playAudioBtn, "cell 5 2 ,grow");
 		add(startLbl, "cell 1 2 ,grow");
 		add(startMin, "cell 1 2 ,grow");
 		add(semiCol, "cell 1 2 ,grow");
@@ -183,8 +203,10 @@ public class AudioToAddPanel extends JPanel {
 
 	}
 
-	private void setUpAddAudioBtn(JButton addAudioBtn, final ArrayList<AudioData> audioTrackList,JTable audTable) {
+	private void setUpAddAudioBtn(final ArrayList<AudioData> audioTrackList,
+			JTable audTable) {
 		addAudioBtn.setToolTipText("Add Another Audio Track to the Video");
+		addAudioBtn.setBackground(Color.lightGray);
 		addAudioBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// check mp3 path is not empty
@@ -200,14 +222,15 @@ public class AudioToAddPanel extends JPanel {
 						AudioData audioData = new AudioData(getMp3Path(),
 								mp3NameLbl.getText(), start, new TimeLabel()
 										.durationStringToInt(start));
-						
-						//add to audio track list
+
+						// add to audio track list
 						audioTrackList.add(audioData);
-						
-						//add to table frame
-						mediaPlayerFrame.audTableFrame.addToTable(mp3NameLbl.getText(), start);
-						
-						//reset textfields
+
+						// add to table frame
+						mediaPlayerFrame.audTableFrame.addToTable(
+								mp3NameLbl.getText(), start);
+
+						// reset textfields
 						resetText();
 
 					}
@@ -218,7 +241,7 @@ public class AudioToAddPanel extends JPanel {
 
 			}
 		});
-		
+
 	}
 
 	/**
@@ -232,12 +255,13 @@ public class AudioToAddPanel extends JPanel {
 
 	/**
 	 * get string format of start time textbox
+	 * 
 	 * @return MM:SS.mm format of start time
 	 */
-	private String startTime(){
+	private String startTime() {
 		return (addZero(startMin.getText().trim()) + ":"
-				+ addZero(startSec.getText().trim()) + "."
-				+ addZero(startMili.getText().trim()));
+				+ addZero(startSec.getText().trim()) + "." + addZero(startMili
+				.getText().trim()));
 	}
 
 	/**
@@ -255,16 +279,16 @@ public class AudioToAddPanel extends JPanel {
 	}
 
 	/**
-	 * set min size of text fields
-	 * make focus listener for input textfield
+	 * set min size of text fields make focus listener for input textfield
+	 * 
 	 * @param text
 	 *            - JTextField
 	 */
 	private void textFocusListen(final JTextField text) {
-		//set min size
+		// set min size
 		text.setMinimumSize(new Dimension(30, 40));
-		
-		//add focus listener
+
+		// add focus listener
 		text.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
@@ -274,12 +298,13 @@ public class AudioToAddPanel extends JPanel {
 					text.setText(defaultText);
 				}
 			}
+
 			@Override
-			public void focusGained(FocusEvent e) {}
+			public void focusGained(FocusEvent e) {
+			}
 		});
 	}
-	
-	
+
 	/**
 	 * Checks - if the text in text box is either a length of 1 or 2 - if the
 	 * characters are numbers
@@ -296,12 +321,14 @@ public class AudioToAddPanel extends JPanel {
 			try {
 				// Check if all characters are numbers
 				int number = Integer.parseInt(text);
-				if(number<0){//negative time can not be given
-					JOptionPane.showMessageDialog(mediaPlayerFrame, "Can Not Be Negative");
+				if (number < 0) {// negative time can not be given
+					JOptionPane.showMessageDialog(mediaPlayerFrame,
+							"Can Not Be Negative");
 					return false;
 				}
 			} catch (NumberFormatException e1) {
-				JOptionPane.showMessageDialog(mediaPlayerFrame, formatErrorMessage);
+				JOptionPane.showMessageDialog(mediaPlayerFrame,
+						formatErrorMessage);
 				return false;
 			}
 		}

@@ -97,7 +97,6 @@ public class TextToSpeechFrame extends JFrame {
 		playText.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//playText.getText().equals(playText.cancel)
 				if(isPlaying==true){
 					playText.stopFestival();
 					isPlaying=false;
@@ -111,10 +110,6 @@ public class TextToSpeechFrame extends JFrame {
 						playText.setText(playText.cancel);
 					} 
 				}
-				
-				
-				
-				
 			}
 		});
 

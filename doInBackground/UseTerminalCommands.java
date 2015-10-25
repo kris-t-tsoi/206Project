@@ -10,15 +10,17 @@ import java.io.InputStreamReader;
  *
  */
 public class UseTerminalCommands {
-
+	ProcessBuilder builder;
+	Process process;
+	
 	/**
 	 * Uses input as command for terminal
 	 * returns void
 	 * @param cmd - command input
 	 */
 	public void terminalCommandVoid (String cmd) {
-		ProcessBuilder builder = new ProcessBuilder("bash", "-c", cmd);
-		Process process;
+		builder = new ProcessBuilder("bash", "-c", cmd);
+		
 		try {
 			process = builder.start();
 			process.waitFor();
@@ -33,8 +35,7 @@ public class UseTerminalCommands {
 	 * @return String
 	 */
 	public String terminalCommandString (String cmd) {
-		ProcessBuilder builder = new ProcessBuilder("bash", "-c", cmd);
-		Process process;
+		builder = new ProcessBuilder("bash", "-c", cmd);
 		try {
 			process = builder.start();
 			
@@ -51,4 +52,12 @@ public class UseTerminalCommands {
 		return null;
 	}
 	
+	/**
+	 * cancels the current process
+	 */
+	public void cancel(){
+		if(process!=null){
+			process.destroy();
+		}
+	}
 }
