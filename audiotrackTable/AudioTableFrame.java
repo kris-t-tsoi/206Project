@@ -43,8 +43,8 @@ public class AudioTableFrame extends JFrame {
 	public AudioTableFrame(MediaPlayerJFrame vid) {
 		thisFrame = this;
 		videoFrame = vid;
-		setBounds(1400, 100, 300, 650);
-		setMinimumSize(new Dimension(300, 100));
+		setBounds(1200, 100, 350, 650);
+		setMinimumSize(new Dimension(300, 250));
 
 		// setup panes
 		contentPane = new JPanel();
@@ -117,7 +117,7 @@ public class AudioTableFrame extends JFrame {
 		table = new JTable(new DefaultTableModel(new Object[] { "Name",
 				"Start Time" }, 0));
 
-		table.setFont(new Font("Dialog", Font.PLAIN, 15));
+		table.setFont(new Font("Dialog", Font.PLAIN, 17));
 		scrollPane.setViewportView(table);
 		tableModel = (DefaultTableModel) table.getModel();
 
