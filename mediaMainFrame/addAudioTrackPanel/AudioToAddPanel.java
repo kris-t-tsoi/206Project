@@ -29,7 +29,6 @@ public class AudioToAddPanel extends JPanel {
 
 	// Panels and Frames
 	final MediaPlayerJFrame mediaPlayerFrame;
-	TextToSpeechFrame create;
 
 	// file choosing
 	final private UserFileChoose fileChoose;
@@ -125,7 +124,7 @@ public class AudioToAddPanel extends JPanel {
 		createAudio.setToolTipText("Create MP3 Audio From Text");
 		createAudio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				create = new TextToSpeechFrame(mainFrame);
+				mediaPlayerFrame.ttsFrame.setVisible(true);
 
 			}
 		});

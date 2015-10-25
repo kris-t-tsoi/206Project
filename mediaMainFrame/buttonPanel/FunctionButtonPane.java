@@ -40,11 +40,12 @@ public class FunctionButtonPane extends JPanel {
 		currentVidName = new NameLabel();
 
 		// Button to create MP3 from text
-		JButton makeMP3Btn = new JButton();//TODO change to choose video file
-		makeMP3Btn.setText("Text to Speech");
-		makeMP3Btn.addActionListener(new ActionListener() {
+		JButton chooseVideo = new JButton();
+		chooseVideo.setText("Choose Video");
+		chooseVideo.setToolTipText("Choose Video to Play and Overlay");
+		chooseVideo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mediaPlayerFrame.ttsFrame.setVisible(true);
+				mediaPlayerFrame.selectVideo(mediaPlayerFrame.getBtnPlay());
 			}
 		});
 
@@ -96,7 +97,7 @@ public class FunctionButtonPane extends JPanel {
 		add(currentVidName, "cell 1 2,growx,aligny top");
 
 		// make MP3, overlay and list of audiotrack buttons
-		add(makeMP3Btn, "cell 1 4 ,grow");
+		add(chooseVideo, "cell 1 4 ,grow");
 		add(tableBtn, "cell 1 5 ,grow");
 		add(overlayVidBtn, "cell 1 6 ,grow");
 
