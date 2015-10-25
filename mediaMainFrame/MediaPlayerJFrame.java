@@ -81,9 +81,6 @@ public class MediaPlayerJFrame extends JFrame {
 	private static final int DEFAULT_VOLUME = 50;
 	private int volume;
 
-	// Constant Message
-	private static final String ERROR_MESSAGE = "Sorry, an error has occured. please try again.";
-
 	// Font
 	public final Font TITLE_FONT = new Font("Tahoma", Font.ITALIC, 15);
 
@@ -152,10 +149,6 @@ public class MediaPlayerJFrame extends JFrame {
 
 	public void setVidTotalTime(TimeLabel vidTotalTime) {
 		this.vidTotalTime = vidTotalTime;
-	}
-
-	public String getErrorMessage() {
-		return ERROR_MESSAGE;
 	}
 
 	public int getVolume() {

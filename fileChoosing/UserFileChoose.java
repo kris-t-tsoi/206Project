@@ -14,7 +14,10 @@ import mediaMainFrame.videoControl.PlayButton;
 @SuppressWarnings("serial")
 public class UserFileChoose extends JFileChooser {
 
-	MediaPlayerJFrame vidFrame;
+	MediaPlayerJFrame vidFrame;	
+	
+	// Constant Message
+	private final String errorMessage = "Sorry, an error has occured. please try again.";
 	private final String fileNotExist = "File Does Not Exist, Please Pick Another";
 
 	/**
@@ -69,7 +72,7 @@ public class UserFileChoose extends JFileChooser {
 				break;
 			} else if (returnVal == JFileChooser.ERROR_OPTION) {
 				JOptionPane.showMessageDialog(parentFrame,
-						vidFrame.getErrorMessage());
+						 errorMessage);
 				break;
 			}
 		}
@@ -112,7 +115,7 @@ public class UserFileChoose extends JFileChooser {
 
 			} else if (returnVal == JFileChooser.ERROR_OPTION) {
 				JOptionPane.showMessageDialog(parentFrame,
-						vidFrame.getErrorMessage());
+						 errorMessage);
 				break;
 			} else {
 				break;
@@ -149,7 +152,7 @@ public class UserFileChoose extends JFileChooser {
 				}
 			} else if (returnVal == JFileChooser.ERROR_OPTION) {
 				JOptionPane.showMessageDialog(vidFrame, 
-						vidFrame.getErrorMessage());
+						 errorMessage);
 				break;
 			} else {
 				break;
@@ -186,7 +189,7 @@ public class UserFileChoose extends JFileChooser {
 				}
 			} else if (returnVal == JFileChooser.ERROR_OPTION) {
 				JOptionPane.showMessageDialog(vidFrame, 
-						vidFrame.getErrorMessage());
+						 errorMessage);
 				break;
 			} else {
 				break;
@@ -198,8 +201,8 @@ public class UserFileChoose extends JFileChooser {
 
 	/**
 	 * Allow user to choose the default working directory
-	 * 
-	 * @param startUp
+	 * @param startUp - true at application start up
+	 * 					- false if default working directory has been previously selected
 	 */
 	public void setDefaultDirectoy(boolean startUp) {
 		//only allow user to choose directories

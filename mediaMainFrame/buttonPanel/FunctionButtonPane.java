@@ -27,11 +27,23 @@ public class FunctionButtonPane extends JPanel {
 	private NameLabel currentVidName;
 	UserFileChoose fileChoose;
 
+	// buttons
+	JButton chooseVideo;
+	JButton tableBtn;
+	OverlayVidAndAudioButton overlayVidBtn;
+	
 	public NameLabel getCurrentVidName() {
 		return currentVidName;
 	}
 
-	public FunctionButtonPane(final MediaPlayerJFrame mainFrame) {
+	/**
+	 * Panel with buttons for choosing video, opening table frame of audio
+	 * tracks added and overlaying added audiotracks to the video
+	 * 
+	 * @param mainFrame
+	 *            - frame with media component
+	 */
+	public FunctionButtonPane(MediaPlayerJFrame mainFrame) {
 		mediaPlayerFrame = mainFrame;
 		setSize(100, 175);
 
@@ -40,28 +52,36 @@ public class FunctionButtonPane extends JPanel {
 		curVidTitle.setFont(mediaPlayerFrame.TITLE_FONT);
 		currentVidName = new NameLabel();
 
-		// Button to create MP3 from text
-		JButton chooseVideo = new JButton();
-		chooseVideo.setText("Choose Video");
-		chooseVideo.setToolTipText("Choose Video to Play and Overlay");
-		chooseVideo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				mediaPlayerFrame.selectVideo(mediaPlayerFrame.getBtnPlay());
-			}
-		});
+		// setup select video,open table of audiotracks and overlaying video button
+		setupChooseVideo();
+		setupOpenTable();
+		setupOverlay();
+	
 
-		// Button to open list of audiotracks that have been added
-		JButton tableBtn = new JButton();
-		tableBtn.setText("List of Audiotracks That Have Been Added");
-		tableBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				mediaPlayerFrame.audTableFrame.setVisible(true);
-			}
-		});
+		setLayout(new MigLayout(
+				"",
+				"[3px,grow 0,shrink 0][300px,grow,shrink][3px,grow 0,shrink 0]",
+				"[2px][20px][20px][2px][20px][20px][20px]"));
 
+		add(new JSeparator(SwingConstants.HORIZONTAL), "cell 0 0 6 0 ,grow");
+
+		// current videoFrame labels
+		add(curVidTitle, "cell 1 1,growx");
+		add(currentVidName, "cell 1 2,growx,aligny top");
+
+		// make MP3, overlay and list of audiotrack buttons
+		add(chooseVideo, "cell 1 4 ,grow");
+		add(tableBtn, "cell 1 5 ,grow");
+		add(overlayVidBtn, "cell 1 6 ,grow");
+
+	}
+
+	/**
+	 * setup button to overlay video with added audiotracks
+	 */
+	private void setupOverlay() {
 		fileChoose = new UserFileChoose(mediaPlayerFrame);
-		// overlay videoFrame button
-		final OverlayVidAndAudioButton overlayVidBtn = new OverlayVidAndAudioButton();
+		overlayVidBtn = new OverlayVidAndAudioButton();
 		overlayVidBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// check there is a videoFrame that has been selected
@@ -85,22 +105,35 @@ public class FunctionButtonPane extends JPanel {
 
 			}
 		});
+		
+	}
 
-		setLayout(new MigLayout(
-				"",
-				"[3px,grow 0,shrink 0][300px,grow,shrink][3px,grow 0,shrink 0]",
-				"[2px][20px][20px][2px][20px][20px][20px]"));
+	/**
+	 * set up button that opens up table of added audiotracks
+	 */
+	private void setupOpenTable() {
+		// Button to open list of audiotracks that have been added
+		tableBtn = new JButton();
+		tableBtn.setText("List of Audiotracks That Have Been Added");
+		tableBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mediaPlayerFrame.audTableFrame.setVisible(true);
+			}
+		});
 
-		add(new JSeparator(SwingConstants.HORIZONTAL), "cell 0 0 6 0 ,grow");
+	}
 
-		// current videoFrame labels
-		add(curVidTitle, "cell 1 1,growx");
-		add(currentVidName, "cell 1 2,growx,aligny top");
-
-		// make MP3, overlay and list of audiotrack buttons
-		add(chooseVideo, "cell 1 4 ,grow");
-		add(tableBtn, "cell 1 5 ,grow");
-		add(overlayVidBtn, "cell 1 6 ,grow");
-
+	/**
+	 * sets up video selection button
+	 */
+	private void setupChooseVideo() {
+		chooseVideo = new JButton();
+		chooseVideo.setText("Choose Video");
+		chooseVideo.setToolTipText("Choose Video to Play and Overlay");
+		chooseVideo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mediaPlayerFrame.selectVideo(mediaPlayerFrame.getBtnPlay());
+			}
+		});
 	}
 }
