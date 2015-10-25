@@ -40,7 +40,7 @@ public class FunctionButtonPane extends JPanel {
 		currentVidName = new NameLabel();
 
 		// Button to create MP3 from text
-		JButton makeMP3Btn = new JButton();
+		JButton makeMP3Btn = new JButton();//TODO change to choose video file
 		makeMP3Btn.setText("Text to Speech");
 		makeMP3Btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

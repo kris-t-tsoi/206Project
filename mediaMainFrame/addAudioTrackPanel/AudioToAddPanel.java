@@ -1,5 +1,6 @@
 package mediaMainFrame.addAudioTrackPanel;
 
+import java.awt.Button;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,7 +45,7 @@ public class AudioToAddPanel extends JPanel {
 
 	// Buttons
 	private SelectMP3Btn selectAudio;
-	private CreateMp3ForAudioPanelBtn createAudio;
+	private JButton createAudio;
 
 	// Constant strings
 	private final String defaultText = "00";
@@ -120,10 +121,10 @@ public class AudioToAddPanel extends JPanel {
 		});
 
 		// Create a new MP3
-		createAudio = new CreateMp3ForAudioPanelBtn();
+		createAudio = new JButton("Create Audio File From Text");
+		createAudio.setToolTipText("Create MP3 Audio From Text");
 		createAudio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				create = new TextToSpeechFrame(mainFrame);
 
 			}
