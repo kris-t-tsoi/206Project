@@ -34,7 +34,7 @@ public class ProgressFrame extends JFrame {
 		
 		JLabel nameLbl = new JLabel("Processing ... ");
 		nameLbl.setFont(new Font("Tahoma", Font.BOLD,30));
-		nameLbl.setForeground(Color.BLUE);
+		nameLbl.setForeground(Color.ORANGE);
 
 		contentPane
 				.setLayout(new MigLayout(
