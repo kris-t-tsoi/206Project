@@ -9,19 +9,19 @@ import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 public class VideoTimeSlider extends JSlider {
 
 	/**
-	 * Creates the video time slider with value from 0-100
+	 * Creates the videoFrame time slider with value from 0-100
 	 * 
-	 * @param video
+	 * @param videoFrame
 	 */
 	public VideoTimeSlider(EmbeddedMediaPlayer video) {
 		super(0, 100, 0);
 	}
 
 	/**
-	 * Gets current position of slider change video position to specified point
+	 * Gets current position of slider change videoFrame position to specified point
 	 * 
 	 * @param vidPlayer
-	 *            - frame in which video is being played
+	 *            - frame in which videoFrame is being played
 	 */
 	public void userDrag(MediaPlayerJFrame vidPlayer) {
 		vidPlayer.getVideo().setPosition((float) getValue() / 100);
@@ -31,18 +31,18 @@ public class VideoTimeSlider extends JSlider {
 		
 		int slidePercent =(int) (vidPlayer.getVideo().getPosition() * 100);
 
-		//if reach the end allow video to replay again
-		if(vidPlayer.getVideo().getPosition()>0.99){
-			vidPlayer.getVideo().stop();
-			vidPlayer.setVideoIsStarted(false);
-			vidPlayer.getBtnPlay().btnSetPlayIcon();
-			slidePercent=0;
-		}
+		//if reach the end allow videoFrame to replay again
+//		if(vidPlayer.getVideo().getPosition()>0.99){
+//			vidPlayer.getVideo().stop();
+//			vidPlayer.setVideoIsStarted(false);
+//			vidPlayer.getBtnPlay().btnSetPlayIcon();
+//			slidePercent=0;
+//		}
 		
-		// update this slider with current video position
+		// update this slider with current videoFrame position
 		setValue(slidePercent);
 
-		//if the video has started
+		//if the videoFrame has started
 		if (!vidPlayer.getVideoIsStarted()||slidePercent==100||slidePercent==0) {
 			vidPlayer.getVidCurrentTime().setText("00:00.00");
 		}else{

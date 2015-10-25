@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -126,7 +127,7 @@ public class AudioToAddPanel extends JPanel {
 
 		// Add new audiotrack button
 		JButton addAudioBtn = new JButton("Add Audio Track");
-		setUpAddAudioBtn(addAudioBtn, mainFrame.getAudioTrackList());
+		setUpAddAudioBtn(addAudioBtn, mainFrame.getAudioTrackList(),mainFrame.audTableFrame.table);
 		
 		setLayout(new MigLayout(
 				"", // Layout Constraint
@@ -153,7 +154,7 @@ public class AudioToAddPanel extends JPanel {
 
 	}
 
-	private void setUpAddAudioBtn(JButton addAudioBtn, final ArrayList<AudioData> audioTrackList) {
+	private void setUpAddAudioBtn(JButton addAudioBtn, final ArrayList<AudioData> audioTrackList,JTable audTable) {
 		addAudioBtn.setToolTipText("Add Another Audio Track to the Video");
 		addAudioBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -170,7 +171,12 @@ public class AudioToAddPanel extends JPanel {
 						AudioData audioData = new AudioData(getMp3Path(),
 								mp3NameLbl.getText(), start, new TimeLabel()
 										.durationStringToInt(start));
+						
+						//add to audio track list
 						audioTrackList.add(audioData);
+						
+						//TODO add to table frame
+						mediaPlayerFrame.audTableFrame.addToTable(mp3NameLbl.getText(), start);
 						
 						try {
 							Thread.sleep(500);

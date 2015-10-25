@@ -14,7 +14,7 @@ public class TimeLabel extends JLabel {
 	}
 
 	/**
-	 * finds the duration of the video and changes label to the total duration
+	 * finds the duration of the videoFrame and changes label to the total duration
 	 * time
 	 * 
 	 * @param videoPath

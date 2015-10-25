@@ -21,9 +21,9 @@ public class OverlayVidAndAudioButton extends JButton {
 	}
 
 	/**
-	 * Overlays selected video
+	 * Overlays selected videoFrame
 	 * @param listAudio - list of audiotracks to overlay
-	 * @param video frame - get current video
+	 * @param videoFrame frame - get current videoFrame
 	 * @param outName - name of mp4 file that will be created
 	 */
 	public void overlayVideo(ArrayList<AudioData> listAudio,

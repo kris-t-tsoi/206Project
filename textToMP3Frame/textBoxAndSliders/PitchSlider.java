@@ -5,6 +5,7 @@ import java.util.Hashtable;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 
+@SuppressWarnings("serial")
 public class PitchSlider extends JSlider {
 	
 	int[] monoPitchRange = {105,105};
@@ -13,6 +14,7 @@ public class PitchSlider extends JSlider {
 	int[] highPitchRange = {145,115};
 	
 
+	@SuppressWarnings("unchecked")
 	public PitchSlider() {
 		super(0, 3, 2);
 		setMajorTickSpacing(1);
@@ -20,6 +22,7 @@ public class PitchSlider extends JSlider {
 		setSnapToTicks(true);
 		
 		//Create the label table
+		@SuppressWarnings("rawtypes")
 		Hashtable<Integer, JLabel> labelTable = new Hashtable();
 		labelTable.put( new Integer( 0 ), new JLabel("Monotone") );
 		labelTable.put( new Integer( 1 ), new JLabel("Low") );

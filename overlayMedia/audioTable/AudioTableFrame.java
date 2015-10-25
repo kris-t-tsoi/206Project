@@ -24,26 +24,25 @@ import mediaMainFrame.MediaPlayerJFrame;
 public class AudioTableFrame extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table;
+	public JTable table;
+	DefaultTableModel tableModel;
 	JScrollPane scrollPane;
 	AudioTableFrame thisFrame;
-	MediaPlayerJFrame video;
+	MediaPlayerJFrame videoFrame;
 
 	// buttons
 	JButton deleteAudioBtn;
-	JButton refreshAudioBtn;
 
 	/**
-	 * Creates a JFrame with list of all audio tracks to be overlaid with video
+	 * Creates a JFrame with list of all audio tracks to be overlaid with videoFrame
 	 * 
-	 * @param video
+	 * @param videoFrame
 	 *            main Frame - where audiotrack list is stored
 	 */
 	public AudioTableFrame(MediaPlayerJFrame vid) {
 		thisFrame = this;
-		video = vid;
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(1600, 100, 300, 650);
+		videoFrame = vid;
+		setBounds(1400, 100, 300, 650);
 		setMinimumSize(new Dimension(300, 100));
 
 		// setup panes
@@ -53,30 +52,25 @@ public class AudioTableFrame extends JFrame {
 		scrollPane = new JScrollPane();
 
 		//title label
-		JLabel frameName = new JLabel("Audio to be Overlaid");
+		JLabel frameName = new JLabel("Audio to Be Overlaid");
 		frameName.setFont(new Font("Audio To Be Overlaid", Font.BOLD, 20));
 
 		// set up table
-		setupTable(video.getAudioTrackList());
+		setupTable();
 
 		// setup delete and refresh button
 		setUpDeleteBtn();
-		setUpRefreshBtn();
 
 		//set layout of contentPane
 		contentPane
 				.setLayout(new MigLayout(
-						"", // Layout Constraint
-						"[5px,grow 0,shrink 0][90px,grow, shrink][5px,grow 0,shrink 0]", // Column
-																							// Constraints
-						"[5px][50px][5px][200px,grow,shrink][3px][50px][5px]")); // Row
-																					// Constraints
+						"",
+						"[5px,grow 0,shrink 0][90px,grow, shrink][5px,grow 0,shrink 0]",
+						"[5px][50px][5px][200px,grow,shrink][3px][50px][5px]")); 
 		add(frameName, "cell 1 1, grow");
 		add(scrollPane, "cell 1 3, grow");
 		add(deleteAudioBtn, "cell 1 5, grow");
-		add(refreshAudioBtn, "cell 1 6, grow");
 
-		setVisible(true);
 	}
 
 	// sets up the delete button
@@ -86,30 +80,14 @@ public class AudioTableFrame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				// check if a row is selected or not
 				if (table.getSelectedRow() != -1) {
-
-					// get data from selected row
-					int index = table.getSelectedRow();
-					video.getAudioTrackList().remove(index);
-
-					setupTable(video.getAudioTrackList());
-					contentPane.repaint();
+					((DefaultTableModel) table.getModel()).removeRow(table.getSelectedRow());
+					
+					//TODO Remove from arraylist
+					//TODO check if actually delete from list
 				}
 			}
 		});
 		deleteAudioBtn.setFont(new Font("Dialog", Font.BOLD, 20));
-	}
-
-	// set up refresh button
-	private void setUpRefreshBtn() {
-		refreshAudioBtn = new JButton("Refresh Added Audio");
-		refreshAudioBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				setupTable(video.getAudioTrackList());
-				contentPane.repaint();
-			}
-		});
-
-		refreshAudioBtn.setFont(new Font("Dialog", Font.ITALIC, 20));
 	}
 
 	/**
@@ -118,28 +96,25 @@ public class AudioTableFrame extends JFrame {
 	 * @param arrayList
 	 *            - list of Audio tracks
 	 */
-	@SuppressWarnings("serial")
-	private void setupTable(ArrayList<AudioData> arrayList) {
-		// set JTable with items in audioTrackList
+	private void setupTable() {
 		table = new JTable(new DefaultTableModel(new Object[] { "Name",
-				"Start Time"}, 0) {
-			@Override
-			public Class getColumnClass(int columnIndex) {
-				return Integer.class;
-			}
-
-		});
+				"Start Time"}, 0));
+		
 		table.setFont(new Font("Dialog", Font.PLAIN, 15));
 		scrollPane.setViewportView(table);
-		final DefaultTableModel model = (DefaultTableModel) table.getModel();
-
-		// get all added mp3s
-		for (AudioData audData : arrayList) {
-			model.addRow(new Object[] { audData.getName(),
-					audData.getStartTime()});
-		}
+		tableModel = (DefaultTableModel) table.getModel();
+		
 		// only allow selection of one row
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	}
 
+	/**
+	 * Allows audio name to be added into the table
+	 * @param name
+	 * @param startTime
+	 */
+	public void addToTable(String name, String startTime){
+		tableModel.addRow(new Object[] { name,startTime});
+	}
+	
 }

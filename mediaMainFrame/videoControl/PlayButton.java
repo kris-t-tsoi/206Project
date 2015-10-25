@@ -9,7 +9,7 @@ import mediaMainFrame.MediaPlayerJFrame;
 
 /**
  * This class is the play button of the media player.
- * It alternates between playing and pausing the video with the icon also changing
+ * It alternates between playing and pausing the videoFrame with the icon also changing
  * between a pause icon and a play icon.
  * It also acts as a cancel for the current skipping, and contains the swingworker for skipping.
  *
@@ -28,7 +28,7 @@ public class PlayButton extends JButton {
 
 	public PlayButton(MediaPlayerJFrame parentFrame) {
 		super();
-		setToolTipText("Play the video");
+		setToolTipText("Play the videoFrame");
 		this.parentFrame = parentFrame;
 	}
 
@@ -37,7 +37,7 @@ public class PlayButton extends JButton {
 	 * 
 	 */
 	class BackgroundSkipper extends SwingWorker<Void, Void> {
-		//If true, video skips forward. If false, backward.
+		//If true, videoFrame skips forward. If false, backward.
 		private boolean skipForward;
 		public BackgroundSkipper(boolean skipFoward) {
 			this.skipForward = skipFoward;
@@ -59,40 +59,39 @@ public class PlayButton extends JButton {
 	/**
 	 * This method determines what happens when the play button is pressed.
 	 * 1. Any skipping is cancelled.
-	 * 2. If the video has not been chosen, it lets the user choose a video
-	 * 3. Start the video if not started
+	 * 2. If the videoFrame has not been chosen, it lets the user choose a videoFrame
+	 * 3. Start the videoFrame if not started
 	 */
 	public void playPressed() {
 		// Cancel any current skipping
 		if (bgTask != null) {
-			System.out.println("restoring muted status");
 			bgTask.cancel(true);
 			bgTask = null;
 			parentFrame.restoreMutedStatus();
 		} else {
-			//If a video is not currently selected
+			//If a videoFrame is not currently selected
 			if (parentFrame.getVideoPath() == null) {
-				JOptionPane.showMessageDialog(parentFrame, "Please select a video to play.");
+				JOptionPane.showMessageDialog(parentFrame, "Please select a videoFrame to play.");
 				parentFrame.selectVideo(this);
 			}
 			
-			// Start the selected video if not started
+			// Start the selected videoFrame if not started
 			else if (!parentFrame.getVideoIsStarted()) {
 					btnSetPauseIcon();
 					parentFrame.setVideoIsStarted(true);
 					parentFrame.setVideoVolume(parentFrame.getVolume());
 					parentFrame.play(this);
 
-			// Else the video is started		
+			// Else the videoFrame is started		
 			} else {
-				// Pause or play the video
+				// Pause or play the videoFrame
 				
-				if (!parentFrame.videoIsPlaying()) {// Pause video if playing
+				if (!parentFrame.videoIsPlaying()) {// Pause videoFrame if playing
 					parentFrame.pauseVideo(false);
 					btnSetPauseIcon();
 
 				} else {
-					parentFrame.pauseVideo(true);// Play video if paused
+					parentFrame.pauseVideo(true);// Play videoFrame if paused
 					btnSetPlayIcon();
 				}
 			}
@@ -108,8 +107,8 @@ public class PlayButton extends JButton {
 	
 	/**
 	 * Method to allow MediaPlayerJFrame to change the button to the play icon
-	 * when a new video is selected, as the icon could be a pause icon if the 
-	 * previous video was playing.
+	 * when a new videoFrame is selected, as the icon could be a pause icon if the 
+	 * previous videoFrame was playing.
 	 */
 	public void btnSetPlayIcon() {
 		setIcon(PLAY_IMAGE);

@@ -5,7 +5,6 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -27,7 +26,7 @@ public class UserFileChoose extends JFileChooser {
 	}
 
 	/**
-	 * allows user to choose a video file video files allowed are .avi and .mp4
+	 * allows user to choose a videoFrame file videoFrame files allowed are .avi and .mp4
 	 * @param parent - panel which called this method
 	 * @param playBtn - play button of main media player frame
 	 * @return - path of selected mp4
@@ -35,7 +34,7 @@ public class UserFileChoose extends JFileChooser {
 	 */
 	public String chooseVideoPath(JFrame parentFrame, PlayButton playBtn) {
 
-		// video media filters
+		// videoFrame media filters
 		FileFilter avi = new FileTypeFilter(".avi", "AVI Files");
 		FileFilter mp4 = new FileTypeFilter(".mp4", "MP4 Files");
 		FileNameExtensionFilter all = new FileNameExtensionFilter(
@@ -59,7 +58,7 @@ public class UserFileChoose extends JFileChooser {
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				// check file exists
 				if (getSelectedFile().exists()) {
-					// if user is already playing a video, then remove it
+					// if user is already playing a videoFrame, then remove it
 					if (vidFrame.getVideoPath() != null) {
 						vidFrame.removeVideo(playBtn);
 					}
@@ -67,9 +66,11 @@ public class UserFileChoose extends JFileChooser {
 
 				}
 			} else if (returnVal == JFileChooser.CANCEL_OPTION) {
+				break;
 			} else if (returnVal == JFileChooser.ERROR_OPTION) {
 				JOptionPane.showMessageDialog(parentFrame,
 						vidFrame.getErrorMessage());
+				break;
 			}
 		}
 
@@ -127,7 +128,7 @@ public class UserFileChoose extends JFileChooser {
 	 * 			- "" (nothing) is returned if user does not wish to create
 	 */
 	public String saveVideo() {
-		// video media filters
+		// videoFrame media filters
 		FileFilter mp4 = new FileTypeFilter(".mp4", "MP4 Files");
 		addChoosableFileFilter(mp4);
 		setFileFilter(mp4);

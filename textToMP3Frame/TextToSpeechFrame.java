@@ -99,7 +99,6 @@ public class TextToSpeechFrame extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		setBounds(900, 50, 575, 250);
 		setMinimumSize(new Dimension(575, 250));
-		setVisible(true);
 
 		contentPane = new JPanel();
 		setContentPane(contentPane);
@@ -161,7 +160,6 @@ public class TextToSpeechFrame extends JFrame {
 		contentPane.add(pitchSlide, "cell 3 3 ,grow");
 		contentPane.add(playText, "cell 5 2,grow");
 		contentPane.add(createMP3, "cell 5 3,grow");
-		setVisible(true);
 
 	}
 

@@ -12,7 +12,7 @@ public class SetCurrentTimeBtn extends JButton {
 		super();
 		currentVid = video;
 		setText("Set Start to Current Time");
-		setToolTipText("Sets start time of audiotrack to the current video time");
+		setToolTipText("Sets start time of audiotrack to the current videoFrame time");
 	}
 	
 	String currentVideoTime(){

@@ -50,7 +50,7 @@ public class MediaPlayerJFrame extends JFrame {
 	private String videoPath;
 	private String currentVideo;
 
-	// video duration in millisec
+	// videoFrame duration in millisec
 	private double videoDuration;
 
 	private JPanel contentPane;
@@ -59,6 +59,9 @@ public class MediaPlayerJFrame extends JFrame {
 	private VideoTimeSlider vidSlide;
 	AudioToAddPanel addAudioTrack;
 	private ArrayList<AudioData> audioTrackList;
+
+	public AudioTableFrame audTableFrame;
+	TextToSpeechFrame ttsFrame;
 
 	private TimeLabel vidTotalTime;
 	private VideoCurrentTime vidCurrentTime;
@@ -71,14 +74,14 @@ public class MediaPlayerJFrame extends JFrame {
 	private boolean videoIsStarted;
 	private final PlayButton btnPlay;
 
-	// Default volume of the video
+	// Default volume of the videoFrame
 	private static final int DEFAULT_VOLUME = 50;
 	private int volume;
 
-	//Constant Message
+	// Constant Message
 	private static final String ERROR_MESSAGE = "Sorry, an error has occured. please try again.";
 
-	//Font
+	// Font
 	public static final Font TITLE_FONT = new Font("Tahoma", Font.ITALIC, 15);
 
 	// FileChooser-related fields
@@ -214,29 +217,36 @@ public class MediaPlayerJFrame extends JFrame {
 		// create list to store audio tracks to be overlaid
 		audioTrackList = new ArrayList<AudioData>();
 
+		// initiate other frames and panes
+		audTableFrame = new AudioTableFrame(thisFrame);
+		ttsFrame = new TextToSpeechFrame(thisFrame);
+		addAudioTrack = new AudioToAddPanel(thisFrame);
+
+		
+		
 		// get default working directory
 		defaultDirect = new UserFileChoose(thisFrame);
 		defaultDirect.setDefaultDirectoy(true);
-		
-		//initalise user file chooser
+
+		// initalise user file chooser
 		fileChoose = new UserFileChoose(thisFrame);
 
-		// use to update video slider and current time label every 0.5 sec
+		// use to update videoFrame slider and current time label every 0.5 sec
 		// https://github.com/caprica/vlcj/blob/master/src/test/java/uk/co/caprica/vlcj/test/basic/PlayerControlsPanel.java
 		ScheduledExecutorService executorService = Executors
 				.newSingleThreadScheduledExecutor();
 		executorService.scheduleAtFixedRate(new UpdateVideoFrame(thisFrame),
 				0L, 200L, TimeUnit.MILLISECONDS);
 
-		// Create a second JPanel which will contain the video
+		// Create a second JPanel which will contain the videoFrame
 		JPanel mediaPanel = new JPanel(new BorderLayout());
 		mediaPlayerComponent = new ResizingEmbeddedMediaPlayerComponent();
 		video = mediaPlayerComponent.getMediaPlayer();
 		mediaPanel.add(mediaPlayerComponent, BorderLayout.CENTER);
 
 		/*
-		 * Button to play the video. It also acts as a pause/unpause button, and
-		 * is used to stop skipping.
+		 * Button to play the videoFrame. It also acts as a pause/unpause
+		 * button, and is used to stop skipping.
 		 */
 		btnPlay = new PlayButton(this);
 		btnPlay.setIcon(PlayButton.PLAY_IMAGE);
@@ -247,25 +257,25 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 
-		// Button to skip backwards - video is muted while skipping
+		// Button to skip backwards - videoFrame is muted while skipping
 		JButton btnBackward = new JButton();
 		btnBackward.setIcon(REWIND_IMAGE);
 		btnBackward.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (getVideoIsStarted())
-					// Skip backwards and mute the video
+					// Skip backwards and mute the videoFrame
 					btnPlay.skipVideo(false);
 				video.mute(true);
 			}
 		});
 
-		// Button to skip forwards - video is muted while skipping
+		// Button to skip forwards - videoFrame is muted while skipping
 		JButton btnForward = new JButton();
 		btnForward.setIcon(FAST_FORWARD_IMAGE);
 		btnForward.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (getVideoIsStarted())
-					// Skip forwards and mute the video
+					// Skip forwards and mute the videoFrame
 					btnPlay.skipVideo(true);
 				video.mute(true);
 			}
@@ -276,7 +286,7 @@ public class MediaPlayerJFrame extends JFrame {
 		makeMP3Btn.setText("Text to Speech");
 		makeMP3Btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new TextToSpeechFrame(thisFrame);
+				ttsFrame.setVisible(true);
 			}
 		});
 
@@ -285,7 +295,7 @@ public class MediaPlayerJFrame extends JFrame {
 		tableBtn.setText("List of Audiotracks That Have Been Added");
 		tableBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new AudioTableFrame(thisFrame);
+				audTableFrame.setVisible(true);
 			}
 		});
 
@@ -295,40 +305,40 @@ public class MediaPlayerJFrame extends JFrame {
 		btnMute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// Set the new button text depending on the current state of the
-				// video.
+				// videoFrame.
 				if (!video.isMute()) {
 					btnMute.setText(UNMUTE_TEXT);
 				} else {
 					btnMute.setText(MUTE_TEXT);
 				}
-				// video.mute mutes if unmuted and vice versa
+				// videoFrame.mute mutes if unmuted and vice versa
 				video.mute();
 			}
 		});
-		
-		// overlay video button
-				final OverlayVidAndAudioButton overlayVidBtn = new OverlayVidAndAudioButton();
-				overlayVidBtn.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						// check there is a video that has been selected
-						if (getVideoPath() == null) {
-							JOptionPane.showMessageDialog(thisFrame,
-									"No Video has Currently Been Choosen");
-						} else if (audioTrackList.size() == 0) { // check audiotracks
-																	// have been added
-							JOptionPane.showMessageDialog(thisFrame,
-									"No Audiotracks have been Added");
-						} else {
-							String name = fileChoose.saveVideo();
-							if (!name.equals("")) { // check user wants to create a
-													// video
-								overlayVidBtn.overlayVideo(audioTrackList, thisFrame, name);
-							}
-						}
 
+		// overlay videoFrame button
+		final OverlayVidAndAudioButton overlayVidBtn = new OverlayVidAndAudioButton();
+		overlayVidBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// check there is a videoFrame that has been selected
+				if (getVideoPath() == null) {
+					JOptionPane.showMessageDialog(thisFrame,
+							"No Video has Currently Been Choosen");
+				} else if (audioTrackList.size() == 0) { // check audiotracks
+															// have been added
+					JOptionPane.showMessageDialog(thisFrame,
+							"No Audiotracks have been Added");
+				} else {
+					String name = fileChoose.saveVideo();
+					if (!name.equals("")) { // check user wants to create a
+											// videoFrame
+						overlayVidBtn.overlayVideo(audioTrackList, thisFrame,
+								name);
 					}
-				});
-		
+				}
+
+			}
+		});
 
 		// Create a JSlider with 0 and 100 as the volume limits. 50 is the
 		// default (it is set to 50 in the constructor).
@@ -336,17 +346,17 @@ public class MediaPlayerJFrame extends JFrame {
 				DEFAULT_VOLUME);
 		sliderVolume.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
-				// get volume in case moved before video is played
+				// get volume in case moved before videoFrame is played
 				setVolume(((JSlider) arg0.getSource()).getValue());
-				// if video is playing then the volume changes as it plays
+				// if videoFrame is playing then the volume changes as it plays
 				video.setVolume(getVolume());
 
 			}
 		});
 		sliderVolume.setMinorTickSpacing(1);
-		sliderVolume.setToolTipText("Change the volume of the video");
+		sliderVolume.setToolTipText("Change the volume of the videoFrame");
 
-		// Labels that displays the currently selected video
+		// Labels that displays the currently selected videoFrame
 		curVidTitle = new JLabel(CURRENT_VIDEO_TEXT);
 		curVidTitle.setFont(TITLE_FONT);
 		currentVidName = new NameLabel();
@@ -367,14 +377,14 @@ public class MediaPlayerJFrame extends JFrame {
 		vidSlide.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				// change video to slider position
+				// change videoFrame to slider position
 				vidSlide.userDrag(thisFrame);
 			}
 		});
 		vidSlide.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// change video to slider position
+				// change videoFrame to slider position
 				vidSlide.userDrag(thisFrame);
 			}
 
@@ -395,17 +405,16 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 
-		//Time Labels
+		// Time Labels
 		setVidTotalTime(new TimeLabel());
 		vidCurrentTime = new VideoCurrentTime();
 		JLabel dash = new JLabel("/");
-		
-		//audioPanel
-		addAudioTrack = new AudioToAddPanel(thisFrame);
 
 		// set up layout
 		contentPane
-				.setLayout(new MigLayout(//(Layout constraints,column constraints,row constraints)
+				.setLayout(new MigLayout(
+						// (Layout constraints,column constraints,row
+						// constraints)
 						"",
 						"[60px,grow 0,shrink 0][4px,grow 0,shrink 0][60px,grow 0,shrink 0][4px,grow 0,shrink 0]"
 								+ "[60px,grow 0,shrink 0][4px,grow 0,shrink 0][100px,grow 0,shrink 0][4px,grow 0,shrink 0]"
@@ -436,17 +445,15 @@ public class MediaPlayerJFrame extends JFrame {
 		contentPane.add(tableBtn, "cell 10 4 ,grow");
 		contentPane.add(overlayVidBtn, "cell 10 5 ,grow");
 
-		// current video labels
+		// current videoFrame labels
 		contentPane.add(curVidTitle, "cell 0 3 9 0,growx");
 		contentPane.add(currentVidName, "cell 0 4 9 0,growx,aligny top");
-		
-		//Add audio
+
+		// Add audio
 		add(addAudioTrack, "cell 0 6 11 0 ,grow");
-		
 
 		setVisible(true);
 	}
-	
 
 	/**
 	 * Method to allow release of the mediaPlayerComponent from the main class
@@ -464,7 +471,7 @@ public class MediaPlayerJFrame extends JFrame {
 	}
 
 	/**
-	 * Method to skip the video (for use by other objects)
+	 * Method to skip the videoFrame (for use by other objects)
 	 * 
 	 * @param value
 	 */
@@ -474,8 +481,8 @@ public class MediaPlayerJFrame extends JFrame {
 
 	/**
 	 * This method is used to restore the videos mute status after the play
-	 * button is pressed to stop skipping. During skipping, the video is muted
-	 * so this method restores it.
+	 * button is pressed to stop skipping. During skipping, the videoFrame is
+	 * muted so this method restores it.
 	 */
 	public void restoreMutedStatus() {
 		if (btnMute.getText().equals(MUTE_TEXT)) {
@@ -486,9 +493,10 @@ public class MediaPlayerJFrame extends JFrame {
 	}
 
 	/**
-	 * Open FileChooser and let the user choose a video to play. If the user is
-	 * already playing a video, stop the old one, set videoIsStarted to false,
-	 * and update the play button's icon to the play icon
+	 * Open FileChooser and let the user choose a videoFrame to play. If the
+	 * user is already playing a videoFrame, stop the old one, set
+	 * videoIsStarted to false, and update the play button's icon to the play
+	 * icon
 	 * 
 	 * @param btnPlay
 	 *            - the play button which has its icon set to the play icon.
@@ -505,13 +513,13 @@ public class MediaPlayerJFrame extends JFrame {
 			JOptionPane.showMessageDialog(this, getCurrentVideo()
 					+ " has been selected.");
 
-			// set total time of video
+			// set total time of videoFrame
 			setVideoDuration(getVidTotalTime().findDuration(getVideoPath()));
 		}
 	}
 
 	/**
-	 * Stops the current video set the play button to display play icon
+	 * Stops the current videoFrame set the play button to display play icon
 	 * 
 	 * @param btnPlay
 	 */
@@ -531,7 +539,7 @@ public class MediaPlayerJFrame extends JFrame {
 		// File tab: Choose Video File, Choose default working directory
 		fileMenu = new JMenu("File");
 
-		// This label opens a FileChooser to select a video
+		// This label opens a FileChooser to select a videoFrame
 		menuItem = new JMenuItem("Choose Video File");
 		menuItem.addActionListener((new ActionListener() {
 			@Override
