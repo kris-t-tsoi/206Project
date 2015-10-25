@@ -77,6 +77,7 @@ public class AudioToAddPanel extends JPanel {
 	 * @param audioTrackList
 	 * @param parentFrame
 	 */
+	@SuppressWarnings("static-access")
 	public AudioToAddPanel(final MediaPlayerJFrame mainFrame) {
 		mediaPlayerFrame = mainFrame;
 		setSize(700, 175);
@@ -84,12 +85,15 @@ public class AudioToAddPanel extends JPanel {
 
 		// MP3 Labels initialize
 		JLabel mp3TitleLbl = new JLabel("MP3 :");
+		mp3TitleLbl.setFont(mediaPlayerFrame.TITLE_FONT);
 		mp3NameLbl = new NameLabel();
 		JLabel duraTitleLbl = new JLabel("Duration :");
+		duraTitleLbl.setFont(mediaPlayerFrame.TITLE_FONT);
 		durationLbl = new TimeLabel();
 
 		// Time Labels initialize
 		startLbl = new JLabel("Start [MM:SS.mm]:");
+		startLbl.setFont(mediaPlayerFrame.TITLE_FONT);
 		startMin = new JTextField();
 		startSec = new JTextField();
 		startMili = new JTextField();

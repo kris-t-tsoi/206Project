@@ -222,8 +222,6 @@ public class MediaPlayerJFrame extends JFrame {
 		ttsFrame = new TextToSpeechFrame(thisFrame);
 		addAudioTrack = new AudioToAddPanel(thisFrame);
 
-		
-		
 		// get default working directory
 		defaultDirect = new UserFileChoose(thisFrame);
 		defaultDirect.setDefaultDirectoy(true);
@@ -417,22 +415,22 @@ public class MediaPlayerJFrame extends JFrame {
 						// constraints)
 						"",
 						"[60px,grow 0,shrink 0][4px,grow 0,shrink 0][60px,grow 0,shrink 0][4px,grow 0,shrink 0]"
-								+ "[60px,grow 0,shrink 0][4px,grow 0,shrink 0][100px,grow 0,shrink 0][4px,grow 0,shrink 0]"
-								+ "[10px,grow 0,shrink 0][2px,grow 0,shrink 0][421px,grow,shrink]",
-						"[500px,grow, shrink][20px][20px][17px][17px][17px][240px,grow, shrink][8px]"));
+								+ "[60px,grow 0,shrink 0][4px,grow 0,shrink 0][60px,grow 0,shrink 0][4px,grow 0,shrink 0]"
+								+ "[100px,grow 0,shrink 0][4px,grow 0,shrink 0][10px,grow 0,shrink 0][2px,grow 0,shrink 0][400px,grow,shrink]",
+						"[500px,grow, shrink][20px][20px][17px][17px][17px][240px,grow, shrink]"));
 
 		// Media player
-		contentPane.add(mediaPlayerComponent, "cell 0 0 11 1,grow");
+		contentPane.add(mediaPlayerComponent, "cell 0 0 13 1,grow");//TODO Layout
 
 		// control buttons
 		contentPane.add(btnBackward, "cell 0 2,alignx center,grow");
 		contentPane.add(btnPlay, "cell 2 2,grow");
-		contentPane.add(btnForward, "cell 4 2,alignx center,grow");
+		contentPane.add(btnForward, "cell 6 2,alignx center,grow");
 
 		// volume
-		contentPane.add(btnMute, "cell 6 2,grow");
-		contentPane.add(volumeIconLbl, "cell 8 2,grow");
-		contentPane.add(sliderVolume, "cell 10 2,grow");
+		contentPane.add(btnMute, "cell 8 2,grow");
+		contentPane.add(volumeIconLbl, "cell 9 2,grow");
+		contentPane.add(sliderVolume, "cell 10 2,growx,aligny top");
 
 		// time labels and slider
 		contentPane.add(vidCurrentTime, "cell 0 1,grow");

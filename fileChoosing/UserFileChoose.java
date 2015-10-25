@@ -201,7 +201,14 @@ public class UserFileChoose extends JFileChooser {
 	 * @param startUp
 	 */
 	public void setDefaultDirectoy(boolean startUp) {
+		//only allow user to choose directories
+		FileNameExtensionFilter dir = new FileNameExtensionFilter(
+				"Directories", "dir");
+		addChoosableFileFilter(dir);
+		setFileFilter(dir);
 		setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		// remove all files filter
+		setAcceptAllFileFilterUsed(false);
 
 		// If user has previously selected and wants to change current working
 		// directory
@@ -209,9 +216,12 @@ public class UserFileChoose extends JFileChooser {
 			setCurrentDirectory(new File(vidFrame.getDefPathDirect()));
 		} else {
 			JOptionPane.showMessageDialog(vidFrame,
-					"Please Set Default Work Directory");
+					"Please Set the Default Working Directory");
 		}
 
+		//set dialog title
+		setDialogTitle("Choose Default Working Directory");
+		
 		int returnDirect = showOpenDialog(vidFrame);
 		if (returnDirect == JFileChooser.APPROVE_OPTION) {
 			vidFrame.setDefPathDirect(getSelectedFile().getAbsolutePath());
@@ -221,7 +231,7 @@ public class UserFileChoose extends JFileChooser {
 				vidFrame.setDefPathDirect(System.getProperty("user.dir"));
 				JOptionPane.showMessageDialog(
 						vidFrame,
-						"No Workspace was Choosen, "
+						"No Workspace was Chosen, "
 								+ vidFrame.getDefPathDirect()
 								+ " has been set as the default directory");
 
