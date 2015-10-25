@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 
-import overlayMedia.addAudioTrackPanel.AudioData;
 import sharedLabels.TimeLabel;
 import mediaMainFrame.MediaPlayerJFrame;
+import mediaMainFrame.addAudioTrackPanel.AudioData;
 import doInBackground.CreateInBackground;
 
 @SuppressWarnings("serial")

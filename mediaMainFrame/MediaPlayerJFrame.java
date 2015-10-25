@@ -29,12 +29,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import audiotrackTable.AudioTableFrame;
 import doInBackground.UpdateVideoFrame;
 import fileChoosing.UserFileChoose;
 import overlayMedia.OverlayVidAndAudioButton;
-import overlayMedia.addAudioTrackPanel.AudioData;
-import overlayMedia.addAudioTrackPanel.AudioToAddPanel;
-import overlayMedia.audioTable.AudioTableFrame;
+import mediaMainFrame.addAudioTrackPanel.AudioData;
+import mediaMainFrame.addAudioTrackPanel.AudioToAddPanel;
+import mediaMainFrame.buttonPanel.FunctionButtonPane;
 import mediaMainFrame.time.VideoCurrentTime;
 import mediaMainFrame.time.VideoTimeSlider;
 import mediaMainFrame.videoControl.PlayButton;
@@ -57,12 +58,16 @@ public class MediaPlayerJFrame extends JFrame {
 	ResizingEmbeddedMediaPlayerComponent mediaPlayerComponent;
 	EmbeddedMediaPlayer video;
 	private VideoTimeSlider vidSlide;
-	AudioToAddPanel addAudioTrack;
 	private ArrayList<AudioData> audioTrackList;
 
+	//Other Frames
 	public AudioTableFrame audTableFrame;
-	TextToSpeechFrame ttsFrame;
+	public TextToSpeechFrame ttsFrame;
 
+	//Panels
+	AudioToAddPanel addAudioTrack;
+	FunctionButtonPane fuctionBtnPane;
+	
 	private TimeLabel vidTotalTime;
 	private VideoCurrentTime vidCurrentTime;
 
@@ -94,11 +99,6 @@ public class MediaPlayerJFrame extends JFrame {
 
 	// default directory
 	private String defPathDirect;
-
-	// Dynamic labels for user information
-	private static final String CURRENT_VIDEO_TEXT = "Currently Selected Video: ";
-	JLabel curVidTitle;
-	private NameLabel currentVidName;
 
 	// Images for fast forward and rewind icons
 	private static final ImageIcon REWIND_IMAGE = new ImageIcon(
@@ -178,10 +178,6 @@ public class MediaPlayerJFrame extends JFrame {
 		return audioTrackList;
 	}
 
-	public NameLabel getCurrentVidName() {
-		return currentVidName;
-	}
-
 	public String getDefPathDirect() {
 		return defPathDirect;
 	}
@@ -209,7 +205,7 @@ public class MediaPlayerJFrame extends JFrame {
 		super(name);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		setMinimumSize(new Dimension(800, 600));
+		setMinimumSize(new Dimension(1000, 600));
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -218,6 +214,7 @@ public class MediaPlayerJFrame extends JFrame {
 		audioTrackList = new ArrayList<AudioData>();
 
 		// initiate other frames and panes
+		fuctionBtnPane = new FunctionButtonPane(thisFrame);
 		audTableFrame = new AudioTableFrame(thisFrame);
 		ttsFrame = new TextToSpeechFrame(thisFrame);
 		addAudioTrack = new AudioToAddPanel(thisFrame);
@@ -279,23 +276,6 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 
-		// Button to create MP3 from text
-		JButton makeMP3Btn = new JButton();
-		makeMP3Btn.setText("Text to Speech");
-		makeMP3Btn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ttsFrame.setVisible(true);
-			}
-		});
-
-		// Button to open list of audiotracks that have been added
-		JButton tableBtn = new JButton();
-		tableBtn.setText("List of Audiotracks That Have Been Added");
-		tableBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				audTableFrame.setVisible(true);
-			}
-		});
 
 		// Button to mute audio
 		btnMute = new JButton("Mute");
@@ -314,29 +294,6 @@ public class MediaPlayerJFrame extends JFrame {
 			}
 		});
 
-		// overlay videoFrame button
-		final OverlayVidAndAudioButton overlayVidBtn = new OverlayVidAndAudioButton();
-		overlayVidBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// check there is a videoFrame that has been selected
-				if (getVideoPath() == null) {
-					JOptionPane.showMessageDialog(thisFrame,
-							"No Video has Currently Been Choosen");
-				} else if (audioTrackList.size() == 0) { // check audiotracks
-															// have been added
-					JOptionPane.showMessageDialog(thisFrame,
-							"No Audiotracks have been Added");
-				} else {
-					String name = fileChoose.saveVideo();
-					if (!name.equals("")) { // check user wants to create a
-											// videoFrame
-						overlayVidBtn.overlayVideo(audioTrackList, thisFrame,
-								name);
-					}
-				}
-
-			}
-		});
 
 		// Create a JSlider with 0 and 100 as the volume limits. 50 is the
 		// default (it is set to 50 in the constructor).
@@ -354,11 +311,7 @@ public class MediaPlayerJFrame extends JFrame {
 		sliderVolume.setMinorTickSpacing(1);
 		sliderVolume.setToolTipText("Change the volume of the videoFrame");
 
-		// Labels that displays the currently selected videoFrame
-		curVidTitle = new JLabel(CURRENT_VIDEO_TEXT);
-		curVidTitle.setFont(TITLE_FONT);
-		currentVidName = new NameLabel();
-
+		
 		/*
 		 * JMenuBar containing most of the functionality The tabs are: File,
 		 * Text, and Video
@@ -416,11 +369,11 @@ public class MediaPlayerJFrame extends JFrame {
 						"",
 						"[60px,grow 0,shrink 0][4px,grow 0,shrink 0][60px,grow 0,shrink 0][4px,grow 0,shrink 0]"
 								+ "[60px,grow 0,shrink 0][4px,grow 0,shrink 0][60px,grow 0,shrink 0][4px,grow 0,shrink 0]"
-								+ "[100px,grow 0,shrink 0][4px,grow 0,shrink 0][10px,grow 0,shrink 0][2px,grow 0,shrink 0][400px,grow,shrink]",
-						"[500px,grow, shrink][20px][20px][17px][17px][17px][240px,grow, shrink]"));
+								+ "[100px,grow 0,shrink 0][4px,grow 0,shrink 0][10px,grow 0,shrink 0][2px,grow 0,shrink 0][50px,grow,shrink]",
+						"[500px,grow, shrink][20px][20px][20px][180px,grow, shrink]"));
 
 		// Media player
-		contentPane.add(mediaPlayerComponent, "cell 0 0 13 1,grow");//TODO Layout
+		contentPane.add(mediaPlayerComponent, "cell 0 0 14 0,grow");//TODO Layout
 
 		// control buttons
 		contentPane.add(btnBackward, "cell 0 2,alignx center,grow");
@@ -430,7 +383,7 @@ public class MediaPlayerJFrame extends JFrame {
 		// volume
 		contentPane.add(btnMute, "cell 8 2,grow");
 		contentPane.add(volumeIconLbl, "cell 9 2,grow");
-		contentPane.add(sliderVolume, "cell 10 2,growx,aligny top");
+		contentPane.add(sliderVolume, "cell 10 2 13 10,growx,aligny top");
 
 		// time labels and slider
 		contentPane.add(vidCurrentTime, "cell 0 1,grow");
@@ -438,17 +391,10 @@ public class MediaPlayerJFrame extends JFrame {
 		contentPane.add(getVidTotalTime(), "cell 2 1,grow");
 		contentPane.add(vidSlide, "cell 3 1 11 3,growx,aligny top");
 
-		// make MP3, overlay and list of audiotrack buttons
-		contentPane.add(makeMP3Btn, "cell 10 3 ,grow");
-		contentPane.add(tableBtn, "cell 10 4 ,grow");
-		contentPane.add(overlayVidBtn, "cell 10 5 ,grow");
-
-		// current videoFrame labels
-		contentPane.add(curVidTitle, "cell 0 3 9 0,growx");
-		contentPane.add(currentVidName, "cell 0 4 9 0,growx,aligny top");
-
-		// Add audio
-		add(addAudioTrack, "cell 0 6 11 0 ,grow");
+		// Add in panes
+		add(addAudioTrack, "cell 0 4 13 0 ,grow");
+		add(fuctionBtnPane, "cell 13 4,grow");
+		
 
 		setVisible(true);
 	}
@@ -506,7 +452,7 @@ public class MediaPlayerJFrame extends JFrame {
 		if (!path.equals("")) {
 
 			setVideoPath(path);
-			setCurrentVideo(currentVidName.getFileName(path));
+			setCurrentVideo(fuctionBtnPane.getCurrentVidName().getFileName(path));
 
 			JOptionPane.showMessageDialog(this, getCurrentVideo()
 					+ " has been selected.");

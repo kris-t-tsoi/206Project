@@ -1,4 +1,4 @@
-package overlayMedia.addAudioTrackPanel;
+package mediaMainFrame.addAudioTrackPanel;
 
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
@@ -179,7 +179,7 @@ public class AudioToAddPanel extends JPanel {
 						//add to audio track list
 						audioTrackList.add(audioData);
 						
-						//TODO add to table frame
+						//add to table frame
 						mediaPlayerFrame.audTableFrame.addToTable(mp3NameLbl.getText(), start);
 						
 						try {

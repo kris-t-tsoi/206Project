@@ -1,4 +1,4 @@
-package overlayMedia.addAudioTrackPanel;
+package mediaMainFrame.addAudioTrackPanel;
 
 public class AudioData {
 
