@@ -31,36 +31,6 @@ public class PlayButton extends JButton {
 		setToolTipText("Play the videoFrame");
 		this.parentFrame = parentFrame;
 	}
-	
-
-	/**
-	 * Method to change the button to the pause icon
-	 */
-	private void btnSetPauseIcon() {
-		setIcon(PAUSE_IMAGE);
-	}
-	
-	/**
-	 * Method to allow MediaPlayerJFrame to change the button to the play icon
-	 * when a new videoFrame is selected, as the icon could be a pause icon if the 
-	 * previous videoFrame was playing.
-	 */
-	public void btnSetPlayIcon() {
-		setIcon(PLAY_IMAGE);
-	}
-
-	/**
-	 * Function to continuously skip forwards or backwards depending on the
-	 * input boolean.
-	 * 
-	 * @param forwards
-	 */
-	public void skipVideo(boolean forwards) {
-		if (bgTask != null)
-			bgTask.cancel(true);
-		bgTask = new BackgroundSkipper(forwards);
-		bgTask.execute();
-	}
 
 	/**
 	 * Class to skip forward/backward continuously without freezing the GUI.
@@ -101,7 +71,7 @@ public class PlayButton extends JButton {
 		} else {
 			//If a videoFrame is not currently selected
 			if (parentFrame.getVideoPath() == null) {
-				JOptionPane.showMessageDialog(parentFrame, "Please select a videoFrame to play.");
+				JOptionPane.showMessageDialog(parentFrame, "Please select a Video to play.");
 				parentFrame.selectVideo(this);
 			}
 			
@@ -128,4 +98,32 @@ public class PlayButton extends JButton {
 		}
 	}
 	
+	/**
+	 * Method to change the button to the pause icon
+	 */
+	private void btnSetPauseIcon() {
+		setIcon(PAUSE_IMAGE);
+	}
+	
+	/**
+	 * Method to allow MediaPlayerJFrame to change the button to the play icon
+	 * when a new videoFrame is selected, as the icon could be a pause icon if the 
+	 * previous videoFrame was playing.
+	 */
+	public void btnSetPlayIcon() {
+		setIcon(PLAY_IMAGE);
+	}
+
+	/**
+	 * Function to continuously skip forwards or backwards depending on the
+	 * input boolean.
+	 * 
+	 * @param forwards
+	 */
+	public void skipVideo(boolean forwards) {
+		if (bgTask != null)
+			bgTask.cancel(true);
+		bgTask = new BackgroundSkipper(forwards);
+		bgTask.execute();
+	}
 }

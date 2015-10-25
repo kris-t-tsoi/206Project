@@ -282,7 +282,7 @@ public class MediaPlayerJFrame extends JFrame {
 		
 		
 		// Button to mute audio
-		btnMute = new JButton("Mute");
+		btnMute = new JButton(MUTE_TEXT);
 		btnMute.setToolTipText("Mute the audio");
 		btnMute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -416,7 +416,6 @@ public class MediaPlayerJFrame extends JFrame {
 	 */
 	public void play(PlayButton btnPlay) {
 		video.playMedia(getVideoPath());
-
 	}
 
 	/**

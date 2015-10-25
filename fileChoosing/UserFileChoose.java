@@ -211,6 +211,7 @@ public class UserFileChoose extends JFileChooser {
 		addChoosableFileFilter(dir);
 		setFileFilter(dir);
 		setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		
 		// remove all files filter
 		setAcceptAllFileFilterUsed(false);
 
