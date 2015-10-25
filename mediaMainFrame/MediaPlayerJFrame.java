@@ -384,7 +384,7 @@ public class MediaPlayerJFrame extends JFrame {
 						"[500px,grow, shrink][20px][20px][5px][180px,grow, shrink]"));
 
 		// Media player
-		contentPane.add(mediaPlayerComponent, "cell 0 0 14 0,grow");//TODO Layout
+		contentPane.add(mediaPlayerComponent, "cell 0 0 14 0,grow");
 
 		// control buttons
 		contentPane.add(btnBackward, "cell 0 2,alignx center,grow");

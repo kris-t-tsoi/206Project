@@ -1,19 +1,29 @@
 package textToMP3Frame.buttons;
 
 import java.io.File;
+
 import javax.swing.JButton;
-import doInBackground.BackgroundUse;
+
+import mediaMainFrame.videoControl.PlayButton;
+import doInBackground.FestivalSpeakBackgroundUse;
 import doInBackground.WriteSchemeFiles;
 import textToMP3Frame.TextToSpeechFrame;
 
+@SuppressWarnings("serial")
 public class PlayTextBtn extends JButton {
 	TextToSpeechFrame parentFrame;
+	FestivalSpeakBackgroundUse backGrd;
+	PlayTextBtn playBtn;
+	
+	final public String cancel = "Cancel Play";
+	final public String play = "Play Text";
 
 	public PlayTextBtn(TextToSpeechFrame frame) {
 		super();
 		parentFrame = frame;
-		setText("Play Text");
+		setText(play);
 		setToolTipText("Play Text From Textbox");
+		playBtn = this;
 	}
 
 	/**
@@ -26,9 +36,11 @@ public class PlayTextBtn extends JButton {
 		
 		//Festival to speak in the background
 		String cmd = ("festival -b "+playScm.getAbsolutePath().toString());		
-		BackgroundUse backGrd = new BackgroundUse(cmd);
+		backGrd = new FestivalSpeakBackgroundUse(cmd,playBtn);
 		backGrd.execute();
-		//TODO get pid so can stop
 	}
 	
+	public void stopFestival(){
+		backGrd.cancel();
+	}
 }

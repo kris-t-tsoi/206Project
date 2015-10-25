@@ -42,7 +42,6 @@ public class TextToMP3TextBox extends JTextArea {
 		return false;
 	}
 
-	// TODO set mindimension
 	@Override
 	public Dimension getMinimumSize() {
 		return new Dimension(100, 50);

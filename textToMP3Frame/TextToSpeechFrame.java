@@ -31,6 +31,7 @@ public class TextToSpeechFrame extends JFrame {
 	VoiceSpeedSlider speedSlide;
 	PitchSlider pitchSlide;
 	UserFileChoose fileChose;
+	boolean isPlaying;
 
 	// Constants for the textfield - Max number of words which can be
 	// played/saved, and error message
@@ -91,15 +92,25 @@ public class TextToSpeechFrame extends JFrame {
 		contentPane = new JPanel();
 		setContentPane(contentPane);
 
+		isPlaying = false;
 		playText = new PlayTextBtn(thisFrame);
 		playText.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// If the text is under the allowed limit, speak the text
-				if (checkTextbox()) {
-					playText.sayWithFestival(getSpeed(), getStartPitch(),
-							getEndPitch(), getText());
-				} 
+				
+				if(playText.getText().equals(playText.cancel)){
+					playText.stopFestival();
+				}else{
+					// If the text is under the allowed limit, speak the text
+					if (checkTextbox()) {
+						playText.sayWithFestival(getSpeed(), getStartPitch(),
+								getEndPitch(), getText());
+					} 
+				}
+				
+				
+				
+				
 			}
 		});
 
