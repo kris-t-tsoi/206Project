@@ -2,7 +2,6 @@ package mediaMainFrame.addAudioTrackPanel;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -19,7 +18,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import doInBackground.DoInBackground;
-import doInBackground.UseTerminalCommands;
 import fileChoosing.UserFileChoose;
 import sharedLabels.NameLabel;
 import sharedLabels.TimeLabel;
@@ -178,7 +176,7 @@ public class AudioToAddPanel extends JPanel {
 						playAudioBtn.setText(playMP3);
 					}else{ //if not playing then start 
 						back = new DoInBackground("ffplay -nodisp -autoexit -af volume=1" + " \"" +getMp3Path()+"\"",thisPane);
-						back.execute();	//TODO when finish excecuting then set back
+						back.execute();
 						isPlaying = true;
 						playAudioBtn.setText(cancelMP3);
 						} 
@@ -217,6 +215,7 @@ public class AudioToAddPanel extends JPanel {
 
 	}
 
+	//set up that add audio button (adds audio int list)
 	private void setUpAddAudioBtn(final ArrayList<AudioData> audioTrackList,
 			JTable audTable) {
 		addAudioBtn.setToolTipText("Add Another Audio Track to the Video");

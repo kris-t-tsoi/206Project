@@ -86,7 +86,7 @@ public class MediaPlayerJFrame extends JFrame {
 
 	// FileChooser-related fields
 	final MediaPlayerJFrame thisFrame = this;
-	final private UserFileChoose fileChoose;
+	final public UserFileChoose fileChoose;
 	UserFileChoose defaultDirect;
 	JMenuBar fileMenuBar;
 	JMenu fileMenu;
@@ -540,22 +540,6 @@ public class MediaPlayerJFrame extends JFrame {
 		}));
 		fileMenu.add(menuItem);
 		fileMenuBar.add(fileMenu);
-
-		// Help tab: help tab
-		fileMenu = new JMenu("Help");// TODO
-
-		// create mp3 from text
-		menuItem = new JMenuItem("Main Page");
-		menuItem.addActionListener((new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO
-			}
-		}));
-
-		fileMenu.add(menuItem);
-		fileMenuBar.add(fileMenu);
-
 	}
 
 }

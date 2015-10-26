@@ -14,7 +14,7 @@ public class TimeLabel extends JLabel {
 	}
 
 	/**
-	 * finds the duration of the videoFrame and changes label to the total duration
+	 * finds the duration of the video and changes label to the total duration
 	 * time
 	 * 
 	 * @param videoPath
@@ -50,7 +50,7 @@ public class TimeLabel extends JLabel {
 	 * @param timeString
 	 * @return time in milliSeconds
 	 */
-	public int  durationStringToInt (String timeString){//TODO a bit off 45.50 turn into 50ish
+	public int  durationStringToInt (String timeString){
 		//00:00.00	min:sec.mil
 		String[] timeSplit = timeString.split("[:.]");	
 		int milli  = (Integer.parseInt(timeSplit[2])*100);

@@ -14,38 +14,65 @@ import mediaMainFrame.videoControl.PlayButton;
 @SuppressWarnings("serial")
 public class UserFileChoose extends JFileChooser {
 
-	MediaPlayerJFrame vidFrame;	
-	
+	MediaPlayerJFrame vidFrame;
+
 	// Constant Message
 	private final String errorMessage = "Sorry, an error has occured. please try again.";
-	private final String fileNotExist = "File Does Not Exist, Please Pick Another";
+	private final String fileNotExist = "File Does Not Exist, No File was Selected";
+	private final String fileNotCreate = "File Was Not Created";
+	private final String fileOverWrite = "There Exists a file with the same name, Would you like to overwrite it ?";
+
+	// File filters
+	FileFilter avi;
+	FileFilter mp4;
+	FileFilter mp3;
+	FileNameExtensionFilter allVid;
+	FileNameExtensionFilter dir;
 
 	/**
 	 * open or save media files
-	 * @param parentFrame - media mainframe
+	 * 
+	 * @param parentFrame
+	 *            - media mainframe
 	 */
 	public UserFileChoose(MediaPlayerJFrame parentFrame) {
 		vidFrame = parentFrame;
+		setupFileFilters();
+	}
+
+	private void setupFileFilters() {
+		// video files
+		avi = new FileTypeFilter(".avi", "AVI Files");
+		mp4 = new FileTypeFilter(".mp4", "MP4 Files");
+		allVid = new FileNameExtensionFilter("Video Files [.avi .mp4]", "avi",
+				"mp4");
+
+		// audio filter
+		mp3 = new FileTypeFilter(".mp3", "MP3 Files");
+
+		// directory filter
+		dir = new FileNameExtensionFilter("Directories", "dir");
+
 	}
 
 	/**
-	 * allows user to choose a videoFrame file videoFrame files allowed are .avi and .mp4
-	 * @param parent - panel which called this method
-	 * @param playBtn - play button of main media player frame
-	 * @return - path of selected mp4
-	 * 			- "" (nothing) is returned if user does not wish to select
+	 * allows user to choose a videoFrame file videoFrame files allowed are .avi
+	 * and .mp4
+	 * 
+	 * @param parent
+	 *            - panel which called this method
+	 * @param playBtn
+	 *            - play button of main media player frame
+	 * @return - path of selected mp4 - "" (nothing) is returned if user does
+	 *         not wish to select
 	 */
 	public String chooseVideoPath(JFrame parentFrame, PlayButton playBtn) {
 
-		// videoFrame media filters
-		FileFilter avi = new FileTypeFilter(".avi", "AVI Files");
-		FileFilter mp4 = new FileTypeFilter(".mp4", "MP4 Files");
-		FileNameExtensionFilter all = new FileNameExtensionFilter(
-				"Video Files [.avi .mp4]", "avi", "mp4");
-		addChoosableFileFilter(all);
+		// add in videoFrame media filters
+		addChoosableFileFilter(allVid);
 		addChoosableFileFilter(avi);
 		addChoosableFileFilter(mp4);
-		setFileFilter(all);
+		setFileFilter(allVid);
 
 		// remove all files filter
 		setAcceptAllFileFilterUsed(false);
@@ -54,27 +81,20 @@ public class UserFileChoose extends JFileChooser {
 		setCurrentDirectory(new File(vidFrame.getDefPathDirect()));
 		int returnVal = showOpenDialog(parentFrame);
 
-		boolean validFile = false;
-
-		while (validFile == false) {
-
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				// check file exists
-				if (getSelectedFile().exists()) {
-					// if user is already playing a videoFrame, then remove it
-					if (vidFrame.getVideoPath() != null) {
-						vidFrame.removeVideo(playBtn);
-					}
-					return getSelectedFile().getAbsolutePath();
-
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			// check file exists
+			if (getSelectedFile().exists()) {
+				// if user is already playing a videoFrame, then remove it
+				if (vidFrame.getVideoPath() != null) {
+					vidFrame.removeVideo(playBtn);
 				}
-			} else if (returnVal == JFileChooser.CANCEL_OPTION) {
-				break;
-			} else if (returnVal == JFileChooser.ERROR_OPTION) {
-				JOptionPane.showMessageDialog(parentFrame,
-						 errorMessage);
-				break;
+				return getSelectedFile().getAbsolutePath();
+
+			} else {
+				JOptionPane.showMessageDialog(parentFrame, fileNotExist);
 			}
+		} else if (returnVal == JFileChooser.ERROR_OPTION) {
+			JOptionPane.showMessageDialog(parentFrame, errorMessage);
 		}
 
 		return "";
@@ -83,57 +103,48 @@ public class UserFileChoose extends JFileChooser {
 	/**
 	 * Allows user to choose an .mp3 file
 	 * 
-	 * @param parent - panel which called this method
-	 * @return - path of selected mp3
-	 * 			- "" (nothing) is returned if user does not wish to select
+	 * @param parent
+	 *            - panel which called this method
+	 * @return - path of selected mp3 - "" (nothing) is returned if user does
+	 *         not wish to select
 	 */
 	public String chooseMP3Path(JFrame parentFrame) {
 		// mp3 media filters
-		FileFilter mp3 = new FileTypeFilter(".mp3", "MP3 Files");
 		addChoosableFileFilter(mp3);
 
 		// remove all files filter
 		setAcceptAllFileFilterUsed(false);
 
-		// Start file search in current directory, and show mp3's
-		FileNameExtensionFilter filter = new FileNameExtensionFilter(
-				"MP3 File", "mp3");
-		setFileFilter(filter);
+		setFileFilter(mp3);
 		setCurrentDirectory(new File(vidFrame.getDefPathDirect()));
 
-		boolean validFile = false;
-
-		while (validFile == false) {
-			int returnVal = showOpenDialog(parentFrame);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				// check file exists
-				if (getSelectedFile().exists()) {
-					return getSelectedFile().getAbsolutePath();
-				} else {
-					JOptionPane.showMessageDialog(vidFrame, fileNotExist);
-				}
-
-			} else if (returnVal == JFileChooser.ERROR_OPTION) {
-				JOptionPane.showMessageDialog(parentFrame,
-						 errorMessage);
-				break;
+		int returnVal = showOpenDialog(parentFrame);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			// check file exists
+			if (getSelectedFile().exists()) {
+				return getSelectedFile().getAbsolutePath();
 			} else {
-				break;
+				JOptionPane.showMessageDialog(vidFrame, fileNotExist);
 			}
 
+		} else if (returnVal == JFileChooser.ERROR_OPTION) {
+			JOptionPane.showMessageDialog(parentFrame, errorMessage);
 		}
+
 		return "";
 	}
 
 	/**
 	 * Choose location to save created mp4
-	 * @return -path of created mp4
-	 * 			- "" (nothing) is returned if user does not wish to create
+	 * 
+	 * @return -path of created mp4 - "" (nothing) is returned if user does not
+	 *         wish to create
 	 */
 	public String saveVideo() {
 		// videoFrame media filters
-		FileFilter mp4 = new FileTypeFilter(".mp4", "MP4 Files");
 		addChoosableFileFilter(mp4);
+		removeChoosableFileFilter(avi);
+		removeChoosableFileFilter(allVid);
 		setFileFilter(mp4);
 
 		// remove all files filter
@@ -142,30 +153,26 @@ public class UserFileChoose extends JFileChooser {
 		setCurrentDirectory(new File(vidFrame.getDefPathDirect()));
 		setSelectedFile(new File(""));
 		int returnVal = showSaveDialog(vidFrame);
-
-		boolean validName = false;
-		while (validName == false) {
-
-			if (returnVal == APPROVE_OPTION) {
-				if (!getSelectedFile().getName().trim().equals("")) {
+		if (returnVal == APPROVE_OPTION) {
+			if (new File(getSelectedFile() + ".mp4").exists()) {
+				if (overwriteFile() == true) {
 					return getSelectedFile().getAbsolutePath() + ".mp4";
 				}
-			} else if (returnVal == JFileChooser.ERROR_OPTION) {
-				JOptionPane.showMessageDialog(vidFrame, 
-						 errorMessage);
-				break;
-			} else {
-				break;
+			} else if (!getSelectedFile().getName().trim().equals("")) {
+				return getSelectedFile().getAbsolutePath() + ".mp4";
 			}
+		} else if (returnVal == JFileChooser.ERROR_OPTION) {
+			JOptionPane.showMessageDialog(vidFrame, errorMessage);
 		}
 
 		return "";
 	}
 
 	/**
-	 *Choose location to save created mp3
-	 * @return -path of created mp3
-	 * 			- "" (nothing) is returned if user does not wish to create
+	 * Choose location to save created mp3
+	 * 
+	 * @return -path of created mp3 - "" (nothing) is returned if user does not
+	 *         wish to create
 	 */
 	public String saveMP3() {
 		// mp3 media filters
@@ -180,20 +187,18 @@ public class UserFileChoose extends JFileChooser {
 		setSelectedFile(new File(""));
 		int returnVal = showSaveDialog(vidFrame);
 
-		boolean validName = false;
-		while (validName == false) {
-
-			if (returnVal == APPROVE_OPTION) {
-				if (!getSelectedFile().getName().trim().equals("")) {
+		if (returnVal == APPROVE_OPTION) {
+			if (new File(getSelectedFile() + ".mp3").exists()) {
+				if (overwriteFile() == true) {
 					return getSelectedFile().getAbsolutePath();
+				} else {
+					setSelectedFile(new File(""));
 				}
-			} else if (returnVal == JFileChooser.ERROR_OPTION) {
-				JOptionPane.showMessageDialog(vidFrame, 
-						 errorMessage);
-				break;
-			} else {
-				break;
+			} else if (!getSelectedFile().getName().trim().equals("")) {
+				return getSelectedFile().getAbsolutePath();
 			}
+		} else if (returnVal == JFileChooser.ERROR_OPTION) {
+			JOptionPane.showMessageDialog(vidFrame, errorMessage);
 		}
 
 		return "";
@@ -201,17 +206,17 @@ public class UserFileChoose extends JFileChooser {
 
 	/**
 	 * Allow user to choose the default working directory
-	 * @param startUp - true at application start up
-	 * 					- false if default working directory has been previously selected
+	 * 
+	 * @param startUp
+	 *            - true at application start up - false if default working
+	 *            directory has been previously selected
 	 */
 	public void setDefaultDirectoy(boolean startUp) {
-		//only allow user to choose directories
-		FileNameExtensionFilter dir = new FileNameExtensionFilter(
-				"Directories", "dir");
+		// only allow user to choose directories
 		addChoosableFileFilter(dir);
 		setFileFilter(dir);
 		setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		
+
 		// remove all files filter
 		setAcceptAllFileFilterUsed(false);
 
@@ -224,9 +229,9 @@ public class UserFileChoose extends JFileChooser {
 					"Please Set the Default Working Directory");
 		}
 
-		//set dialog title
+		// set dialog title
 		setDialogTitle("Choose Default Working Directory");
-		
+
 		int returnDirect = showOpenDialog(vidFrame);
 		if (returnDirect == JFileChooser.APPROVE_OPTION) {
 			vidFrame.setDefPathDirect(getSelectedFile().getAbsolutePath());
@@ -242,6 +247,23 @@ public class UserFileChoose extends JFileChooser {
 
 			}
 		}
+	}
+
+	/**
+	 * check if user would like to overwrite an existing file with the same name
+	 * as their input
+	 * 
+	 * @return
+	 */
+	private boolean overwriteFile() {
+		int overwrite = JOptionPane.showConfirmDialog(vidFrame, fileOverWrite,
+				"Overwrite File", JOptionPane.YES_NO_OPTION);
+		if (overwrite == JOptionPane.YES_OPTION) {
+			return true;
+		}else{
+			JOptionPane.showMessageDialog(vidFrame, fileNotCreate);
+		}
+		return false;
 	}
 
 	/**

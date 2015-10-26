@@ -10,7 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
-import fileChoosing.UserFileChoose;
 import overlayMedia.OverlayVidAndAudioButton;
 import sharedLabels.NameLabel;
 import net.miginfocom.swing.MigLayout;
@@ -25,7 +24,6 @@ public class FunctionButtonPane extends JPanel {
 	private static final String CURRENT_VIDEO_TEXT = "Currently Selected Video: ";
 	JLabel curVidTitle;
 	private NameLabel currentVidName;
-	UserFileChoose fileChoose;
 
 	// buttons
 	JButton chooseVideo;
@@ -79,8 +77,7 @@ public class FunctionButtonPane extends JPanel {
 	/**
 	 * setup button to overlay video with added audiotracks
 	 */
-	private void setupOverlay() {
-		fileChoose = new UserFileChoose(mediaPlayerFrame);
+	private void setupOverlay() {		
 		overlayVidBtn = new OverlayVidAndAudioButton();
 		overlayVidBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -94,7 +91,7 @@ public class FunctionButtonPane extends JPanel {
 					JOptionPane.showMessageDialog(mediaPlayerFrame,
 							"No Audiotracks have been Added");
 				} else {
-					String name = fileChoose.saveVideo();
+					String name = mediaPlayerFrame.fileChoose.saveVideo();
 					if (!name.equals("")) { // check user wants to create a
 											// videoFrame
 						overlayVidBtn.overlayVideo(

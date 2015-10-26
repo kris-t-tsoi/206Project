@@ -1,12 +1,5 @@
 package doInBackground;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.swing.SwingWorker;
 
 import textToMP3Frame.TextToSpeechFrame;
@@ -28,7 +21,6 @@ public class FestivalSpeakBackgroundUse extends SwingWorker<Void, Void> {
 
 	public FestivalSpeakBackgroundUse(String line, PlayTextBtn playBtn,
 			TextToSpeechFrame parent) {
-		// get command as input
 		cmd = line;
 		playButton = playBtn;
 		textFrame = parent;

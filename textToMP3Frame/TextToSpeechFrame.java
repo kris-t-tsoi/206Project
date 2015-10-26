@@ -28,14 +28,13 @@ public class TextToSpeechFrame extends JFrame {
 
 	// Buttons
 	private PlayTextBtn playText;
-
 	CreateMP3Btn createMP3;
 
+	//Textbox and sliders
 	TextToMP3TextBox userText;
 	VoiceSpeedSlider speedSlide;
 	PitchSlider pitchSlide;
 	UserFileChoose fileChose;
-	private boolean isPlaying;
 
 	// Constants for the textfield - Max number of words which can be
 	// played/saved, and error message
@@ -88,14 +87,14 @@ public class TextToSpeechFrame extends JFrame {
 	 */
 	public TextToSpeechFrame(final MediaPlayerJFrame video) {
 
+		//intialise frame and pane
 		super("Create Audio From Text");
 		setBounds(500, 250, 580, 255);
 		setMinimumSize(new Dimension(575, 250));
-
 		contentPane = new JPanel();
 		setContentPane(contentPane);
 
-
+		//play text button
 		playText = new PlayTextBtn(thisFrame);
 		playText.addActionListener(new ActionListener() {
 			@Override
@@ -108,16 +107,15 @@ public class TextToSpeechFrame extends JFrame {
 			}
 		});
 
+		//create MP3 button
 		createMP3 = new CreateMP3Btn(thisFrame);
 		createMP3.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (checkTextbox()) {
-
+				if (checkTextbox()) {//check textarea is not blank and is less than 50 words
 					fileChose = new UserFileChoose(video);
 					String name = fileChose.saveMP3();
 					if (!name.equals("")) { // check user wants to create a mp3
-
 						createMP3.createAudio(getSpeed(), getStartPitch(),
 								getEndPitch(), getText(), name);
 					}
@@ -130,6 +128,7 @@ public class TextToSpeechFrame extends JFrame {
 		JScrollPane scrollPane = new JScrollPane(userText);
 
 		JLabel titleLbl = new JLabel("Type in Text to Synthesis into MP3 Audio");
+		titleLbl.setFont(video.TITLE_FONT);
 		JLabel speedLbl = new JLabel("Voice Speed");
 		JLabel pitchLbl = new JLabel("Vocal Tone");
 
@@ -144,13 +143,17 @@ public class TextToSpeechFrame extends JFrame {
 																										// Constraints
 						"[40px][50px,grow, shrink][40px][40px]")); // Row
 																	// Constraints
-
+		//textBox
 		contentPane.add(titleLbl, "cell 1 0 5 1,grow");
 		contentPane.add(scrollPane, "cell 1 1 5 1,grow");
+		
+		//Sliders
 		contentPane.add(speedLbl, "cell 1 2,grow");
 		contentPane.add(pitchLbl, "cell 1 3,grow");
 		contentPane.add(speedSlide, "cell 3 2 ,grow");
 		contentPane.add(pitchSlide, "cell 3 3 ,grow");
+		
+		//buttons
 		contentPane.add(playText, "cell 5 2,grow");
 		contentPane.add(createMP3, "cell 5 3,grow");
 

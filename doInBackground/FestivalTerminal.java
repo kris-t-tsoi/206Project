@@ -24,7 +24,10 @@ public class FestivalTerminal {
 	}
 
 	
-	
+	/**
+	 * start the speech using terminal and get pid of speech
+	 * @param cmd
+	 */
 	void start(String cmd){
 		probuild = new ProcessBuilder("bash", "-c", cmd);
 		probuild.redirectErrorStream(true);
