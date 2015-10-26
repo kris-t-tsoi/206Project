@@ -70,9 +70,9 @@ public class TimeLabel extends JLabel {
 		duration = duration/1000;
 		
 		//et min sec and millisec
-		int min = (int)(duration/360);
-		int sec = (int)(duration%360);
-		int milli = (int)((duration-min-sec)*100);
+		int min = (int)(duration/60);
+		int sec = (int)(duration-(min*60));
+		int milli = (int)((duration-(min*60)-sec)*100);
 		
 		//make into string
 		String minString = min +"";
@@ -88,6 +88,9 @@ public class TimeLabel extends JLabel {
 			secString = "0"+secString;
 		}
 		
+		if(milliString.length()>2){
+			milliString = milliString.substring(0,2);
+		}
 		
 		if(milli<10 & milli>=0){
 			milliString = "0"+milliString;
