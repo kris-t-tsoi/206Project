@@ -23,7 +23,7 @@ public class ProgressFrame extends JFrame {
 	public ProgressFrame() {
 		super("Working In Background");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(700, 350, 500, 400);
+		setBounds(700, 350, 500, 200);
 		setResizable(false);	
 		
 		processBar = new JProgressBar(JProgressBar.HORIZONTAL);
@@ -34,13 +34,13 @@ public class ProgressFrame extends JFrame {
 		
 		JLabel nameLbl = new JLabel("Processing ... ");
 		nameLbl.setFont(new Font("Tahoma", Font.BOLD,30));
-		nameLbl.setForeground(Color.ORANGE);
+		nameLbl.setForeground(Color.RED);
 
 		contentPane
 				.setLayout(new MigLayout(
 						"", 
 						"[5px,grow 0,shrink 0][120px,grow, shrink][5px,grow 0,shrink 0]",
-						"[5px][100px][10px][100px][5px]")); // Row Constraints
+						"[5px][100px][3px][100px][3px]")); 
 
 		contentPane.add(nameLbl, "cell 1 1, alignx center,grow");
 		contentPane.add(processBar, "cell 1 3, alignx center,grow");
