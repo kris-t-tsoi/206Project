@@ -32,7 +32,7 @@ public class OverlayVidAndAudioButton extends JButton {
 		time = new TimeLabel();
 		
 		//follow format: 
-		//ffmpeg -i video_path -i mp3_path [1:a]adelay=500[a1];,[a1]amix=inputs=2 output_name
+		//ffmpeg -i video_path -i mp3_path -filter_complex "[1:a]adelay=500[a1];,[a1]amix=inputs=2" output_name
 		
 
 		String ffmpegVideoPath = "ffmpeg -i " + video.getVideoPath() + " ";
@@ -45,6 +45,9 @@ public class OverlayVidAndAudioButton extends JButton {
 		for (AudioData audio : listAudio) {
 
 			int delay = audio.getStartMiliTime();
+			if(delay ==0){	//ffmpeg can not create overlay with 0 delay so make it 1 milisec
+				delay++;
+			}
 
 			// add in paths of the audio files
 			ffmpegMP3Paths = ffmpegMP3Paths + "-i " + audio.getPath() + " ";
@@ -59,10 +62,12 @@ public class OverlayVidAndAudioButton extends JButton {
 			count++;
 		}
 
-		String ffmpegAmix = "amix=inputs=" + count + "\" " + outName;
+		String ffmpegAmix = "amix=inputs=" + count + "\" -ac 2 " + outName;
 
 		String cmd = ffmpegVideoPath + ffmpegMP3Paths + "-filter_complex \""
 				+ ffmpegDelay +","+ffmpegMediaNumAndChannel+ ffmpegAmix;
+		
+		System.out.println(cmd);
 
 		//exceute in background
 		CreateInBackground back = new CreateInBackground(cmd);

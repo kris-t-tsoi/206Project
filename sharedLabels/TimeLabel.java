@@ -53,7 +53,7 @@ public class TimeLabel extends JLabel {
 	public int  durationStringToInt (String timeString){
 		//00:00.00	min:sec.mil
 		String[] timeSplit = timeString.split("[:.]");	
-		int milli  = (Integer.parseInt(timeSplit[2]));
+		int milli  = (Integer.parseInt(timeSplit[2])*100);
 		int sec =  Integer.parseInt(timeSplit[1])*1000; 
 		int min =  Integer.parseInt(timeSplit[0])*60000; 		
 		return (min+sec+milli);
