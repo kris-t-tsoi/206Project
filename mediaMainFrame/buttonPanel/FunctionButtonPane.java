@@ -16,6 +16,13 @@ import net.miginfocom.swing.MigLayout;
 import mediaMainFrame.MediaPlayerJFrame;
 
 @SuppressWarnings("serial")
+/**
+ * Pane contains add video button, button to open audioTrackTable
+ * and overlayButton to overlay currently selected video with 
+ * audio tracks in list
+ * @author kristy
+ *
+ */
 public class FunctionButtonPane extends JPanel {
 
 	MediaPlayerJFrame mediaPlayerFrame;
@@ -63,7 +70,7 @@ public class FunctionButtonPane extends JPanel {
 
 		add(new JSeparator(SwingConstants.HORIZONTAL), "cell 0 0 6 0 ,grow");
 
-		// current videoFrame labels
+		// current video labels
 		add(curVidTitle, "cell 1 1,growx");
 		add(currentVidName, "cell 1 2,growx,aligny top");
 
@@ -80,20 +87,22 @@ public class FunctionButtonPane extends JPanel {
 	private void setupOverlay() {		
 		overlayVidBtn = new OverlayVidAndAudioButton();
 		overlayVidBtn.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
 				// check there is a videoFrame that has been selected
 				if (mediaPlayerFrame.getVideoPath() == null) {
 					JOptionPane.showMessageDialog(mediaPlayerFrame,
 							"No Video has Currently Been Choosen");
-				} else if (mediaPlayerFrame.getAudioTrackList().size() == 0) { // check
-																				// audiotracks
-					// have been added
+					
+					//check audiotracks have been added
+				} else if (mediaPlayerFrame.getAudioTrackList().size() == 0) { 
 					JOptionPane.showMessageDialog(mediaPlayerFrame,
 							"No Audiotracks have been Added");
 				} else {
 					String name = mediaPlayerFrame.fileChoose.saveVideo();
-					if (!name.equals("")) { // check user wants to create a
-											// videoFrame
+					
+					//check if user wants to create a video
+					if (!name.equals("")) { 
 						overlayVidBtn.overlayVideo(
 								mediaPlayerFrame.getAudioTrackList(),
 								mediaPlayerFrame, name);

@@ -5,6 +5,11 @@ import java.awt.Dimension;
 import javax.swing.JTextArea;
 
 @SuppressWarnings("serial")
+/**
+ * Text Area where text gets synthesized into audio
+ * @author kristy
+ *
+ */
 public class TextToMP3TextBox extends JTextArea {
 	public static final int MAX_NUMBER_OF_WORDS = 50;
 
@@ -42,7 +47,7 @@ public class TextToMP3TextBox extends JTextArea {
 		return false;
 	}
 
-	@Override
+	@Override //text area can not be smaller that this
 	public Dimension getMinimumSize() {
 		return new Dimension(100, 50);
 	}

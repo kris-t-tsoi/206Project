@@ -6,6 +6,11 @@ import javax.swing.JLabel;
 import javax.swing.JSlider;
 
 @SuppressWarnings("serial")
+/**
+ * creates the slider of festival voice volume
+ * @author kristy
+ *
+ */
 public class VoiceSpeedSlider extends JSlider {
 
 	public VoiceSpeedSlider(){

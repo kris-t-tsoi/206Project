@@ -4,6 +4,12 @@ import javax.swing.JLabel;
 
 import doInBackground.UseTerminalCommands;
 
+@SuppressWarnings("serial")
+/**
+ * Label that gets the duration of a media file
+ * @author kristy
+ *
+ */
 public class TimeLabel extends JLabel {
 
 	UseTerminalCommands termCommand = new UseTerminalCommands();
@@ -20,7 +26,7 @@ public class TimeLabel extends JLabel {
 	 * @param videoPath
 	 */
 	public double findDuration(String path) {
-		;
+		//Source: http://superuser.com/questions/650291/how-to-get-video-duration-in-seconds
 		String inputLine = termCommand.terminalCommandString("ffprobe -i \""
 				+ path + "\" -show_format 2>&1 | grep Duration");
 		if (inputLine != null) {

@@ -9,6 +9,11 @@ import doInBackground.CreateInBackground;
 import doInBackground.WriteSchemeFiles;
 
 @SuppressWarnings("serial")
+/**
+ * button creates MP3 files from text
+ * @author kristy
+ *
+ */
 public class CreateMP3Btn extends JButton {
 
 	private TextToSpeechFrame parentFrame;

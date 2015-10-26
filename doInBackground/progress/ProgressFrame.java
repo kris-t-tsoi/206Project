@@ -11,6 +11,11 @@ import javax.swing.JProgressBar;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
+/**
+ * Creates frame with an indeterminate progress bar
+ * @author kristy
+ *
+ */
 public class ProgressFrame extends JFrame {
 
 	JPanel contentPane;

@@ -20,6 +20,11 @@ import mediaMainFrame.MediaPlayerJFrame;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
+/**
+ * frame with all text to audio synthesis functionality
+ * @author kristy
+ *
+ */
 public class TextToSpeechFrame extends JFrame {
 
 	// GUI Components
@@ -46,39 +51,6 @@ public class TextToSpeechFrame extends JFrame {
 	private int endPitch;
 	private String text;
 
-	public float getSpeed() {
-		return speed;
-	}
-
-	public void setSpeed(float speed) {
-		this.speed = speed;
-	}
-
-	public int getStartPitch() {
-		return startPitch;
-	}
-
-	public void setStartPitch(int startPitch) {
-		this.startPitch = startPitch;
-	}
-
-	public int getEndPitch() {
-		return endPitch;
-	}
-
-	public void setEndPitch(int endPitch) {
-		this.endPitch = endPitch;
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
-	}
-
-
 	/**
 	 * Constructor for Text to Speech Frame Used for - playing text to audio -
 	 * creating MP3
@@ -101,8 +73,8 @@ public class TextToSpeechFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// If the text is under the allowed limit, speak the text
 				if (checkTextbox()) {
-					playText.sayWithFestival(getSpeed(), getStartPitch(),
-							getEndPitch(), getText());
+					playText.sayWithFestival(speed, startPitch,
+							endPitch,text);
 				}
 			}
 		});
@@ -112,26 +84,29 @@ public class TextToSpeechFrame extends JFrame {
 		createMP3.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (checkTextbox()) {//check textarea is not blank and is less than 50 words
+				if (checkTextbox()) {//check text area is not blank and is less than 50 words
 					fileChose = new UserFileChoose(video);
 					String name = fileChose.saveMP3();
 					if (!name.equals("")) { // check user wants to create a mp3
-						createMP3.createAudio(getSpeed(), getStartPitch(),
-								getEndPitch(), getText(), name);
+						createMP3.createAudio(speed, startPitch,
+								endPitch, text, name);
 					}
 
 				}
 			}
 		});
 
+		//textbox
 		userText = new TextToMP3TextBox();
 		JScrollPane scrollPane = new JScrollPane(userText);
 
+		//title labels
 		JLabel titleLbl = new JLabel("Type in Text to Synthesis into MP3 Audio");
 		titleLbl.setFont(video.TITLE_FONT);
 		JLabel speedLbl = new JLabel("Voice Speed");
 		JLabel pitchLbl = new JLabel("Vocal Tone");
 
+		//sliders
 		speedSlide = new VoiceSpeedSlider();
 		pitchSlide = new PitchSlider();
 
@@ -160,14 +135,19 @@ public class TextToSpeechFrame extends JFrame {
 	}
 
 	/**
-	 * get the current slider and textbox values
+	 * get the speed and pitch slider and textbox values
 	 */
 	private void getFestivalValues() {
-		setSpeed((float) (speedSlide.getValue()) / 10);
+		//speed value
+		speed = ((float) (speedSlide.getValue()) / 10);
+		
+		//tone value
 		int[] pitchRange = pitchSlide.findRange(pitchSlide.getValue());
-		setStartPitch(pitchRange[0]);
-		setEndPitch(pitchRange[1]);
-		setText(userText.getText());
+		startPitch=pitchRange[0];
+		endPitch=pitchRange[1];
+		
+		//text to be converted to audio
+		text= userText.getText();
 	}
 
 	/**
@@ -176,14 +156,12 @@ public class TextToSpeechFrame extends JFrame {
 	 * @return - true if valid text
 	 */
 	private boolean checkTextbox() {
-
 		// get values from sliders and text box
 		getFestivalValues();
 
 		// (getText() != null) && !getText().startsWith(" ")
 		if (userText.getText().trim().isEmpty()) {
-			JOptionPane
-					.showMessageDialog(thisFrame, "Textbox Can Not Be Empty");
+			JOptionPane.showMessageDialog(thisFrame, "Textbox Can Not Be Empty");
 			return false;
 		}
 
@@ -192,7 +170,6 @@ public class TextToSpeechFrame extends JFrame {
 			JOptionPane.showMessageDialog(thisFrame, ERROR_WORD_LIMIT_MESSAGE);
 			return false;
 		}
-
 		return true;
 	}
 

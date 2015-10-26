@@ -4,6 +4,13 @@ import javax.swing.SwingUtilities;
 
 import mediaMainFrame.MediaPlayerJFrame;
 
+/**
+ * Runs in the background of the application
+ * calls on a method to update the current position
+ * of the video slider and current time lablel
+ * @author kristy
+ *
+ */
 public class UpdateVideoFrame implements Runnable {
 	
 	MediaPlayerJFrame video;

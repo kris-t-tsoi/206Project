@@ -12,6 +12,12 @@ import mediaMainFrame.MediaPlayerJFrame;
 import mediaMainFrame.videoControl.PlayButton;
 
 @SuppressWarnings("serial")
+/**
+ * Class extends FileChoooser
+ * used to open and save files
+ * @author kristy
+ *
+ */
 public class UserFileChoose extends JFileChooser {
 
 	MediaPlayerJFrame vidFrame;
@@ -40,6 +46,9 @@ public class UserFileChoose extends JFileChooser {
 		setupFileFilters();
 	}
 
+	/*
+	 * sets up the filters in the filechoosers
+	 */
 	private void setupFileFilters() {
 		// video files
 		avi = new FileTypeFilter(".avi", "AVI Files");
@@ -154,7 +163,7 @@ public class UserFileChoose extends JFileChooser {
 		setSelectedFile(new File(""));
 		int returnVal = showSaveDialog(vidFrame);
 		if (returnVal == APPROVE_OPTION) {
-			if (new File(getSelectedFile() + ".mp4").exists()) {
+			if (getSelectedFile().exists()||new File(getSelectedFile() + ".mp4").exists()) {
 				if (overwriteFile() == true) {
 					return getSelectedFile().getAbsolutePath() + ".mp4";
 				}
@@ -188,7 +197,7 @@ public class UserFileChoose extends JFileChooser {
 		int returnVal = showSaveDialog(vidFrame);
 
 		if (returnVal == APPROVE_OPTION) {
-			if (new File(getSelectedFile() + ".mp3").exists()) {
+			if (getSelectedFile().exists()||new File(getSelectedFile() + ".mp3").exists()) {
 				if (overwriteFile() == true) {
 					return getSelectedFile().getAbsolutePath();
 				} else {
@@ -267,8 +276,8 @@ public class UserFileChoose extends JFileChooser {
 	}
 
 	/**
-	 * Class for file filtering Code from:
-	 * www.codejava.net/java-se/swing/add-file-filter-for-jfilechooser-dialog
+	 * Class for file filtering 
+	 * Source:www.codejava.net/java-se/swing/add-file-filter-for-jfilechooser-dialog
 	 *
 	 */
 	class FileTypeFilter extends FileFilter {

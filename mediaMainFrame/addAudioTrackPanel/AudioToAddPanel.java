@@ -25,11 +25,20 @@ import mediaMainFrame.MediaPlayerJFrame;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
+/**
+ * Pane contains functionality for adding audio to be overlaid
+ * on the currently selected video
+ * @author kristy
+ *
+ */
 public class AudioToAddPanel extends JPanel {
 
 	// Panels and Frames
 	final MediaPlayerJFrame mediaPlayerFrame;
 	AudioToAddPanel thisPane;
+	
+	//bachground task
+	DoInBackground back;
 
 	// file choosing
 	final private UserFileChoose fileChoose;
@@ -44,33 +53,21 @@ public class AudioToAddPanel extends JPanel {
 	private JTextField startMili;
 
 	// Buttons
-	private SelectMP3Btn selectAudio;
+	private JButton selectAudio;
 	private JButton createAudio;
 	private JButton playAudioBtn;
 	private JButton addAudioBtn;
 	
 	//playing mp3
 	private boolean isPlaying;
-	public JButton getPlayAudioBtn() {
-		return playAudioBtn;
-	}
-
-	public boolean isPlaying() {
-		return isPlaying;
-	}
-
-	DoInBackground back;
-	
+		
 	// Constant strings
 	private final String defaultText = "00";
 	private final String formatErrorMessage = "Please have format [MM:SS.mm] using Numbers";
 	public final String playMP3 = "Play Selected MP3";
-	public void setPlaying(boolean isPlaying) {
-		this.isPlaying = isPlaying;
-	}
+		private final String cancelMP3 = "Stop";
 
-	private final String cancelMP3 = "Stop";
-
+	// getters and setters
 	public String getMp3Path() {
 		return mp3Path;
 	}
@@ -90,7 +87,14 @@ public class AudioToAddPanel extends JPanel {
 	public JTextField getStartMili() {
 		return startMili;
 	}
+	public JButton getPlayAudioBtn() {
+		return playAudioBtn;
+	}
+	public void setPlaying(boolean isPlaying) {
+		this.isPlaying = isPlaying;
+	}
 
+	
 	/**
 	 * Constructs add audio panel
 	 * 
@@ -136,7 +140,8 @@ public class AudioToAddPanel extends JPanel {
 		textFocusListen(startMili);
 
 		// select existing MP3
-		selectAudio = new SelectMP3Btn();
+		selectAudio = new JButton("Select MP3");
+		selectAudio.setToolTipText("Select MP3 to Add to the Video");
 		selectAudio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				mp3Path = fileChoose.chooseMP3Path(mediaPlayerFrame);
@@ -323,7 +328,7 @@ public class AudioToAddPanel extends JPanel {
 	 * characters are numbers
 	 * 
 	 * @param text
-	 * @return
+	 * @return true - if there is 2 numbers with correct format
 	 */
 	private boolean checkTwoNumbers(String text) {
 		// check text is length 1 or 2
@@ -351,7 +356,7 @@ public class AudioToAddPanel extends JPanel {
 	/**
 	 * Finds the duration of a MP3 file
 	 * 
-	 * @param mp3Path
+	 * @param mp3Path - path of MP3
 	 */
 	private void getMP3Information(String mp3Path) {
 		durationLbl.findDuration(mp3Path);

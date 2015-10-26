@@ -8,6 +8,11 @@ import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+/**
+ * Class has methods to write scm files for festival 
+ * @author kristy
+ *
+ */
 public class WriteSchemeFiles {
 	private JFrame parentFrame;
 	
@@ -35,6 +40,7 @@ public class WriteSchemeFiles {
 			file = new FileWriter(playScm, false);
 			BufferedWriter buffwrite = new BufferedWriter(file);
 			writeSpeedPitch(buffwrite, speed, startPitch, endPitch);
+			//write line to say text
 			buffwrite.write("(SayText \""+text+"\")");
 			buffwrite.close();
 		} catch (IOException e) {
@@ -98,7 +104,10 @@ public class WriteSchemeFiles {
 	private void writeSpeedPitch(BufferedWriter buffwrite, float speed, int startPitch, int endPitch){
 		
 		try {
+			//write speed command
 			buffwrite.write("(Parameter.set 'Duration_Stretch "+speed+")");
+			
+			//write pitch command
 			buffwrite.write("(set! duffint_params '((start "+startPitch+") (end "+endPitch+")))");
 			buffwrite.write("(Parameter.set 'Int_Method 'DuffInt)");
 			buffwrite.write("(Parameter.set 'Int_Target_Method Int_Targets_Default)");

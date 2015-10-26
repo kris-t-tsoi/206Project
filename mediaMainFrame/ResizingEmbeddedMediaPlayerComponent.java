@@ -6,7 +6,7 @@ import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 
 /**
- * Allow videoFrame to shrink
+ * Class for the embedded media player
  *
  */
 @SuppressWarnings("serial")

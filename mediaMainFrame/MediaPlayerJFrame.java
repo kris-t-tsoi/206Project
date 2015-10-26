@@ -44,6 +44,12 @@ import textToMP3Frame.TextToSpeechFrame;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 @SuppressWarnings("serial")
+/**
+ * Class for the main frame where the embedded media player is located
+ * Uses the AudioToAddPane and FunctionButtonPane
+ * @author kristy
+ *
+ */
 public class MediaPlayerJFrame extends JFrame {
 
 	private String videoPath;
@@ -95,7 +101,7 @@ public class MediaPlayerJFrame extends JFrame {
 	// default directory
 	private String defPathDirect;
 
-	// Images for fast forward and rewind icons
+	// Images for stop, fast forward and rewind icons
 	private static final ImageIcon REWIND_IMAGE = new ImageIcon(
 			MediaPlayerJFrame.class.getResource("/Rewind16.gif"));
 	private static final ImageIcon STOP_IMAGE = new ImageIcon(
@@ -103,6 +109,8 @@ public class MediaPlayerJFrame extends JFrame {
 	private static final ImageIcon FAST_FORWARD_IMAGE = new ImageIcon(
 			MediaPlayerJFrame.class.getResource("/FastForward16.gif"));
 
+	
+	//getters and setters
 	public EmbeddedMediaPlayer getVideo() {
 		return video;
 	}
@@ -323,11 +331,15 @@ public class MediaPlayerJFrame extends JFrame {
 		fileMenuBar = new JMenuBar();
 		fileBarInital(fileMenuBar, btnPlay);
 		setJMenuBar(fileMenuBar);
+		
 
 		// Image which is on the left of the JSlider
 		JLabel volumeIconLbl = new JLabel(new ImageIcon(
 				MediaPlayerJFrame.class.getResource("/Volume16.gif")));
 
+		/*
+		 * JSlider for the video's progress
+		 */
 		vidSlide = new VideoTimeSlider(video);
 		vidSlide.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
@@ -459,11 +471,10 @@ public class MediaPlayerJFrame extends JFrame {
 	 *            - the play button which has its icon set to the play icon.
 	 */
 	public void selectVideo(PlayButton btnPlay) {
-
+		
 		String path = fileChoose.chooseVideoPath(thisFrame, btnPlay);
 
-		if (!path.equals("")) {
-
+		if (!path.equals("")) {	//if path is not empty
 			setVideoPath(path);
 			setCurrentVideo(fuctionBtnPane.getCurrentVidName().getFileName(path));
 

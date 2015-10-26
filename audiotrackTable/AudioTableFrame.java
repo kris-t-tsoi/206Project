@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,14 +22,17 @@ import mediaMainFrame.addAudioTrackPanel.AudioData;
 @SuppressWarnings("serial")
 public class AudioTableFrame extends JFrame {
 
+	//panes and frames
 	private JPanel contentPane;
+	AudioTableFrame thisFrame;
+	MediaPlayerJFrame videoFrame;
+	
+	//table
 	public JTable table;
 	DefaultTableModel tableModel;
 	JScrollPane scrollPane;
-	AudioTableFrame thisFrame;
-	MediaPlayerJFrame videoFrame;
 
-	// buttons
+	//delete button
 	JButton deleteAudioBtn;
 
 	/**
@@ -82,7 +86,7 @@ public class AudioTableFrame extends JFrame {
 				if (table.getSelectedRow() != -1) {
 					int index = 0;
 					
-					// remove selected audio from audiotrack list
+					// remove selected audio from audio track list
 					for (AudioData audData : videoFrame.getAudioTrackList()) {
 						if (table.getModel()	//if name and start time is the same then delete
 								.getValueAt(table.getSelectedRow(), 0)
@@ -121,6 +125,7 @@ public class AudioTableFrame extends JFrame {
 
 		// only allow selection of one row
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
 	}
 
 	/**

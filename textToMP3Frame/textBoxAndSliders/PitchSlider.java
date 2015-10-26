@@ -6,12 +6,17 @@ import javax.swing.JLabel;
 import javax.swing.JSlider;
 
 @SuppressWarnings("serial")
+/**
+ * Slider for festival tone of voice
+ * @author kristy
+ *
+ */
 public class PitchSlider extends JSlider {
 	
-	int[] monoPitchRange = {105,105};
-	int[] lowPitchRange = {95,85};
-	int[] neutPitchRange = {115,100};
-	int[] highPitchRange = {145,115};
+	final int[] monoPitchRange = {105,105};
+	final int[] lowPitchRange = {95,85};
+	final int[] neutPitchRange = {115,100};
+	final int[] highPitchRange = {145,115};
 	
 
 	@SuppressWarnings("unchecked")

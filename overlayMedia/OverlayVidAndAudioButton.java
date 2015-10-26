@@ -10,6 +10,12 @@ import mediaMainFrame.addAudioTrackPanel.AudioData;
 import doInBackground.CreateInBackground;
 
 @SuppressWarnings("serial")
+/**
+ * Overlaying video and audio button
+ * Contains overlaying video and mp3 methods
+ * @author kristy
+ *
+ */
 public class OverlayVidAndAudioButton extends JButton {
 
 	TimeLabel time;
@@ -31,7 +37,7 @@ public class OverlayVidAndAudioButton extends JButton {
 
 		time = new TimeLabel();
 		
-		//follow format: 
+		//this method follows the following format to overlay: 
 		//ffmpeg -i video_path -i mp3_path -filter_complex "[1:a]adelay=500[a1];,[a1]amix=inputs=2" -ac 2 output_name
 		
 

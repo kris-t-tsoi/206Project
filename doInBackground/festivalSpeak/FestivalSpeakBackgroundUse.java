@@ -1,4 +1,4 @@
-package doInBackground;
+package doInBackground.festivalSpeak;
 
 import javax.swing.SwingWorker;
 
@@ -19,6 +19,9 @@ public class FestivalSpeakBackgroundUse extends SwingWorker<Void, Void> {
 	ProcessBuilder probuild;
 	Process pb;
 
+	/*
+	 * constructor initialise all variables
+	 */
 	public FestivalSpeakBackgroundUse(String line, PlayTextBtn playBtn,
 			TextToSpeechFrame parent) {
 		cmd = line;

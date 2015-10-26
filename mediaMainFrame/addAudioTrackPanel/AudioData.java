@@ -1,11 +1,35 @@
 package mediaMainFrame.addAudioTrackPanel;
 
+/**
+ * Used as an object to hold information about
+ * audio tracks that will later be used to be
+ * overlaid onto the currently selected video
+ * @author kristy
+ *
+ */
 public class AudioData {
 
 	private String path;
 	private String name;
 	private String startTime;
 	private int startMiliTime;
+	
+	//getters
+	public String getPath() {
+		return path;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public int getStartMiliTime() {
+		return startMiliTime;
+	}
+
+	public String getName() {
+		return name;
+	}
 
 	/**
 	 * Class creates audioData objects which stores information on audio to be
@@ -23,20 +47,6 @@ public class AudioData {
 		startMiliTime = (int) mili;
 	}
 
-	public String getPath() {
-		return path;
-	}
-
-	public String getStartTime() {
-		return startTime;
-	}
-
-	public int getStartMiliTime() {
-		return startMiliTime;
-	}
-
-	public String getName() {
-		return name;
-	}
+	
 
 }

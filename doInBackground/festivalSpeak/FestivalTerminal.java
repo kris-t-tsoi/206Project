@@ -1,4 +1,4 @@
-package doInBackground;
+package doInBackground.festivalSpeak;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,6 +7,12 @@ import java.lang.reflect.Field;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Class plays text in festival and
+ * gets the PID of the festival command
+ * @author kristy
+ *
+ */
 public class FestivalTerminal {
 
 	ProcessBuilder probuild;
@@ -14,15 +20,6 @@ public class FestivalTerminal {
 	private int festivalID;
 	private String[] processID;
 	
-
-	public int getFestivalID() {
-		return festivalID;
-	}
-
-	public void setFestivalID(int i) {
-		this.festivalID = i;
-	}
-
 	
 	/**
 	 * start the speech using terminal and get pid of speech
@@ -41,7 +38,7 @@ public class FestivalTerminal {
 
 				Field f = pb.getClass().getDeclaredField("pid");
 				f.setAccessible(true);
-				setFestivalID(f.getInt(pb));
+				festivalID=f.getInt(pb);
 			}
 			
 			
@@ -55,7 +52,7 @@ public class FestivalTerminal {
 	 */
 	 void cancel() {
 		// get pid for all festival children processes
-		String cmd = "pstree -lp " + getFestivalID() + "| grep festival";
+		String cmd = "pstree -lp " + festivalID + "| grep festival";
 		probuild = new ProcessBuilder("bash", "-c", cmd);
 		try {
 			pb = probuild.start();

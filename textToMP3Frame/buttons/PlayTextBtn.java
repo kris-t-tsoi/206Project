@@ -4,16 +4,24 @@ import java.io.File;
 
 import javax.swing.JButton;
 
-import doInBackground.FestivalSpeakBackgroundUse;
 import doInBackground.WriteSchemeFiles;
+import doInBackground.festivalSpeak.FestivalSpeakBackgroundUse;
 import textToMP3Frame.TextToSpeechFrame;
 
 @SuppressWarnings("serial")
+/**
+ * Play button for festival to synthesis text to audio
+ * @author kristy
+ *
+ */
 public class PlayTextBtn extends JButton {
+	
+	//Objects
 	TextToSpeechFrame parentFrame;
 	FestivalSpeakBackgroundUse backGrd;
 	PlayTextBtn playBtn;
 	
+	//constant button text
 	final public String cancel = "Cancel Play";
 	final public String play = "Play Text";
 

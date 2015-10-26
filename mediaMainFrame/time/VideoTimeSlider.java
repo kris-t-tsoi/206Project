@@ -6,6 +6,11 @@ import mediaMainFrame.MediaPlayerJFrame;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 @SuppressWarnings("serial")
+/**
+ * Slider for video, shows the current positon of the video
+ * @author kristy
+ *
+ */
 public class VideoTimeSlider extends JSlider {
 
 	/**

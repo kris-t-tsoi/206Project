@@ -1,13 +1,16 @@
 package doInBackground;
 
-import java.util.List;
-
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 
 import doInBackground.progress.ProgressFrame;
 
+/**
+ * Class creates MP3 and MP4 files in the background
+ * @author kristy
+ *
+ */
 public class CreateInBackground extends SwingWorker<Void, Void>  {
 	private String cmd;
 	private UseTerminalCommands termCmd;
@@ -16,9 +19,11 @@ public class CreateInBackground extends SwingWorker<Void, Void>  {
 	
 	
 	public CreateInBackground(String line) {
-		progressFrame = new ProgressFrame();
 		termCmd = new UseTerminalCommands();
 		cmd = line;
+		
+		//start up progress bar
+		progressFrame = new ProgressFrame();
 	}
 
 	@Override
@@ -28,13 +33,10 @@ public class CreateInBackground extends SwingWorker<Void, Void>  {
 		return null;
 	}
 
-	@Override
-	protected void process(List<Void> chunks) {
-		super.process(chunks);
-	}
-
+	
 	@Override
 	protected void done() {
+		//When the creation is done, notify user and dispose of progress bar
 		JOptionPane.showMessageDialog(progressFrame, "Done !");
 		progressFrame.dispose();
 	}
