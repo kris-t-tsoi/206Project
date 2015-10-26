@@ -25,17 +25,12 @@ public class TextToSpeechFrame extends JFrame {
 	// GUI Components
 	final TextToSpeechFrame thisFrame = this;
 	JPanel contentPane;
-	
-	//Buttons
-	private PlayTextBtn playText;
-	public PlayTextBtn getPlayText() {
-		return playText;
-	}
 
+	// Buttons
+	private PlayTextBtn playText;
 
 	CreateMP3Btn createMP3;
-	
-	
+
 	TextToMP3TextBox userText;
 	VoiceSpeedSlider speedSlide;
 	PitchSlider pitchSlide;
@@ -85,15 +80,6 @@ public class TextToSpeechFrame extends JFrame {
 	}
 
 
-
-	public boolean isPlaying() {
-		return isPlaying;
-	}
-
-	public void setPlaying(boolean isPlaying) {
-		this.isPlaying = isPlaying;
-	}
-
 	/**
 	 * Constructor for Text to Speech Frame Used for - playing text to audio -
 	 * creating MP3
@@ -109,23 +95,15 @@ public class TextToSpeechFrame extends JFrame {
 		contentPane = new JPanel();
 		setContentPane(contentPane);
 
-		isPlaying = false;
+
 		playText = new PlayTextBtn(thisFrame);
 		playText.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(isPlaying==true){
-					playText.stopFestival();
-					setPlaying(false);
-					playText.setText(playText.play);
-				}else{
-					// If the text is under the allowed limit, speak the text
-					if (checkTextbox()) {
-						playText.sayWithFestival(getSpeed(), getStartPitch(),
-								getEndPitch(), getText());
-						setPlaying(true);
-						playText.setText(playText.cancel);
-					} 
+				// If the text is under the allowed limit, speak the text
+				if (checkTextbox()) {
+					playText.sayWithFestival(getSpeed(), getStartPitch(),
+							getEndPitch(), getText());
 				}
 			}
 		});
@@ -144,7 +122,7 @@ public class TextToSpeechFrame extends JFrame {
 								getEndPitch(), getText(), name);
 					}
 
-				} 
+				}
 			}
 		});
 
@@ -153,7 +131,7 @@ public class TextToSpeechFrame extends JFrame {
 
 		JLabel titleLbl = new JLabel("Type in Text to Synthesis into MP3 Audio");
 		JLabel speedLbl = new JLabel("Voice Speed");
-		JLabel pitchLbl = new JLabel("Vocal Pitch");
+		JLabel pitchLbl = new JLabel("Vocal Tone");
 
 		speedSlide = new VoiceSpeedSlider();
 		pitchSlide = new PitchSlider();
@@ -188,31 +166,30 @@ public class TextToSpeechFrame extends JFrame {
 		setEndPitch(pitchRange[1]);
 		setText(userText.getText());
 	}
-	
-	
+
 	/**
 	 * Check if text box is not empty and is within text limit
-	 * @return	-	true if valid text
+	 * 
+	 * @return - true if valid text
 	 */
-	private boolean checkTextbox(){
-		
+	private boolean checkTextbox() {
+
 		// get values from sliders and text box
 		getFestivalValues();
-		
-		//(getText() != null) && !getText().startsWith(" ")
-		if(userText.getText().trim().isEmpty()){
-			JOptionPane.showMessageDialog(thisFrame,
-					"Textbox Can Not Be Empty");
+
+		// (getText() != null) && !getText().startsWith(" ")
+		if (userText.getText().trim().isEmpty()) {
+			JOptionPane
+					.showMessageDialog(thisFrame, "Textbox Can Not Be Empty");
 			return false;
 		}
 
 		// If the text is under the allowed limit, speak the text
 		if (!userText.checkTxtLength()) {
-			JOptionPane.showMessageDialog(thisFrame,
-					ERROR_WORD_LIMIT_MESSAGE);
+			JOptionPane.showMessageDialog(thisFrame, ERROR_WORD_LIMIT_MESSAGE);
 			return false;
 		}
-		
+
 		return true;
 	}
 

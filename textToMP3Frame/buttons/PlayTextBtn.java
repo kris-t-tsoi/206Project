@@ -39,10 +39,4 @@ public class PlayTextBtn extends JButton {
 		backGrd.execute();
 	}
 	
-	/**
-	 * cancels the festival speech
-	 */
-	public void stopFestival(){
-		backGrd.cancel();
-	}
 }
