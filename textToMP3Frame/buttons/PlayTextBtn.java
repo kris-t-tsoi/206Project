@@ -35,7 +35,7 @@ public class PlayTextBtn extends JButton {
 		
 		//Festival to speak in the background
 		String cmd = ("festival -b "+playScm.getAbsolutePath().toString());		
-		backGrd = new FestivalSpeakBackgroundUse(cmd,playBtn);
+		backGrd = new FestivalSpeakBackgroundUse(cmd,playBtn, parentFrame);
 		backGrd.execute();
 	}
 	

@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.SwingWorker;
 
+import textToMP3Frame.TextToSpeechFrame;
 import textToMP3Frame.buttons.PlayTextBtn;
 
 /**
@@ -19,6 +20,7 @@ import textToMP3Frame.buttons.PlayTextBtn;
 public class FestivalSpeakBackgroundUse extends SwingWorker<Void, Void> {
 	private String cmd;
 	PlayTextBtn playButton;
+	TextToSpeechFrame textFrame;
 
 	ProcessBuilder probuild;
 	Process pb;
@@ -33,10 +35,11 @@ public class FestivalSpeakBackgroundUse extends SwingWorker<Void, Void> {
 		this.festivalID = i;
 	}
 
-	public FestivalSpeakBackgroundUse(String line, PlayTextBtn playBtn) {
+	public FestivalSpeakBackgroundUse(String line, PlayTextBtn playBtn, TextToSpeechFrame parent) {
 		// get command as input
 		cmd = line;
 		playButton = playBtn;
+		textFrame =parent;
 	}
 
 	@Override
@@ -106,5 +109,9 @@ public class FestivalSpeakBackgroundUse extends SwingWorker<Void, Void> {
 
 	}
 
-	
+	@Override
+	protected void done() {
+		textFrame.setPlaying(false);
+		textFrame.getPlayText().setText(textFrame.getPlayText().play);
+	}
 }

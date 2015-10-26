@@ -525,7 +525,7 @@ public class MediaPlayerJFrame extends JFrame {
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new TextToSpeechFrame(thisFrame);
+				ttsFrame.setVisible(true);
 			}
 		}));
 		fileMenu.add(menuItem);
@@ -535,7 +535,7 @@ public class MediaPlayerJFrame extends JFrame {
 		menuItem.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new AudioTableFrame(thisFrame);
+				audTableFrame.setVisible(true);
 			}
 		}));
 		fileMenu.add(menuItem);

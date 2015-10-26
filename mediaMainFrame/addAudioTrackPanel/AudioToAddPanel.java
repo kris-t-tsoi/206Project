@@ -31,6 +31,7 @@ public class AudioToAddPanel extends JPanel {
 
 	// Panels and Frames
 	final MediaPlayerJFrame mediaPlayerFrame;
+	AudioToAddPanel thisPane;
 
 	// file choosing
 	final private UserFileChoose fileChoose;
@@ -51,13 +52,25 @@ public class AudioToAddPanel extends JPanel {
 	private JButton addAudioBtn;
 	
 	//playing mp3
-	boolean isPlaying;
+	private boolean isPlaying;
+	public JButton getPlayAudioBtn() {
+		return playAudioBtn;
+	}
+
+	public boolean isPlaying() {
+		return isPlaying;
+	}
+
 	DoInBackground back;
 	
 	// Constant strings
 	private final String defaultText = "00";
 	private final String formatErrorMessage = "Please have format [MM:SS.mm] using Numbers";
-	private final String playMP3 = "Play Selected MP3";
+	public final String playMP3 = "Play Selected MP3";
+	public void setPlaying(boolean isPlaying) {
+		this.isPlaying = isPlaying;
+	}
+
 	private final String cancelMP3 = "Stop";
 
 	public String getMp3Path() {
@@ -89,6 +102,7 @@ public class AudioToAddPanel extends JPanel {
 	 */
 	public AudioToAddPanel(final MediaPlayerJFrame mainFrame) {
 		mediaPlayerFrame = mainFrame;
+		thisPane =this;
 		setSize(700, 175);
 		fileChoose = new UserFileChoose(mediaPlayerFrame);
 
@@ -163,8 +177,8 @@ public class AudioToAddPanel extends JPanel {
 						isPlaying=false;
 						playAudioBtn.setText(playMP3);
 					}else{ //if not playing then start 
-						back = new DoInBackground("ffplay -nodisp -autoexit -af volume=1" + " \"" +getMp3Path()+"\"");
-						back.execute();
+						back = new DoInBackground("ffplay -nodisp -autoexit -af volume=1" + " \"" +getMp3Path()+"\"",thisPane);
+						back.execute();	//TODO when finish excecuting then set back
 						isPlaying = true;
 						playAudioBtn.setText(cancelMP3);
 						} 

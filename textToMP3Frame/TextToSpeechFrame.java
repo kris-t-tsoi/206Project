@@ -25,13 +25,22 @@ public class TextToSpeechFrame extends JFrame {
 	// GUI Components
 	final TextToSpeechFrame thisFrame = this;
 	JPanel contentPane;
-	PlayTextBtn playText;
+	
+	//Buttons
+	private PlayTextBtn playText;
+	public PlayTextBtn getPlayText() {
+		return playText;
+	}
+
+
 	CreateMP3Btn createMP3;
+	
+	
 	TextToMP3TextBox userText;
 	VoiceSpeedSlider speedSlide;
 	PitchSlider pitchSlide;
 	UserFileChoose fileChose;
-	boolean isPlaying;
+	private boolean isPlaying;
 
 	// Constants for the textfield - Max number of words which can be
 	// played/saved, and error message
@@ -77,6 +86,14 @@ public class TextToSpeechFrame extends JFrame {
 
 
 
+	public boolean isPlaying() {
+		return isPlaying;
+	}
+
+	public void setPlaying(boolean isPlaying) {
+		this.isPlaying = isPlaying;
+	}
+
 	/**
 	 * Constructor for Text to Speech Frame Used for - playing text to audio -
 	 * creating MP3
@@ -99,14 +116,14 @@ public class TextToSpeechFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(isPlaying==true){
 					playText.stopFestival();
-					isPlaying=false;
+					setPlaying(false);
 					playText.setText(playText.play);
 				}else{
 					// If the text is under the allowed limit, speak the text
 					if (checkTextbox()) {
 						playText.sayWithFestival(getSpeed(), getStartPitch(),
 								getEndPitch(), getText());
-						isPlaying=true;
+						setPlaying(true);
 						playText.setText(playText.cancel);
 					} 
 				}
